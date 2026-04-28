@@ -105,7 +105,7 @@ export const ProductCard = React.memo(function ProductCard({
                 className,
             )}
             style={{
-                background: 'var(--bg-elevated)',
+                background: '#ffffff',
                 border: '1px solid var(--border)',
                 boxShadow: style === 'solid' ? 'var(--shadow-sm)' : 'none',
                 gridTemplateColumns: isList ? '120px 1fr 220px' : undefined,
@@ -113,10 +113,14 @@ export const ProductCard = React.memo(function ProductCard({
         >
             {/* Image */}
             <div
-                className={cn('ph-image relative overflow-hidden')}
+                className={cn(
+                    'relative overflow-hidden rounded-md',
+                    !(img && !imgError) && 'ph-image',
+                )}
                 style={{
                     aspectRatio: '1 / 1',
                     width: isList ? 120 : '100%',
+                    background: img && !imgError ? '#ffffff' : undefined,
                 }}
             >
                 {img && !imgError ? (
@@ -125,7 +129,7 @@ export const ProductCard = React.memo(function ProductCard({
                         alt={product.name}
                         fill
                         sizes={isList ? '120px' : '(max-width: 768px) 50vw, 25vw'}
-                        className="object-cover"
+                        className="object-contain p-3"
                         onError={() => setImgError(true)}
                     />
                 ) : (

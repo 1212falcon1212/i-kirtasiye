@@ -270,7 +270,14 @@ export function ProductDetailClient() {
     ];
 
     const mainImage = product.image_url || product.image;
-    const thumbnails = mainImage ? [mainImage, mainImage, mainImage, mainImage, mainImage] : [];
+    const galleryImages = (product as { images?: string[] }).images;
+    const thumbnails =
+        Array.isArray(galleryImages) && galleryImages.length > 0
+            ? galleryImages
+            : mainImage
+              ? [mainImage]
+              : [];
+    const showThumbnailColumn = thumbnails.length > 1;
 
     return (
         <div className="max-w-[1440px] mx-auto px-6 pt-5 pb-12">
@@ -313,16 +320,22 @@ export function ProductDetailClient() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-10">
                 {/* Gallery */}
                 <div>
-                    <div className="grid gap-2" style={{ gridTemplateColumns: '64px 1fr' }}>
-                        <div className="flex flex-col gap-2">
-                            {(thumbnails.length > 0 ? thumbnails : Array.from({ length: 5 })).map(
-                                (thumb, i) => (
+                    <div
+                        className="grid gap-2"
+                        style={{
+                            gridTemplateColumns: showThumbnailColumn ? '64px 1fr' : '1fr',
+                        }}
+                    >
+                        {showThumbnailColumn && (
+                            <div className="flex flex-col gap-2">
+                                {thumbnails.map((thumb, i) => (
                                     <button
                                         type="button"
                                         key={i}
                                         onClick={() => setActiveImageIdx(i)}
-                                        className="ph-image relative aspect-square overflow-hidden"
+                                        className="relative aspect-square overflow-hidden"
                                         style={{
+                                            background: '#ffffff',
                                             border:
                                                 i === activeImageIdx
                                                     ? '2px solid var(--accent)'
@@ -330,28 +343,31 @@ export function ProductDetailClient() {
                                             borderRadius: 6,
                                         }}
                                     >
-                                        {thumb ? (
-                                            <Image
-                                                src={thumb as string}
-                                                alt={`${product.name} ${i + 1}`}
-                                                fill
-                                                sizes="64px"
-                                                className="object-cover"
-                                            />
-                                        ) : null}
+                                        <Image
+                                            src={thumb}
+                                            alt={`${product.name} ${i + 1}`}
+                                            fill
+                                            sizes="64px"
+                                            className="object-contain p-1"
+                                        />
                                     </button>
-                                ),
-                            )}
-                        </div>
+                                ))}
+                            </div>
+                        )}
                         <div
-                            className="ph-image relative aspect-square overflow-hidden"
+                            className={
+                                'relative aspect-square overflow-hidden ' +
+                                (mainImage ? '' : 'ph-image')
+                            }
                             style={{
                                 borderRadius: 'var(--radius-lg)',
+                                background: mainImage ? '#ffffff' : undefined,
+                                border: mainImage ? '1px solid var(--border)' : undefined,
                             }}
                         >
                             {mainImage ? (
                                 <Image
-                                    src={mainImage}
+                                    src={thumbnails[activeImageIdx] || mainImage}
                                     alt={product.name}
                                     fill
                                     sizes="(max-width: 1024px) 100vw, 600px"
