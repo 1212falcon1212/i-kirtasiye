@@ -281,7 +281,7 @@ export function MarketHeader({ activeNav }: MarketHeaderProps) {
 
             {/* MainNav with hover dropdowns */}
             <nav style={{ borderTop: '1px solid var(--border)' }}>
-                <div className="max-w-[1440px] mx-auto px-4 sm:px-6 flex items-center gap-1 overflow-x-auto scrollbar-hide relative">
+                <div className="max-w-[1440px] mx-auto px-4 sm:px-6 flex items-center gap-1 overflow-x-auto lg:overflow-visible scrollbar-hide relative">
                     <Link
                         href="/market/products"
                         className="px-3.5 py-3 text-[13px] font-medium whitespace-nowrap transition-colors border-b-2"
