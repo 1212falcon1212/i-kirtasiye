@@ -1,0 +1,298 @@
+"use client";
+
+import React, { useState } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { ArrowRight, Heart, ShoppingCart, Check, AlertCircle, Box, Loader2, Minus, Plus } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useCartStore } from "@/stores/useCartStore";
+import { useAuth } from "@/contexts/AuthContext";
+import { cn } from "@/lib/utils";
+import { wishlistApi } from "@/lib/api";
+import { toast } from "sonner";
+
+interface ProductCardProps {
+    product: {
+        id: number;
+        name: string;
+        image?: string;
+        image_url?: string;
+        brand?: string;
+        lowest_price?: number;
+        offers_count?: number;
+        stock_status?: 'in_stock' | 'low_stock' | 'out_of_stock';
+        default_offer_id?: number;
+    };
+    badge?: string;
+    className?: string;
+}
+
+export const ProductCard = React.memo(function ProductCard({ product, badge, className }: ProductCardProps) {
+    const [isWishlisted, setIsWishlisted] = useState(false);
+    const [isAddingToCart, setIsAddingToCart] = useState(false);
+    const [isTogglingWishlist, setIsTogglingWishlist] = useState(false);
+    const [showAddedFeedback, setShowAddedFeedback] = useState(false);
+    const [quantity, setQuantity] = useState(1);
+    const [imgError, setImgError] = useState(false);
+    const { addItem, setOpen } = useCartStore();
+    const { user } = useAuth();
+    const router = useRouter();
+
+    // Company users cannot buy
+    const canBuy = !user || user.role !== 'company';
+
+    const formatPrice = (price?: number) => {
+        if (!price) return '---';
+        return new Intl.NumberFormat('tr-TR', {
+            style: 'currency',
+            currency: 'TRY',
+        }).format(price);
+    };
+
+    // Normalize offers_count to handle undefined, null, 0, or "0"
+    const offersCount = typeof product.offers_count === 'number' ? product.offers_count : parseInt(product.offers_count as unknown as string) || 0;
+
+    // Determine stock status
+    const getStockStatus = () => {
+        if (product.stock_status === 'out_of_stock' || offersCount === 0) {
+            return { status: 'out_of_stock', label: 'Stokta Yok', color: 'text-red-500 bg-red-50' };
+        }
+        if (product.stock_status === 'low_stock' || offersCount <= 2) {
+            return { status: 'low_stock', label: 'Son Birimler', color: 'text-[#dc2626] bg-[#fef2f2] font-bold text-[10px]' };
+        }
+        return { status: 'in_stock', label: `${offersCount} satıcıdan`, color: 'text-[#be185d] bg-[#fdf2f8]' };
+    };
+
+    const stockInfo = getStockStatus();
+
+    const handleAddToCart = async (e: React.MouseEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        if (!product.default_offer_id || stockInfo.status === 'out_of_stock' || !canBuy) {
+            return;
+        }
+
+        setIsAddingToCart(true);
+        try {
+            await addItem(product.default_offer_id, quantity);
+            setShowAddedFeedback(true);
+            setQuantity(1); // Reset quantity after adding
+            setTimeout(() => {
+                setShowAddedFeedback(false);
+            }, 2000);
+        } catch (error) {
+            console.error('Failed to add to cart:', error);
+        } finally {
+            setIsAddingToCart(false);
+        }
+    };
+
+    const handleQuantityChange = (delta: number, e: React.MouseEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setQuantity(prev => Math.max(1, Math.min(99, prev + delta)));
+    };
+
+    const handleWishlist = async (e: React.MouseEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        // Check if user is logged in
+        if (!user) {
+            toast.error('Favorilere eklemek için giriş yapmalısınız.');
+            router.push('/login');
+            return;
+        }
+
+        if (isTogglingWishlist) return;
+
+        setIsTogglingWishlist(true);
+        try {
+            const response = await wishlistApi.toggle(product.id);
+            if (response.data) {
+                setIsWishlisted(response.data.in_wishlist);
+                toast.success(response.data.in_wishlist ? 'Favorilere eklendi' : 'Favorilerden çıkarıldı');
+            }
+        } catch (error) {
+            console.error('Failed to toggle wishlist:', error);
+            toast.error('Bir hata oluştu.');
+        } finally {
+            setIsTogglingWishlist(false);
+        }
+    };
+
+    return (
+        <div className={cn(
+            "group relative bg-white dark:bg-[#1a1a1a] rounded-[14px] border border-[#f0eceb] dark:border-[#2a2a2a]",
+            "hover:border-[1.5px] hover:border-[#f9a8d4] hover:-translate-y-1.5 hover:shadow-[0_16px_48px_rgba(190,24,93,0.10)]",
+            "transition-all duration-300 ease-[cubic-bezier(.4,0,.2,1)] flex flex-col h-full overflow-hidden",
+            className
+        )}>
+            {/* Image Area */}
+            <div className="relative aspect-square bg-[#faf8f6] dark:bg-[#222222] p-3.5 flex items-center justify-center overflow-hidden border-b border-[#f0eceb] dark:border-[#2a2a2a]">
+                <Link href={`/market/product/${product.id}`} className="absolute inset-0 z-10" />
+
+                {(product.image_url || product.image) && !imgError ? (
+                    <Image
+                        src={product.image_url || product.image || ''}
+                        alt={product.name}
+                        fill
+                        sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
+                        className="object-contain mix-blend-multiply dark:mix-blend-normal opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-300 rounded-[10px] p-4"
+                        onError={() => setImgError(true)}
+                    />
+                ) : (
+                    <div className="text-4xl grayscale opacity-50 group-hover:grayscale-0 group-hover:opacity-70 transition-all duration-300">💊</div>
+                )}
+
+                {/* Badge */}
+                {badge && (
+                    <span className="absolute top-3 left-3 px-2 py-1 bg-[#be185d] text-white text-[10px] uppercase font-bold tracking-wider rounded-full shadow-sm">
+                        {badge}
+                    </span>
+                )}
+
+
+                {/* Wishlist Button */}
+                <button
+                    onClick={handleWishlist}
+                    disabled={isTogglingWishlist}
+                    className={cn(
+                        "absolute top-3 right-3 z-20 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200",
+                        isWishlisted
+                            ? "bg-[#be185d] text-white shadow-sm"
+                            : "bg-white dark:bg-[#1a1a1a] text-[#9ca3af] opacity-0 group-hover:opacity-100 hover:bg-[#fdf2f8] dark:hover:bg-[#be185d]/20 hover:text-[#be185d] shadow-sm border border-[#f0eceb] dark:border-[#2a2a2a]",
+                        isTogglingWishlist && "opacity-50 cursor-not-allowed"
+                    )}
+                >
+                    {isTogglingWishlist ? (
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                    ) : (
+                        <Heart className={cn("w-4 h-4 transition-colors", isWishlisted && "fill-current")} />
+                    )}
+                </button>
+
+                {/* Quick Add to Cart with Quantity Selector - Shows on hover */}
+                {product.default_offer_id && stockInfo.status !== 'out_of_stock' && canBuy && (
+                    <div className={cn(
+                        "absolute bottom-3 left-1/2 -translate-x-1/2 z-20 flex items-center gap-1 transition-opacity duration-150",
+                        showAddedFeedback
+                            ? "opacity-100"
+                            : "opacity-0 group-hover:opacity-100"
+                    )}>
+                        {showAddedFeedback ? (
+                            <div className="flex items-center gap-2 px-4 py-2 rounded-[10px] font-bold text-sm bg-[#059669] text-white shadow-sm">
+                                <Check className="w-4 h-4" />
+                                <span>Eklendi!</span>
+                            </div>
+                        ) : (
+                            <>
+                                {/* Quantity Controls */}
+                                <div className="flex items-center bg-white/95 dark:bg-[#1a1a1a]/95 rounded-[10px] shadow-sm overflow-hidden border border-[#f0eceb] dark:border-[#2a2a2a]">
+                                    <button
+                                        onClick={(e) => handleQuantityChange(-1, e)}
+                                        disabled={quantity <= 1}
+                                        className="w-8 h-8 flex items-center justify-center text-[#1a1a1a] dark:text-[#d4d4d4] hover:bg-[#fdf2f8] dark:hover:bg-[#be185d]/20 disabled:opacity-50 transition-colors"
+                                    >
+                                        <Minus className="w-3 h-3" />
+                                    </button>
+                                    <span className="w-8 text-center text-sm font-semibold text-[#1a1a1a] dark:text-[#e5e5e5]">
+                                        {quantity}
+                                    </span>
+                                    <button
+                                        onClick={(e) => handleQuantityChange(1, e)}
+                                        disabled={quantity >= 99}
+                                        className="w-8 h-8 flex items-center justify-center text-[#1a1a1a] dark:text-[#d4d4d4] hover:bg-[#fdf2f8] dark:hover:bg-[#be185d]/20 disabled:opacity-50 transition-colors"
+                                    >
+                                        <Plus className="w-3 h-3" />
+                                    </button>
+                                </div>
+                                {/* Add Button */}
+                                <button
+                                    onClick={handleAddToCart}
+                                    disabled={isAddingToCart}
+                                    className="flex items-center gap-2 px-4 py-2 rounded-[10px] font-bold text-sm bg-[#be185d] text-white hover:bg-[#9d174d] shadow-sm transition-colors duration-150"
+                                >
+                                    {isAddingToCart ? (
+                                        <Loader2 className="w-4 h-4 animate-spin" />
+                                    ) : (
+                                        <ShoppingCart className="w-4 h-4" />
+                                    )}
+                                    <span>Ekle</span>
+                                </button>
+                            </>
+                        )}
+                    </div>
+                )}
+            </div>
+
+            {/* Content Area */}
+            <div className="p-4 flex flex-col flex-1">
+                {/* Brand */}
+                {product.brand && (
+                    <p className="text-[11px] font-extrabold text-[#be185d] dark:text-[#f472b6] mb-1 uppercase tracking-[0.8px]">
+                        {product.brand}
+                    </p>
+                )}
+
+                {/* Title */}
+                <Link
+                    href={`/market/product/${product.id}`}
+                    className="text-[13px] font-medium text-[#1a1a1a] dark:text-[#e5e5e5] line-clamp-2 leading-[1.45] h-10 mb-2 group-hover:text-[#be185d] dark:group-hover:text-[#f472b6] transition-colors"
+                    title={product.name}
+                >
+                    {product.name}
+                </Link>
+
+                {/* Stock Status Indicator */}
+                <div className={cn(
+                    "inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold w-fit mb-2",
+                    stockInfo.color
+                )}>
+                    {stockInfo.status === 'out_of_stock' ? (
+                        <AlertCircle className="w-3 h-3" />
+                    ) : stockInfo.status === 'low_stock' ? (
+                        <Box className="w-3 h-3" />
+                    ) : (
+                        <Check className="w-3 h-3" />
+                    )}
+                    {stockInfo.label}
+                </div>
+
+                {/* Price Section */}
+                <div className="mt-auto pt-4 flex items-center justify-between border-t border-[#f0eceb] dark:border-[#2a2a2a]">
+                    <div>
+                        <div className="flex items-baseline gap-1">
+                            <span className="text-xl font-black text-[#1a1a1a] dark:text-white">
+                                {formatPrice(product.lowest_price)}
+                            </span>
+                        </div>
+                    </div>
+
+                    {/* Action Button */}
+                    <Button
+                        size="icon"
+                        className={cn(
+                            "w-8 h-8 rounded-[10px] transition-all duration-200 shadow-sm",
+                            stockInfo.status === 'out_of_stock'
+                                ? "bg-[#f0eceb] dark:bg-[#2a2a2a] text-[#9ca3af] cursor-not-allowed"
+                                : "bg-[#be185d] text-white hover:bg-[#9d174d] group-hover:scale-105"
+                        )}
+                        asChild={stockInfo.status !== 'out_of_stock'}
+                        disabled={stockInfo.status === 'out_of_stock'}
+                    >
+                        {stockInfo.status !== 'out_of_stock' ? (
+                            <Link href={`/market/product/${product.id}`}>
+                                <ArrowRight className="w-4 h-4" />
+                            </Link>
+                        ) : (
+                            <span><ArrowRight className="w-4 h-4" /></span>
+                        )}
+                    </Button>
+                </div>
+            </div>
+        </div>
+    );
+});
