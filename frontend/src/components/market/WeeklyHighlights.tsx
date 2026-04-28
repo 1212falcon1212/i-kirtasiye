@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { Flame, Zap } from 'lucide-react';
 
 const formatTL = (n: number) =>
@@ -10,6 +11,7 @@ interface MiniProduct {
     id: number | string;
     name: string;
     brand?: string;
+    image?: string;
     lowest?: number;
     href?: string;
 }
@@ -105,8 +107,30 @@ export function WeeklyHighlights({ season = FALLBACK, weekly = FALLBACK }: Weekl
                                         href={p.href || `/market/product/${p.id}`}
                                         className="flex flex-col gap-1.5 p-2 rounded-md transition-colors hover:bg-bg-muted"
                                     >
-                                        <div className="ph-image" style={{ aspectRatio: '1 / 1', fontSize: 9 }}>
-                                            {p.brand}
+                                        <div
+                                            className="relative overflow-hidden"
+                                            style={{
+                                                aspectRatio: '1 / 1',
+                                                background: 'var(--bg-muted)',
+                                                borderRadius: 6,
+                                            }}
+                                        >
+                                            {p.image ? (
+                                                <Image
+                                                    src={p.image}
+                                                    alt={p.name}
+                                                    fill
+                                                    sizes="(max-width:1024px) 30vw, 200px"
+                                                    className="object-contain p-2"
+                                                />
+                                            ) : (
+                                                <div
+                                                    className="ph-image w-full h-full flex items-center justify-center"
+                                                    style={{ fontSize: 9 }}
+                                                >
+                                                    {p.brand}
+                                                </div>
+                                            )}
                                         </div>
                                         <div
                                             className="text-xs font-medium leading-tight line-clamp-2"
