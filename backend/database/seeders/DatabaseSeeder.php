@@ -12,21 +12,17 @@ class DatabaseSeeder extends Seeder
         $this->command->newLine();
 
         $this->call([
-            // Şehir/ilçe verileri (sabit referans, korunur)
+            // Şehir/ilçe verileri (sabit referans)
             TurkeyLocationsSeeder::class,
-            // Kargo desi tablosu (sabit referans, korunur)
+            // Kargo desi tablosu (sabit referans)
             ShippingDesiSeeder::class,
-            // Kategoriler (12 ana + alt kategori)
-            CategorySeeder::class,
-            // Markalar
-            BrandSeeder::class,
             // Onaylı vergi numaraları
             VergiNoWhitelistSeeder::class,
             // Demo kullanıcılar (admin + 3 kırtasiyeci + 4 tedarikçi)
             KirtasiyeUserSeeder::class,
-            // Demo ürünler (~40 adet)
-            KirtasiyeProductSeeder::class,
-            // Her ürün için 2-4 teklif
+            // Nezih kataloğu: 9 ana kategori + 467 alt path + 1060 marka + 12,799 ürün
+            NezihCatalogSeeder::class,
+            // Her ürüne 1-3 satıcıdan teklif
             KirtasiyeOfferSeeder::class,
             // Demo siparişler (farklı durumlarda)
             KirtasiyeOrderSeeder::class,
