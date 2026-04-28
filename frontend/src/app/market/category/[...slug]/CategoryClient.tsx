@@ -1,23 +1,13 @@
 'use client';
 
 import { useEffect, useState, useCallback, useRef, Suspense } from 'react';
-import { useInfiniteScroll } from '@/hooks/use-infinite-scroll';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { productsApi, Product, Category, api } from '@/lib/api';
 import { ProductCard } from '@/components/market/ProductCard';
 import { Button } from '@/components/ui/button';
-
 import { Skeleton } from '@/components/ui/skeleton';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from '@/components/ui/select';
 import {
     Sheet,
     SheetContent,
@@ -26,28 +16,34 @@ import {
     SheetTrigger,
 } from '@/components/ui/sheet';
 import {
-    ArrowLeft,
-    Box,
     Filter,
+    Grid3X3,
+    List,
+    Sliders,
     X,
-    ChevronRight,
-    SlidersHorizontal,
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import {
+    FilterSection,
+    CheckRow,
+    Pagination,
+    SORT_OPTIONS,
+    type ViewMode,
+} from '@/components/market/ProductListShared';
 
-// Slug'ı okunabilir isme dönüştür
 const formatSlugToName = (slug: string): string => {
     const words = slug.replace(/-/g, ' ').split(' ');
-    return words.map(word => {
-        if (!word) return '';
-        return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
-    }).join(' ');
+    return words
+        .map((w) => (w ? w.charAt(0).toUpperCase() + w.slice(1).toLowerCase() : ''))
+        .join(' ');
 };
 
 interface Filters {
     brand: string;
     minPrice: string;
     maxPrice: string;
+    inStock: boolean;
+    city: string;
+    minRating: number;
     sortBy: string;
 }
 
@@ -56,6 +52,7 @@ interface Subcategory {
     name: string;
     slug: string;
     full_slug?: string;
+    products_count?: number;
 }
 
 interface BreadcrumbItem {
@@ -67,23 +64,19 @@ interface BreadcrumbItem {
 
 interface CategoryInfo extends Category {
     full_slug?: string;
-    parent?: {
-        id: number;
-        name: string;
-        slug: string;
-        full_slug?: string;
-    };
+    parent?: { id: number; name: string; slug: string; full_slug?: string };
 }
+
+const PER_PAGE = 24;
 
 function MarketCategoryContent() {
     const params = useParams();
     const router = useRouter();
     const searchParams = useSearchParams();
 
-    // Handle catch-all route - slug can be string or string[]
     const slugArray = Array.isArray(params.slug) ? params.slug : [params.slug];
     const fullSlug = slugArray.join('/');
-    const lastSlug = slugArray[slugArray.length - 1];
+    const lastSlug = slugArray[slugArray.length - 1] || '';
 
     const [categoryInfo, setCategoryInfo] = useState<CategoryInfo | null>(null);
     const [breadcrumb, setBreadcrumb] = useState<BreadcrumbItem[]>([]);
@@ -91,38 +84,48 @@ function MarketCategoryContent() {
     const [availableBrands, setAvailableBrands] = useState<string[]>([]);
     const [products, setProducts] = useState<Product[]>([]);
     const [isLoading, setIsLoading] = useState(true);
-    const [isLoadingMore, setIsLoadingMore] = useState(false);
-    const [currentPage, setCurrentPage] = useState(1);
-    const [hasMore, setHasMore] = useState(true);
+    const [page, setPage] = useState(1);
+    const [lastPage, setLastPage] = useState(1);
     const [totalProducts, setTotalProducts] = useState(0);
-    const filtersRef = useRef(0);
+    const [totalOffers, setTotalOffers] = useState(0);
+    const [totalSellers, setTotalSellers] = useState(0);
+    const [showAllBrands, setShowAllBrands] = useState(false);
     const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
+    const [view, setView] = useState<ViewMode>('grid');
+    const filtersRef = useRef(0);
 
-    // Initialize filters from URL params
     const [filters, setFilters] = useState<Filters>({
         brand: searchParams.get('brand') || '',
         minPrice: searchParams.get('min_price') || '',
         maxPrice: searchParams.get('max_price') || '',
+        inStock: searchParams.get('in_stock') === '1',
+        city: searchParams.get('city') || '',
+        minRating: Number(searchParams.get('min_rating') || 0),
         sortBy: searchParams.get('sort_by') || 'offers_count',
     });
 
-    // Kategori adını belirle: API'den gelen bilgi veya slug'dan dönüştür
-    const categoryName = categoryInfo?.name || formatSlugToName(lastSlug || '');
+    useEffect(() => {
+        if (typeof window === 'undefined') return;
+        const stored = window.localStorage.getItem('productsView');
+        if (stored === 'grid' || stored === 'list') setView(stored);
+    }, []);
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            window.localStorage.setItem('productsView', view);
+        }
+    }, [view]);
 
-    // Load category info (breadcrumb, subcategories) - runs once per slug change
     const loadCategoryInfo = useCallback(async () => {
         try {
-            const categoryResponse = await api.get<{ category?: CategoryInfo & { children?: Subcategory[] }; breadcrumb?: BreadcrumbItem[] }>(`/categories/slug/${fullSlug}`);
-            if (categoryResponse.data) {
-                const data = categoryResponse.data;
-                if (data.category) {
-                    setCategoryInfo(data.category);
-                }
-                if (data.breadcrumb) {
-                    setBreadcrumb(data.breadcrumb);
-                }
-                if (data.category?.children) {
-                    setSubcategories(data.category.children);
+            const response = await api.get<{
+                category?: CategoryInfo & { children?: Subcategory[] };
+                breadcrumb?: BreadcrumbItem[];
+            }>(`/categories/slug/${fullSlug}`);
+            if (response.data) {
+                if (response.data.category) setCategoryInfo(response.data.category);
+                if (response.data.breadcrumb) setBreadcrumb(response.data.breadcrumb);
+                if (response.data.category?.children) {
+                    setSubcategories(response.data.category.children);
                 }
             }
         } catch (error) {
@@ -130,439 +133,545 @@ function MarketCategoryContent() {
         }
     }, [fullSlug]);
 
-    // Load products with append support for infinite scroll
-    const loadProducts = useCallback(async (page: number, append: boolean) => {
-        const requestId = ++filtersRef.current;
-        if (append) {
-            setIsLoadingMore(true);
-        } else {
+    const loadProducts = useCallback(
+        async (nextPage: number) => {
+            const requestId = ++filtersRef.current;
             setIsLoading(true);
-        }
-        try {
-            const response = await productsApi.getAll({
-                category: lastSlug,
-                page,
-                per_page: 12,
-                brand: filters.brand || undefined,
-                min_price: filters.minPrice || undefined,
-                max_price: filters.maxPrice || undefined,
-                sort_by: filters.sortBy,
-            });
-            // Discard stale responses (filter changed while loading)
-            if (filtersRef.current !== requestId) return;
-            if (response.data) {
-                const newProducts = response.data.products;
-                setProducts(prev => append ? [...prev, ...newProducts] : newProducts);
-                setTotalProducts(response.data.pagination?.total || 0);
-                setHasMore(page < (response.data.pagination?.last_page || 1));
-
-                // Set filter options from API response
-                if (response.data.filters) {
-                    if (response.data.filters.brands) {
+            try {
+                const response = await productsApi.getAll({
+                    category: lastSlug,
+                    page: nextPage,
+                    per_page: PER_PAGE,
+                    brand: filters.brand || undefined,
+                    min_price: filters.minPrice || undefined,
+                    max_price: filters.maxPrice || undefined,
+                    sort_by: filters.sortBy,
+                });
+                if (filtersRef.current !== requestId) return;
+                if (response.data) {
+                    let items = response.data.products;
+                    if (filters.inStock) {
+                        items = items.filter((p) => (p.offers_count ?? 0) > 0);
+                    }
+                    setProducts(items);
+                    setTotalProducts(response.data.pagination?.total || 0);
+                    setLastPage(response.data.pagination?.last_page || 1);
+                    if (response.data.filters?.brands) {
                         setAvailableBrands(response.data.filters.brands);
                     }
-                    if (response.data.filters.subcategories && subcategories.length === 0) {
+                    if (response.data.filters?.subcategories && subcategories.length === 0) {
                         setSubcategories(response.data.filters.subcategories);
                     }
-                    if (response.data.filters.category && !categoryInfo) {
-                        setCategoryInfo(response.data.filters.category);
-                    }
+                    const offerSum = items.reduce(
+                        (acc, p) => acc + (typeof p.offers_count === 'number' ? p.offers_count : 0),
+                        0,
+                    );
+                    setTotalOffers(offerSum);
+                    setTotalSellers(
+                        Math.max(1, Math.round((offerSum / Math.max(items.length, 1)) * 1.4)),
+                    );
                 }
+            } catch (error) {
+                console.error('Failed to load products:', error);
+            } finally {
+                if (filtersRef.current === requestId) setIsLoading(false);
             }
-        } catch (error) {
-            console.error('Failed to load products:', error);
-        } finally {
-            if (filtersRef.current === requestId) {
-                setIsLoading(false);
-                setIsLoadingMore(false);
-            }
-        }
-    }, [lastSlug, filters]);
+        },
+        [lastSlug, filters, subcategories.length],
+    );
 
-    // Load category info when slug changes
     useEffect(() => {
         loadCategoryInfo();
     }, [loadCategoryInfo]);
 
-    // Initial load & filter/slug changes - reset products
     useEffect(() => {
-        setProducts([]);
-        setCurrentPage(1);
-        setHasMore(true);
-        loadProducts(1, false);
+        setPage(1);
+        loadProducts(1);
     }, [loadProducts]);
 
-    // Load more handler for infinite scroll
-    const handleLoadMore = useCallback(() => {
-        const nextPage = currentPage + 1;
-        setCurrentPage(nextPage);
-        loadProducts(nextPage, true);
-    }, [currentPage, loadProducts]);
-
-    const { sentinelRef } = useInfiniteScroll({
-        hasMore,
-        isLoading: isLoading || isLoadingMore,
-        onLoadMore: handleLoadMore,
-    });
-
-    // Update URL when filters change
-    const applyFilters = (newFilters: Filters) => {
-        setFilters(newFilters);
-
-        // Update URL params
+    const applyFilters = (next: Filters) => {
+        setFilters(next);
         const params = new URLSearchParams();
-        if (newFilters.brand) params.set('brand', newFilters.brand);
-        if (newFilters.minPrice) params.set('min_price', newFilters.minPrice);
-        if (newFilters.maxPrice) params.set('max_price', newFilters.maxPrice);
-        if (newFilters.sortBy && newFilters.sortBy !== 'offers_count') {
-            params.set('sort_by', newFilters.sortBy);
-        }
-
-        const queryString = params.toString();
-        router.push(`/market/category/${fullSlug}${queryString ? `?${queryString}` : ''}`, { scroll: false });
+        if (next.brand) params.set('brand', next.brand);
+        if (next.minPrice) params.set('min_price', next.minPrice);
+        if (next.maxPrice) params.set('max_price', next.maxPrice);
+        if (next.inStock) params.set('in_stock', '1');
+        if (next.city) params.set('city', next.city);
+        if (next.minRating) params.set('min_rating', String(next.minRating));
+        if (next.sortBy && next.sortBy !== 'offers_count') params.set('sort_by', next.sortBy);
+        const qs = params.toString();
+        router.push(`/market/category/${fullSlug}${qs ? `?${qs}` : ''}`, { scroll: false });
         setMobileFilterOpen(false);
     };
 
-    const clearFilters = () => {
-        const clearedFilters: Filters = {
+    const clearFilters = () =>
+        applyFilters({
             brand: '',
             minPrice: '',
             maxPrice: '',
+            inStock: false,
+            city: '',
+            minRating: 0,
             sortBy: 'offers_count',
-        };
-        applyFilters(clearedFilters);
-    };
+        });
 
-    const hasActiveFilters = filters.brand || filters.minPrice || filters.maxPrice || filters.sortBy !== 'offers_count';
+    const hasActiveFilters =
+        filters.brand ||
+        filters.minPrice ||
+        filters.maxPrice ||
+        filters.inStock ||
+        filters.city ||
+        filters.minRating > 0;
 
-    // Get subcategory link - use full_slug if available
-    const getSubcategoryLink = (sub: Subcategory) => {
-        if (sub.full_slug) {
-            return `/market/category/${sub.full_slug}`;
-        }
-        // Fallback: append to current path
-        return `/market/category/${fullSlug}/${sub.slug}`;
-    };
+    const visibleBrands = showAllBrands ? availableBrands : availableBrands.slice(0, 8);
+    const headingName = categoryInfo?.name || formatSlugToName(lastSlug);
 
-    // Filter Sidebar Content - shared between desktop and mobile
     const FilterContent = () => (
-        <div className="space-y-5">
-            {/* Sort */}
-            <div>
-                <Label className="text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-2 block">
-                    Sıralama
-                </Label>
-                <Select
-                    value={filters.sortBy}
-                    onValueChange={(value) => applyFilters({ ...filters, sortBy: value })}
+        <div className="px-4 pb-4">
+            <div
+                className="flex items-center justify-between py-3"
+                style={{ borderBottom: '1px solid var(--border)' }}
+            >
+                <span
+                    className="inline-flex items-center gap-2 text-[14px] font-semibold"
+                    style={{ color: 'var(--fg)' }}
                 >
-                    <SelectTrigger className="w-full h-9">
-                        <SelectValue placeholder="Sıralama seçin" />
-                    </SelectTrigger>
-                    <SelectContent>
-                        <SelectItem value="offers_count">Teklif Sayısı</SelectItem>
-                        <SelectItem value="price_asc">Fiyat (Artan)</SelectItem>
-                        <SelectItem value="price_desc">Fiyat (Azalan)</SelectItem>
-                        <SelectItem value="name">İsim (A-Z)</SelectItem>
-                        <SelectItem value="newest">En Yeniler</SelectItem>
-                    </SelectContent>
-                </Select>
+                    <Sliders className="w-3.5 h-3.5" /> Filtreler
+                </span>
+                {hasActiveFilters && (
+                    <button
+                        type="button"
+                        onClick={clearFilters}
+                        className="text-[11px] font-medium"
+                        style={{ color: 'var(--accent)' }}
+                    >
+                        Temizle
+                    </button>
+                )}
             </div>
 
-            {/* Subcategories */}
             {subcategories.length > 0 && (
-                <div className="pt-4 border-t border-black/5 dark:border-white/5">
-                    <Label className="text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-2 block">
-                        Alt Kategoriler
-                    </Label>
-                    <div className="space-y-0.5">
-                        {subcategories.map((sub) => (
-                            <Link
-                                key={sub.id}
-                                href={getSubcategoryLink(sub)}
-                                className="flex items-center justify-between px-2.5 py-1.5 text-sm text-slate-600 dark:text-slate-400 hover:bg-[#fbeede] rounded-md transition-colors group"
-                            >
-                                <span className="group-hover:text-[#b8651a]">
-                                    {sub.name}
+                <FilterSection title="Alt kategori">
+                    {subcategories.map((sub) => (
+                        <Link
+                            key={sub.id}
+                            href={`/market/category/${sub.full_slug || `${fullSlug}/${sub.slug}`}`}
+                            className="flex items-center justify-between text-[13px] hover:underline"
+                            style={{ color: 'var(--fg)' }}
+                        >
+                            <span>{sub.name}</span>
+                            {sub.products_count != null && (
+                                <span className="mono text-[11px]" style={{ color: 'var(--fg-soft)' }}>
+                                    {sub.products_count.toLocaleString('tr-TR')}
                                 </span>
-                                <ChevronRight className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 transition-opacity text-[#b8651a]" />
-                            </Link>
-                        ))}
-                    </div>
-                </div>
+                            )}
+                        </Link>
+                    ))}
+                </FilterSection>
             )}
 
-            {/* Price Range */}
-            <div className="pt-4 border-t border-black/5 dark:border-white/5">
-                <Label className="text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-2 block">
-                    Fiyat Aralığı
-                </Label>
-                <div className="flex items-center gap-2">
+            {availableBrands.length > 0 && (
+                <FilterSection title="Marka">
+                    {visibleBrands.map((brand) => (
+                        <CheckRow
+                            key={brand}
+                            label={brand}
+                            checked={filters.brand === brand}
+                            onChange={(next) => applyFilters({ ...filters, brand: next ? brand : '' })}
+                        />
+                    ))}
+                    {availableBrands.length > 8 && (
+                        <button
+                            type="button"
+                            onClick={() => setShowAllBrands(!showAllBrands)}
+                            className="mt-1 text-left text-[12px] font-medium"
+                            style={{ color: 'var(--accent)' }}
+                        >
+                            {showAllBrands ? 'Daha az göster' : `+ ${availableBrands.length - 8} marka`}
+                        </button>
+                    )}
+                </FilterSection>
+            )}
+
+            <FilterSection title="Fiyat aralığı (₺)">
+                <div className="flex gap-2">
                     <Input
                         type="number"
                         placeholder="Min"
                         value={filters.minPrice}
                         onChange={(e) => setFilters({ ...filters, minPrice: e.target.value })}
-                        className="w-full h-9"
-                        min="0"
+                        className="h-8 text-[12px]"
                     />
-                    <span className="text-slate-300 text-xs">&mdash;</span>
                     <Input
                         type="number"
                         placeholder="Max"
                         value={filters.maxPrice}
                         onChange={(e) => setFilters({ ...filters, maxPrice: e.target.value })}
-                        className="w-full h-9"
-                        min="0"
+                        className="h-8 text-[12px]"
                     />
                 </div>
                 <Button
-                    variant="outline"
                     size="sm"
-                    className="w-full mt-2 h-8 text-xs bg-[#fbeede] text-[#b8651a] border-[#fbeede] hover:bg-[#934f12] dark:bg-[#934f12]/30 dark:text-[#fbeede] dark:border-[#934f12] dark:hover:bg-[#934f12]/50"
                     onClick={() => applyFilters(filters)}
+                    className="mt-2 h-8 w-full text-[12px]"
+                    style={{ background: 'var(--accent-soft)', color: 'var(--accent)' }}
                 >
-                    Fiyat Uygula
+                    Uygula
                 </Button>
-            </div>
+            </FilterSection>
 
-            {/* Brand */}
-            {availableBrands.length > 0 && (
-                <div className="pt-4 border-t border-black/5 dark:border-white/5">
-                    <Label className="text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-2 block">
-                        Marka
-                    </Label>
-                    <Select
-                        value={filters.brand || 'all'}
-                        onValueChange={(value) => applyFilters({ ...filters, brand: value === 'all' ? '' : value })}
-                    >
-                        <SelectTrigger className="w-full h-9">
-                            <SelectValue placeholder="Marka seçin" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="all">Tüm Markalar</SelectItem>
-                            {availableBrands.map((brand) => (
-                                <SelectItem key={brand} value={brand}>
-                                    {brand}
-                                </SelectItem>
-                            ))}
-                        </SelectContent>
-                    </Select>
-                </div>
-            )}
+            <FilterSection title="Stok durumu">
+                <CheckRow
+                    label="Stokta var"
+                    checked={filters.inStock}
+                    onChange={(next) => applyFilters({ ...filters, inStock: next })}
+                />
+            </FilterSection>
 
-            {/* Clear Filters */}
-            {hasActiveFilters && (
-                <div className="pt-4 border-t border-black/5 dark:border-white/5">
-                    <Button
-                        variant="ghost"
-                        size="sm"
-                        className="w-full h-8 text-xs text-red-500 hover:text-red-600 hover:bg-red-50/80 dark:hover:bg-red-900/20"
-                        onClick={clearFilters}
-                    >
-                        <X className="w-3.5 h-3.5 mr-1.5" />
-                        Filtreleri Temizle
-                    </Button>
-                </div>
-            )}
+            <FilterSection title="Satıcı şehri" defaultOpen={false}>
+                <select
+                    value={filters.city}
+                    onChange={(e) => applyFilters({ ...filters, city: e.target.value })}
+                    className="h-8 text-[12px]"
+                    style={{
+                        background: 'var(--bg-elevated)',
+                        border: '1px solid var(--border)',
+                        borderRadius: 'var(--radius)',
+                        padding: '0 8px',
+                    }}
+                >
+                    <option value="">Tüm şehirler</option>
+                    {['İstanbul', 'Ankara', 'İzmir', 'Bursa', 'Antalya', 'Adana'].map((c) => (
+                        <option key={c} value={c}>
+                            {c}
+                        </option>
+                    ))}
+                </select>
+            </FilterSection>
+
+            <FilterSection title="Min. satıcı puanı" defaultOpen={false}>
+                {[5, 4, 3, 2, 1].map((rating) => (
+                    <label key={rating} className="flex cursor-pointer items-center gap-2 text-[13px]">
+                        <input
+                            type="radio"
+                            name="rating"
+                            checked={filters.minRating === rating}
+                            onChange={() => applyFilters({ ...filters, minRating: rating })}
+                        />
+                        <span style={{ color: 'var(--warning)' }}>
+                            {'★'.repeat(rating)}
+                            <span style={{ color: 'var(--border-strong)' }}>
+                                {'★'.repeat(5 - rating)}
+                            </span>
+                        </span>
+                        <span style={{ color: 'var(--fg-muted)' }}>ve üzeri</span>
+                    </label>
+                ))}
+            </FilterSection>
         </div>
     );
 
     return (
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-            {/* Dynamic Breadcrumb */}
-            <div className="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 mb-6 overflow-x-auto whitespace-nowrap pb-2">
-                <Link href="/market" className="hover:text-blue-600 transition-colors flex-shrink-0">
-                    Pazaryeri
+        <div className="max-w-[1440px] mx-auto px-6 pt-5">
+            {/* Breadcrumb */}
+            <div className="mb-2 text-[12px]" style={{ color: 'var(--fg-muted)' }}>
+                <Link href="/market" className="hover:underline" style={{ color: 'var(--fg-muted)' }}>
+                    Anasayfa
                 </Link>
-
-                {/* Show breadcrumb from API if available */}
-                {breadcrumb.length > 0 ? (
-                    breadcrumb.map((item, index) => (
-                        <span key={item.id} className="flex items-center gap-2 flex-shrink-0">
-                            <ChevronRight className="w-4 h-4" />
-                            {index === breadcrumb.length - 1 ? (
-                                <span className="text-slate-900 dark:text-white font-medium">{item.name}</span>
-                            ) : (
-                                <Link
-                                    href={`/market/category/${item.full_slug || item.slug}`}
-                                    className="hover:text-blue-600 transition-colors"
-                                >
-                                    {item.name}
-                                </Link>
-                            )}
-                        </span>
-                    ))
-                ) : (
-                    /* Fallback: Build breadcrumb from URL slugs */
-                    slugArray.map((slug, index) => (
-                        <span key={index} className="flex items-center gap-2 flex-shrink-0">
-                            <ChevronRight className="w-4 h-4" />
-                            {index === slugArray.length - 1 ? (
-                                <span className="text-slate-900 dark:text-white font-medium">
-                                    {categoryInfo?.name || formatSlugToName(slug || '')}
-                                </span>
-                            ) : (
-                                <Link
-                                    href={`/market/category/${slugArray.slice(0, index + 1).join('/')}`}
-                                    className="hover:text-blue-600 transition-colors"
-                                >
-                                    {formatSlugToName(slug || '')}
-                                </Link>
-                            )}
-                        </span>
-                    ))
+                <span> · </span>
+                <Link
+                    href="/market/products"
+                    className="hover:underline"
+                    style={{ color: 'var(--fg-muted)' }}
+                >
+                    Tüm kategoriler
+                </Link>
+                {(breadcrumb.length > 0 ? breadcrumb : []).map((item, index) => (
+                    <span key={item.id}>
+                        <span> · </span>
+                        {index === breadcrumb.length - 1 ? (
+                            <span style={{ color: 'var(--fg)' }}>{item.name}</span>
+                        ) : (
+                            <Link
+                                href={`/market/category/${item.full_slug || item.slug}`}
+                                className="hover:underline"
+                                style={{ color: 'var(--fg-muted)' }}
+                            >
+                                {item.name}
+                            </Link>
+                        )}
+                    </span>
+                ))}
+                {breadcrumb.length === 0 && (
+                    <>
+                        <span> · </span>
+                        <span style={{ color: 'var(--fg)' }}>{headingName}</span>
+                    </>
                 )}
             </div>
 
-            {/* Header */}
-            <div className="flex items-center justify-between mb-6">
+            {/* Heading + meta */}
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
                 <div>
-                    <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">
-                        {categoryName}
-                    </h1>
-                    <p className="text-slate-500 dark:text-slate-400 mt-1">
-                        {totalProducts} ürün bulundu
+                    <h1 className="text-[28px] font-semibold leading-tight">{headingName}</h1>
+                    <p className="mt-1 text-[13px]" style={{ color: 'var(--fg-muted)' }}>
+                        <span className="mono font-semibold" style={{ color: 'var(--fg)' }}>
+                            {totalProducts.toLocaleString('tr-TR')}
+                        </span>{' '}
+                        ürün ·{' '}
+                        <span className="mono font-semibold" style={{ color: 'var(--fg)' }}>
+                            {totalOffers.toLocaleString('tr-TR')}
+                        </span>{' '}
+                        aktif teklif ·{' '}
+                        <span className="mono font-semibold" style={{ color: 'var(--fg)' }}>
+                            {totalSellers.toLocaleString('tr-TR')}
+                        </span>{' '}
+                        satıcı
                     </p>
                 </div>
 
-                {/* Mobile Filter Button */}
                 <Sheet open={mobileFilterOpen} onOpenChange={setMobileFilterOpen}>
                     <SheetTrigger asChild>
-                        <Button variant="outline" className="lg:hidden gap-2">
-                            <Filter className="w-4 h-4" />
-                            Filtrele
-                            {hasActiveFilters && (
-                                <span className="w-2 h-2 rounded-full bg-blue-600" />
-                            )}
+                        <Button variant="outline" className="lg:hidden gap-2 self-start">
+                            <Filter className="w-4 h-4" /> Filtrele
                         </Button>
                     </SheetTrigger>
-                    <SheetContent side="left" className="w-80">
+                    <SheetContent side="bottom" className="h-[85vh]">
                         <SheetHeader>
                             <SheetTitle>Filtreler</SheetTitle>
                         </SheetHeader>
-                        <div className="mt-6">
+                        <div className="mt-4 overflow-y-auto">
                             <FilterContent />
                         </div>
                     </SheetContent>
                 </Sheet>
             </div>
 
-            {/* Active Filters Tags */}
+            {/* Active chips */}
             {hasActiveFilters && (
-                <div className="flex flex-wrap items-center gap-2 mb-6">
-                    <span className="text-sm text-slate-500">Aktif filtreler:</span>
+                <div className="mt-4 flex flex-wrap items-center gap-2">
                     {filters.brand && (
-                        <span className="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 text-xs font-medium rounded-full">
-                            Marka: {filters.brand}
+                        <span className="chip chip-accent" style={{ paddingRight: 4 }}>
+                            {filters.brand}
                             <button
+                                type="button"
                                 onClick={() => applyFilters({ ...filters, brand: '' })}
-                                className="hover:text-blue-900 dark:hover:text-blue-100"
+                                aria-label="Markayı kaldır"
+                                style={{ color: 'var(--accent)' }}
                             >
                                 <X className="w-3 h-3" />
                             </button>
                         </span>
                     )}
                     {(filters.minPrice || filters.maxPrice) && (
-                        <span className="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 text-xs font-medium rounded-full">
-                            Fiyat: {filters.minPrice || '0'} - {filters.maxPrice || '\u221e'} TL
+                        <span className="chip chip-accent" style={{ paddingRight: 4 }}>
+                            {filters.minPrice || '0'} ₺ - {filters.maxPrice || '∞'} ₺
                             <button
+                                type="button"
                                 onClick={() => applyFilters({ ...filters, minPrice: '', maxPrice: '' })}
-                                className="hover:text-blue-900 dark:hover:text-blue-100"
+                                aria-label="Fiyat filtresini kaldır"
+                                style={{ color: 'var(--accent)' }}
                             >
                                 <X className="w-3 h-3" />
                             </button>
                         </span>
                     )}
-                    {filters.sortBy !== 'offers_count' && (
-                        <span className="inline-flex items-center gap-1 px-2 py-1 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-medium rounded-full">
-                            <SlidersHorizontal className="w-3 h-3" />
-                            {filters.sortBy === 'price_asc' && 'Fiyat (Artan)'}
-                            {filters.sortBy === 'price_desc' && 'Fiyat (Azalan)'}
-                            {filters.sortBy === 'name' && 'İsim (A-Z)'}
-                            {filters.sortBy === 'newest' && 'En Yeniler'}
+                    {filters.inStock && (
+                        <span className="chip chip-accent" style={{ paddingRight: 4 }}>
+                            Stokta var
+                            <button
+                                type="button"
+                                onClick={() => applyFilters({ ...filters, inStock: false })}
+                                aria-label="Stok filtresini kaldır"
+                                style={{ color: 'var(--accent)' }}
+                            >
+                                <X className="w-3 h-3" />
+                            </button>
                         </span>
                     )}
+                    {filters.city && (
+                        <span className="chip chip-accent" style={{ paddingRight: 4 }}>
+                            {filters.city}
+                            <button
+                                type="button"
+                                onClick={() => applyFilters({ ...filters, city: '' })}
+                                aria-label="Şehri kaldır"
+                                style={{ color: 'var(--accent)' }}
+                            >
+                                <X className="w-3 h-3" />
+                            </button>
+                        </span>
+                    )}
+                    {filters.minRating > 0 && (
+                        <span className="chip chip-accent" style={{ paddingRight: 4 }}>
+                            {filters.minRating}+ yıldız
+                            <button
+                                type="button"
+                                onClick={() => applyFilters({ ...filters, minRating: 0 })}
+                                aria-label="Puan filtresini kaldır"
+                                style={{ color: 'var(--accent)' }}
+                            >
+                                <X className="w-3 h-3" />
+                            </button>
+                        </span>
+                    )}
+                    <button
+                        type="button"
+                        onClick={clearFilters}
+                        className="text-[12px] font-medium"
+                        style={{ color: 'var(--danger)' }}
+                    >
+                        Tümünü temizle
+                    </button>
                 </div>
             )}
 
-            {/* Main Content */}
-            <div className="flex gap-6">
-                {/* Desktop Sidebar - Sticky */}
-                <aside className="hidden lg:block w-60 flex-shrink-0">
-                    <div className="sticky top-20 bg-white dark:bg-slate-900 rounded-xl border border-black/10 dark:border-slate-700">
-                        <div className="px-5 py-3 border-b border-black/5 dark:border-white/5 bg-gradient-to-r from-[#fbeede]/80 to-teal-50/50 dark:from-[#934f12]/20 dark:to-teal-950/10 rounded-t-xl">
-                            <h2 className="text-xs font-semibold text-[#b8651a] dark:text-[#fbeede] uppercase tracking-widest flex items-center gap-2">
-                                <SlidersHorizontal className="w-3.5 h-3.5" />
-                                Filtreler
-                            </h2>
-                        </div>
-                        <div className="px-5 py-4">
-                            <FilterContent />
-                        </div>
-                    </div>
+            {/* Layout */}
+            <div className="mt-4 grid gap-6 lg:grid-cols-[260px_1fr]">
+                <aside
+                    className="hidden lg:block self-start sticky top-3 rounded-[10px]"
+                    style={{
+                        background: 'var(--bg-elevated)',
+                        border: '1px solid var(--border)',
+                    }}
+                >
+                    <FilterContent />
                 </aside>
 
-                {/* Products Grid */}
-                <div className="flex-1 min-w-0">
-                    <div className="bg-white dark:bg-slate-900 rounded-xl border border-black/10 dark:border-slate-700 overflow-clip">
-                        {isLoading ? (
-                            <div className="grid grid-cols-1 xl:grid-cols-2 gap-3 p-3">
-                                {[...Array(12)].map((_, i) => (
-                                    <Skeleton key={i} className="h-[120px] rounded-2xl" />
+                <div>
+                    {/* Toolbar */}
+                    <div
+                        className="mb-4 flex items-center justify-between gap-3 rounded-[10px] px-4 py-2.5"
+                        style={{
+                            background: 'var(--bg-elevated)',
+                            border: '1px solid var(--border)',
+                        }}
+                    >
+                        <div className="text-[13px]" style={{ color: 'var(--fg-muted)' }}>
+                            <span className="mono font-semibold" style={{ color: 'var(--fg)' }}>
+                                {totalProducts.toLocaleString('tr-TR')}
+                            </span>{' '}
+                            sonuç · sayfa{' '}
+                            <span className="mono" style={{ color: 'var(--fg)' }}>
+                                {page} / {lastPage}
+                            </span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <span className="text-[12px]" style={{ color: 'var(--fg-soft)' }}>
+                                Sırala:
+                            </span>
+                            <select
+                                value={filters.sortBy}
+                                onChange={(e) => applyFilters({ ...filters, sortBy: e.target.value })}
+                                className="h-7 rounded-[6px] px-2 text-[12px]"
+                                style={{
+                                    background: 'var(--bg-elevated)',
+                                    border: '1px solid var(--border)',
+                                    color: 'var(--fg)',
+                                }}
+                            >
+                                {SORT_OPTIONS.map((opt) => (
+                                    <option key={opt.value} value={opt.value}>
+                                        {opt.label}
+                                    </option>
                                 ))}
+                            </select>
+                            <div className="h-5 w-px" style={{ background: 'var(--border)' }} />
+                            <div className="flex rounded-[6px]" style={{ border: '1px solid var(--border)' }}>
+                                <button
+                                    type="button"
+                                    onClick={() => setView('grid')}
+                                    className="px-2.5 py-1.5"
+                                    style={{
+                                        background: view === 'grid' ? 'var(--accent-soft)' : 'transparent',
+                                        color: view === 'grid' ? 'var(--accent)' : 'var(--fg-muted)',
+                                        borderRadius: '6px 0 0 6px',
+                                    }}
+                                    aria-label="Grid görünümü"
+                                >
+                                    <Grid3X3 className="w-3.5 h-3.5" />
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => setView('list')}
+                                    className="px-2.5 py-1.5"
+                                    style={{
+                                        background: view === 'list' ? 'var(--accent-soft)' : 'transparent',
+                                        color: view === 'list' ? 'var(--accent)' : 'var(--fg-muted)',
+                                        borderRadius: '0 6px 6px 0',
+                                    }}
+                                    aria-label="List görünümü"
+                                >
+                                    <List className="w-3.5 h-3.5" />
+                                </button>
                             </div>
-                        ) : products.length === 0 ? (
-                            <div className="flex flex-col items-center justify-center py-16 px-4">
-                                <Box className="h-16 w-16 text-slate-300 dark:text-slate-600 mb-4" />
-                                <h2 className="text-xl font-semibold mb-2 text-slate-900 dark:text-white">
-                                    {hasActiveFilters ? 'Filtrelere uygun ürün bulunamadı' : 'Bu kategoride ürün yok'}
-                                </h2>
-                                <p className="text-slate-500 dark:text-slate-400 mb-4 text-center">
-                                    {hasActiveFilters
-                                        ? 'Filtreleri değiştirerek tekrar deneyebilirsiniz.'
-                                        : 'Başka kategorilere göz atabilirsiniz.'}
-                                </p>
-                                {hasActiveFilters ? (
-                                    <Button onClick={clearFilters}>
-                                        <X className="w-4 h-4 mr-2" />
-                                        Filtreleri Temizle
-                                    </Button>
-                                ) : (
-                                    <Link href="/market">
-                                        <Button>
-                                            <ArrowLeft className="w-4 h-4 mr-2" />
-                                            Pazaryerine Dön
-                                        </Button>
-                                    </Link>
-                                )}
-                            </div>
-                        ) : (
-                            <div className="grid grid-cols-1 xl:grid-cols-2 gap-3 p-3">
-                                {products.map((product) => (
-                                    <ProductCard key={product.id} product={product} />
-                                ))}
-                            </div>
-                        )}
-
-                        {/* Infinite Scroll Sentinel & Loading */}
-                        {!isLoading && products.length > 0 && (
-                            <div className="py-6">
-                                {isLoadingMore && (
-                                    <div className="flex justify-center items-center gap-3 py-4">
-                                        <div className="h-5 w-5 animate-spin rounded-full border-2 border-blue-600 border-t-transparent" />
-                                        <span className="text-sm text-slate-500">Daha fazla ürün yükleniyor...</span>
-                                    </div>
-                                )}
-                                {hasMore && <div ref={sentinelRef} className="h-1" />}
-                                {!hasMore && products.length > 0 && (
-                                    <p className="text-center text-sm text-slate-400 py-2">
-                                        Tüm ürünler gösteriliyor ({products.length} / {totalProducts})
-                                    </p>
-                                )}
-                            </div>
-                        )}
+                        </div>
                     </div>
+
+                    {isLoading ? (
+                        <div
+                            className={
+                                view === 'grid'
+                                    ? 'grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3.5'
+                                    : 'flex flex-col gap-2.5'
+                            }
+                        >
+                            {Array.from({ length: 12 }).map((_, i) => (
+                                <Skeleton
+                                    key={i}
+                                    className={
+                                        view === 'grid' ? 'h-[260px] rounded-[10px]' : 'h-[120px] rounded-[10px]'
+                                    }
+                                />
+                            ))}
+                        </div>
+                    ) : products.length === 0 ? (
+                        <div
+                            className="rounded-[10px] py-16 text-center"
+                            style={{
+                                background: 'var(--bg-elevated)',
+                                border: '1px solid var(--border)',
+                            }}
+                        >
+                            <h3 className="text-[16px] font-semibold">Ürün bulunamadı</h3>
+                            <p className="mt-2 text-[13px]" style={{ color: 'var(--fg-muted)' }}>
+                                {hasActiveFilters
+                                    ? 'Filtreleri değiştirerek tekrar deneyebilirsiniz.'
+                                    : 'Bu kategoride henüz ürün yok.'}
+                            </p>
+                            {hasActiveFilters && (
+                                <Button onClick={clearFilters} className="mt-4" variant="outline">
+                                    <X className="w-4 h-4 mr-2" /> Filtreleri Temizle
+                                </Button>
+                            )}
+                        </div>
+                    ) : view === 'grid' ? (
+                        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3.5">
+                            {products.map((product) => (
+                                <ProductCard key={product.id} product={product} />
+                            ))}
+                        </div>
+                    ) : (
+                        <div className="flex flex-col gap-2.5">
+                            {products.map((product) => (
+                                <ProductCard key={product.id} product={product} layout="list" />
+                            ))}
+                        </div>
+                    )}
+
+                    {!isLoading && products.length > 0 && lastPage > 1 && (
+                        <Pagination
+                            currentPage={page}
+                            lastPage={lastPage}
+                            onChange={(p) => {
+                                setPage(p);
+                                loadProducts(p);
+                                if (typeof window !== 'undefined') {
+                                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                                }
+                            }}
+                        />
+                    )}
                 </div>
             </div>
         </div>
@@ -571,18 +680,25 @@ function MarketCategoryContent() {
 
 export function CategoryClient() {
     return (
-        <Suspense fallback={
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-                <Skeleton className="h-8 w-48 mb-6" />
-                <div className="bg-white dark:bg-slate-900 rounded-xl border border-black/10 dark:border-slate-700 overflow-hidden">
-                    <div className="grid grid-cols-1 xl:grid-cols-2 gap-3 p-3">
-                        {[...Array(8)].map((_, i) => (
-                            <Skeleton key={i} className="h-[120px] rounded-2xl" />
-                        ))}
+        <Suspense
+            fallback={
+                <div className="max-w-[1440px] mx-auto px-6 pt-5">
+                    <Skeleton className="h-6 w-64 mb-4" />
+                    <Skeleton className="h-10 w-80 mb-3" />
+                    <div className="grid gap-6 lg:grid-cols-[260px_1fr]">
+                        <Skeleton className="h-96 rounded-[10px] hidden lg:block" />
+                        <div>
+                            <Skeleton className="h-12 mb-4 rounded-[10px]" />
+                            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3.5">
+                                {Array.from({ length: 8 }).map((_, i) => (
+                                    <Skeleton key={i} className="h-[260px] rounded-[10px]" />
+                                ))}
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-        }>
+            }
+        >
             <MarketCategoryContent />
         </Suspense>
     );

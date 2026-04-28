@@ -24,7 +24,7 @@ const COLUMNS: { h: string; links: { label: string; href: string }[] }[] = [
         h: 'Bayiler',
         links: [
             { label: 'Vadeli alışveriş', href: '/yardim/alici-rehberi/sepet-odeme' },
-            { label: 'Toplu sipariş', href: '/yardim/alici-rehberi/sepet-odeme' },
+            { label: 'Toplu sipariş', href: '/yardim/alici-rehberi/siparis-takibi' },
             { label: 'Kurumsal hesap', href: '/iletisim' },
             { label: 'Faturalar', href: '/market/hesabim?tab=invoices' },
         ],

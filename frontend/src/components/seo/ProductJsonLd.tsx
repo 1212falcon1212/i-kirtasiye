@@ -8,12 +8,18 @@ interface ProductJsonLdProps {
     image?: string;
     brand?: string;
     barcode?: string;
-    lowestPrice?: number;
-    highestPrice?: number;
-    offersCount?: number;
+    lowestPrice?: number | string | null;
+    highestPrice?: number | string | null;
+    offersCount?: number | string | null;
     inStock?: boolean;
-    reviewCount?: number;
-    averageRating?: number;
+    reviewCount?: number | string | null;
+    averageRating?: number | string | null;
+}
+
+function toFiniteNumber(value: number | string | null | undefined): number | null {
+    if (value === null || value === undefined || value === '') return null;
+    const num = typeof value === 'number' ? value : Number(value);
+    return Number.isFinite(num) ? num : null;
 }
 
 export function ProductJsonLd({
@@ -55,32 +61,37 @@ export function ProductJsonLd({
         data.gtin13 = barcode.length === 13 ? barcode : undefined;
     }
 
-    if (lowestPrice !== undefined && lowestPrice > 0) {
+    const lowest = toFiniteNumber(lowestPrice);
+    if (lowest !== null && lowest > 0) {
         const offers: Record<string, unknown> = {
             '@type': 'AggregateOffer',
             priceCurrency: 'TRY',
-            lowPrice: lowestPrice.toFixed(2),
+            lowPrice: lowest.toFixed(2),
             availability: inStock
                 ? 'https://schema.org/InStock'
                 : 'https://schema.org/OutOfStock',
         };
 
-        if (highestPrice !== undefined && highestPrice > 0) {
-            offers.highPrice = highestPrice.toFixed(2);
+        const highest = toFiniteNumber(highestPrice);
+        if (highest !== null && highest > 0) {
+            offers.highPrice = highest.toFixed(2);
         }
 
-        if (offersCount !== undefined && offersCount > 0) {
-            offers.offerCount = offersCount;
+        const count = toFiniteNumber(offersCount);
+        if (count !== null && count > 0) {
+            offers.offerCount = count;
         }
 
         data.offers = offers;
     }
 
-    if (averageRating !== undefined && averageRating > 0 && reviewCount !== undefined && reviewCount > 0) {
+    const rating = toFiniteNumber(averageRating);
+    const reviews = toFiniteNumber(reviewCount);
+    if (rating !== null && rating > 0 && reviews !== null && reviews > 0) {
         data.aggregateRating = {
             '@type': 'AggregateRating',
-            ratingValue: averageRating.toFixed(1),
-            reviewCount,
+            ratingValue: rating.toFixed(1),
+            reviewCount: reviews,
             bestRating: 5,
             worstRating: 1,
         };
