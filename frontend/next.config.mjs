@@ -13,7 +13,7 @@ const nextConfig = {
             {
                 protocol: "http",
                 hostname: "localhost",
-                port: "8001",
+                port: "8003",
                 pathname: "/storage/**",
             },
             {
@@ -24,7 +24,7 @@ const nextConfig = {
             },
             {
                 protocol: "https",
-                hostname: "i-depo.com",
+                hostname: "i-kirtasiye.com",
                 pathname: "/**",
             },
             {
@@ -43,7 +43,7 @@ const nextConfig = {
         return [
             {
                 source: '/storage/:path*',
-                destination: 'http://localhost:8001/storage/:path*',
+                destination: 'http://localhost:8003/storage/:path*',
             },
         ];
     },
