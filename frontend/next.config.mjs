@@ -37,6 +37,16 @@ const nextConfig = {
                 hostname: "images.unsplash.com",
                 pathname: "/**",
             },
+            {
+                protocol: "https",
+                hostname: "www.nezih.com.tr",
+                pathname: "/**",
+            },
+            {
+                protocol: "https",
+                hostname: "nezih.com.tr",
+                pathname: "/**",
+            },
         ],
     },
     async rewrites() {
