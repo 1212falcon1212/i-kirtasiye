@@ -73,7 +73,7 @@ export function ShippingTimeline({
                             href={trackingUrl}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-[#b8651a] hover:underline text-sm"
+                            className="text-[#ea580c] hover:underline text-sm"
                         >
                             Takip Et →
                         </a>
@@ -96,9 +96,9 @@ export function ShippingTimeline({
                                 {/* Icon Circle */}
                                 <div
                                     className={`absolute left-0 w-8 h-8 rounded-full flex items-center justify-center ${isCompleted
-                                            ? 'bg-[#fbeede] text-white'
+                                            ? 'bg-[#ffedd5] text-white'
                                             : isCurrent
-                                                ? 'bg-[#fbeede] text-[#b8651a] ring-2 ring-[#b8651a]'
+                                                ? 'bg-[#ffedd5] text-[#ea580c] ring-2 ring-[#ea580c]'
                                                 : 'bg-gray-100 text-gray-400'
                                         }`}
                                 >
@@ -115,7 +115,7 @@ export function ShippingTimeline({
                                             {step.label}
                                         </span>
                                         {isCurrent && (
-                                            <Badge variant="secondary" className="bg-[#fbeede] text-[#b8651a]">
+                                            <Badge variant="secondary" className="bg-[#ffedd5] text-[#ea580c]">
                                                 Şu an
                                             </Badge>
                                         )}

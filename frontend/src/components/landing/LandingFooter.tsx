@@ -11,7 +11,7 @@ export default function LandingFooter() {
           {/* Brand */}
           <div className="lg:col-span-1">
             <Link href="/" className="flex items-center gap-2.5 mb-5">
-              <div className="w-9 h-9 bg-[#b8651a] rounded-xl flex items-center justify-center">
+              <div className="w-9 h-9 bg-[#1e3a8a] rounded-xl flex items-center justify-center">
                 <Plus className="w-5 h-5 text-white" strokeWidth={3} />
               </div>
               <div className="flex flex-col -space-y-0.5">

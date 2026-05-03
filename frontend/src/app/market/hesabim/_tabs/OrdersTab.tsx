@@ -52,8 +52,8 @@ function StatusIcon({ status }: { status: string }) {
         pending: { icon: <Clock className="w-4 h-4" />, color: 'text-amber-600' },
         confirmed: { icon: <CheckCircle2 className="w-4 h-4" />, color: 'text-blue-600' },
         processing: { icon: <Box className="w-4 h-4" />, color: 'text-blue-600' },
-        shipped: { icon: <Truck className="w-4 h-4" />, color: 'text-[#b8651a]' },
-        delivered: { icon: <CheckCircle2 className="w-4 h-4" />, color: 'text-[#b8651a]' },
+        shipped: { icon: <Truck className="w-4 h-4" />, color: 'text-[#ea580c]' },
+        delivered: { icon: <CheckCircle2 className="w-4 h-4" />, color: 'text-[#ea580c]' },
         returned: { icon: <RotateCcw className="w-4 h-4" />, color: 'text-red-600' },
         cancelled: { icon: <XCircle className="w-4 h-4" />, color: 'text-red-600' },
     };
@@ -71,7 +71,7 @@ function CopyButton({ text }: { text: string }) {
     };
     return (
         <button onClick={handleCopy} className="text-[#6b7280] hover:text-[#1a1a1a] transition-colors">
-            {copied ? <CheckCircle2 className="w-3.5 h-3.5 text-[#b8651a]" /> : <Link2 className="w-3.5 h-3.5" />}
+            {copied ? <CheckCircle2 className="w-3.5 h-3.5 text-[#ea580c]" /> : <Link2 className="w-3.5 h-3.5" />}
         </button>
     );
 }
@@ -102,11 +102,11 @@ function BuyerReturnsContent() {
     const getStatusBadge = (status: string) => {
         const colors: Record<string, string> = {
             pending: 'bg-amber-50 text-amber-700',
-            approved: 'bg-[#fbeede] text-[#b8651a]',
+            approved: 'bg-[#ffedd5] text-[#ea580c]',
             rejected: 'bg-red-50 text-red-700',
             shipped: 'bg-blue-50 text-blue-700',
-            received: 'bg-[#fbeede] text-[#934f12]',
-            refunded: 'bg-[#fbeede] text-[#934f12]',
+            received: 'bg-[#ffedd5] text-[#c2410c]',
+            refunded: 'bg-[#ffedd5] text-[#c2410c]',
             cancelled: 'bg-red-50 text-red-700',
         };
         return colors[status] || 'bg-[#faf8f6] text-[#6b7280]';
@@ -115,7 +115,7 @@ function BuyerReturnsContent() {
     if (loading) {
         return (
             <div className="flex items-center justify-center py-12">
-                <Loader2 className="w-8 h-8 animate-spin text-[#b8651a]" />
+                <Loader2 className="w-8 h-8 animate-spin text-[#ea580c]" />
             </div>
         );
     }
@@ -158,7 +158,7 @@ function BuyerReturnsContent() {
                         <div className="flex flex-col items-end gap-2">
                             <span className={cn("px-3 py-1 rounded-full text-xs font-semibold", getStatusBadge(r.status))}>{r.status_label}</span>
                             {r.formatted_refund && (
-                                <p className="text-sm font-bold text-[#b8651a]">{r.formatted_refund}</p>
+                                <p className="text-sm font-bold text-[#ea580c]">{r.formatted_refund}</p>
                             )}
                             {r.seller_note && (
                                 <p className="text-xs text-[#6b7280] max-w-[200px] text-right">Satıcı notu: {r.seller_note}</p>
@@ -240,11 +240,11 @@ function SellerReturnRequestsContent() {
     const getStatusBadge = (status: string) => {
         const colors: Record<string, string> = {
             pending: 'bg-amber-50 text-amber-700',
-            approved: 'bg-[#fbeede] text-[#b8651a]',
+            approved: 'bg-[#ffedd5] text-[#ea580c]',
             rejected: 'bg-red-50 text-red-700',
             shipped: 'bg-blue-50 text-blue-700',
-            received: 'bg-[#fbeede] text-[#934f12]',
-            refunded: 'bg-[#fbeede] text-[#934f12]',
+            received: 'bg-[#ffedd5] text-[#c2410c]',
+            refunded: 'bg-[#ffedd5] text-[#c2410c]',
             cancelled: 'bg-red-50 text-red-700',
         };
         return colors[status] || 'bg-[#faf8f6] text-[#6b7280]';
@@ -253,7 +253,7 @@ function SellerReturnRequestsContent() {
     if (loading) {
         return (
             <div className="flex items-center justify-center py-12">
-                <Loader2 className="w-8 h-8 animate-spin text-[#b8651a]" />
+                <Loader2 className="w-8 h-8 animate-spin text-[#ea580c]" />
             </div>
         );
     }
@@ -289,7 +289,7 @@ function SellerReturnRequestsContent() {
                     : '';
 
                 return (
-                <div key={r.id} className="bg-white rounded-2xl border border-[#f0eceb] p-4 hover:border-[#fbeede] transition-colors">
+                <div key={r.id} className="bg-white rounded-2xl border border-[#f0eceb] p-4 hover:border-[#ffedd5] transition-colors">
                     <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
                         <div className="flex items-start gap-4">
                             {productImage ? (
@@ -315,7 +315,7 @@ function SellerReturnRequestsContent() {
                         <div className="flex flex-col items-end gap-2">
                             <span className={cn("px-3 py-1 rounded-full text-xs font-semibold", getStatusBadge(r.status))}>{r.status_label}</span>
                             {r.formatted_refund && (
-                                <p className="text-sm font-bold text-[#b8651a]">{r.formatted_refund}</p>
+                                <p className="text-sm font-bold text-[#ea580c]">{r.formatted_refund}</p>
                             )}
                             {r.status === 'pending' && (
                                 <div className="flex gap-2 mt-2">
@@ -323,7 +323,7 @@ function SellerReturnRequestsContent() {
                                         size="sm"
                                         onClick={() => handleApprove(r.id)}
                                         disabled={processingId === r.id}
-                                        className="bg-[#b8651a] hover:bg-[#934f12] text-white rounded-xl"
+                                        className="bg-[#1e3a8a] hover:bg-[#1e40af] text-white rounded-xl"
                                     >
                                         {processingId === r.id ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4 mr-1" />}
                                         Onayla
@@ -407,7 +407,7 @@ function OrderCard({
     })();
 
     return (
-        <div className="bg-white rounded-2xl border border-[#f0eceb] p-3 sm:p-4 hover:border-[#fbeede] transition-colors">
+        <div className="bg-white rounded-2xl border border-[#f0eceb] p-3 sm:p-4 hover:border-[#ffedd5] transition-colors">
             {/* ===== DESKTOP LAYOUT ===== */}
             <div className="hidden sm:flex gap-5 items-center">
                 {/* Thumbnails */}
@@ -437,20 +437,20 @@ function OrderCard({
                 <div className="flex-1 min-w-0 space-y-1.5">
                     <div className="flex items-center gap-2">
                         <StatusIcon status={order.status} />
-                        <span className={cn("font-bold text-[15px] leading-tight", order.status === 'shipped' && "text-[#b8651a]", order.status === 'delivered' && "text-[#b8651a]", order.status === 'cancelled' && "text-red-600", order.status === 'pending' && "text-amber-600", order.status === 'processing' && "text-blue-600")}>{getStatusLabel(order.status)}</span>
+                        <span className={cn("font-bold text-[15px] leading-tight", order.status === 'shipped' && "text-[#ea580c]", order.status === 'delivered' && "text-[#ea580c]", order.status === 'cancelled' && "text-red-600", order.status === 'pending' && "text-amber-600", order.status === 'processing' && "text-blue-600")}>{getStatusLabel(order.status)}</span>
                         {!isSeller && order.sub_orders && order.sub_orders.length > 1 && (
                             <span className="text-xs text-[#6b7280] border border-[#f0eceb] rounded-full px-2 py-0.5">{order.sub_orders.length} Teslimat &middot; {allItems.length} Ürün</span>
                         )}
                     </div>
                     <div className="text-sm leading-relaxed space-y-0.5">
                         <div className="flex"><span className="w-14 shrink-0 text-[#6b7280]">Sipariş</span><span className="text-[#1a1a1a] truncate"><span className="font-medium">{order.order_number}</span><span className="ml-1 inline-flex align-middle"><CopyButton text={order.order_number} /></span></span></div>
-                        <div className="flex"><span className="w-14 shrink-0 text-[#6b7280]">{sellerLabel.prefix}</span><span className="text-[#1a1a1a] truncate flex items-center gap-1.5">{isIptaller && sellerLabel.badge && (<Badge variant="outline" className={cn("text-[10px] px-1.5 py-0 shrink-0", sellerLabel.badge === 'seller' ? "bg-[#fbeede] text-[#b8651a] border-[#fbeede]" : "bg-blue-50 text-blue-700 border-blue-200")}>{sellerLabel.badge === 'seller' ? 'Satıcı' : 'Alıcı'}</Badge>)}<span className="font-medium truncate">{sellerLabel.name}</span>{sellerLabel.role && <SellerTypeBadge role={sellerLabel.role} size="sm" />}</span></div>
+                        <div className="flex"><span className="w-14 shrink-0 text-[#6b7280]">{sellerLabel.prefix}</span><span className="text-[#1a1a1a] truncate flex items-center gap-1.5">{isIptaller && sellerLabel.badge && (<Badge variant="outline" className={cn("text-[10px] px-1.5 py-0 shrink-0", sellerLabel.badge === 'seller' ? "bg-[#ffedd5] text-[#ea580c] border-[#ffedd5]" : "bg-blue-50 text-blue-700 border-blue-200")}>{sellerLabel.badge === 'seller' ? 'Satıcı' : 'Alıcı'}</Badge>)}<span className="font-medium truncate">{sellerLabel.name}</span>{sellerLabel.role && <SellerTypeBadge role={sellerLabel.role} size="sm" />}</span></div>
                         <div className="flex"><span className="w-14 shrink-0 text-[#6b7280]">Tarih</span><span className="text-[#6b7280]">{formatDate(order.created_at)}</span></div>
                     </div>
                     {!isSeller && order.payment_status === 'pending' && order.payment_method === 'credit_card' && (
                         <div className="mt-2 p-2 bg-amber-50 border border-amber-100 rounded-xl flex items-center justify-between">
                             <span className="text-xs text-amber-700 font-medium flex items-center gap-1"><AlertCircle className="w-3.5 h-3.5" />Ödeme bekleniyor</span>
-                            <Link href={`/market/odeme/${order.id}`}><Button size="sm" className="bg-[#b8651a] hover:bg-[#934f12] text-white text-xs h-7 rounded-xl">Ödemeye Git</Button></Link>
+                            <Link href={`/market/odeme/${order.id}`}><Button size="sm" className="bg-[#1e3a8a] hover:bg-[#1e40af] text-white text-xs h-7 rounded-xl">Ödemeye Git</Button></Link>
                         </div>
                     )}
                     {!isSeller && (order.payment_status === 'expired' || order.payment_status === 'failed') && (
@@ -460,7 +460,7 @@ function OrderCard({
                 {/* Price & Button */}
                 <div className="flex flex-col items-end gap-3 shrink-0">
                     <p className="text-xl font-black text-[#1a1a1a] whitespace-nowrap">{formatPrice(isIptaller ? (order.seller_total !== undefined ? order.seller_total : order.total_amount) : (isSeller ? order.seller_total : order.total_amount))}<span className="text-sm font-normal text-[#6b7280] ml-1">TL</span></p>
-                    <Button size="sm" className="bg-[#b8651a] hover:bg-[#934f12] text-white rounded-xl" onClick={() => onViewOrderDetail(order.id, isIptaller ? order.seller_total !== undefined : isSeller)}>Siparişe Git</Button>
+                    <Button size="sm" className="bg-[#1e3a8a] hover:bg-[#1e40af] text-white rounded-xl" onClick={() => onViewOrderDetail(order.id, isIptaller ? order.seller_total !== undefined : isSeller)}>Siparişe Git</Button>
                 </div>
             </div>
 
@@ -470,7 +470,7 @@ function OrderCard({
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                         <StatusIcon status={order.status} />
-                        <span className={cn("font-bold text-[15px]", order.status === 'shipped' && "text-[#b8651a]", order.status === 'delivered' && "text-[#b8651a]", order.status === 'cancelled' && "text-red-600", order.status === 'pending' && "text-amber-600", order.status === 'processing' && "text-blue-600")}>{getStatusLabel(order.status)}</span>
+                        <span className={cn("font-bold text-[15px]", order.status === 'shipped' && "text-[#ea580c]", order.status === 'delivered' && "text-[#ea580c]", order.status === 'cancelled' && "text-red-600", order.status === 'pending' && "text-amber-600", order.status === 'processing' && "text-blue-600")}>{getStatusLabel(order.status)}</span>
                     </div>
                     <p className="text-lg font-black text-[#1a1a1a]">{formatPrice(isIptaller ? (order.seller_total !== undefined ? order.seller_total : order.total_amount) : (isSeller ? order.seller_total : order.total_amount))}<span className="text-xs font-normal text-[#6b7280] ml-0.5">TL</span></p>
                 </div>
@@ -512,7 +512,7 @@ function OrderCard({
                 {!isSeller && order.payment_status === 'pending' && order.payment_method === 'credit_card' && (
                     <div className="p-2 bg-amber-50 border border-amber-100 rounded-xl flex items-center justify-between">
                         <span className="text-xs text-amber-700 font-medium flex items-center gap-1"><AlertCircle className="w-3.5 h-3.5" />Ödeme bekleniyor</span>
-                        <Link href={`/market/odeme/${order.id}`}><Button size="sm" className="bg-[#b8651a] hover:bg-[#934f12] text-white text-xs h-7 rounded-xl">Ödemeye Git</Button></Link>
+                        <Link href={`/market/odeme/${order.id}`}><Button size="sm" className="bg-[#1e3a8a] hover:bg-[#1e40af] text-white text-xs h-7 rounded-xl">Ödemeye Git</Button></Link>
                     </div>
                 )}
                 {!isSeller && (order.payment_status === 'expired' || order.payment_status === 'failed') && (
@@ -520,7 +520,7 @@ function OrderCard({
                 )}
 
                 {/* Full-width button */}
-                <Button className="w-full bg-[#b8651a] hover:bg-[#934f12] text-white rounded-xl" onClick={() => onViewOrderDetail(order.id, isIptaller ? order.seller_total !== undefined : isSeller)}>Siparişe Git</Button>
+                <Button className="w-full bg-[#1e3a8a] hover:bg-[#1e40af] text-white rounded-xl" onClick={() => onViewOrderDetail(order.id, isIptaller ? order.seller_total !== undefined : isSeller)}>Siparişe Git</Button>
             </div>
         </div>
     );
@@ -579,7 +579,7 @@ export function OrdersContent({
     if (loadingOrders) {
         return (
             <div className="flex items-center justify-center py-12">
-                <Loader2 className="w-8 h-8 animate-spin text-[#b8651a]" />
+                <Loader2 className="w-8 h-8 animate-spin text-[#ea580c]" />
             </div>
         );
     }
@@ -621,7 +621,7 @@ export function OrdersContent({
                         <Store className="w-16 h-16 mx-auto text-[#d1ccc9] mb-4" />
                         <p className="text-sm text-[#6b7280] mb-4">Henüz satış yapmadınız</p>
                         <Link href="/market/hesabim?tab=ilanlarim">
-                            <Button variant="outline" className="rounded-xl border-[#f0eceb] hover:border-[#fbeede] hover:bg-[#faf8f6]">Ürün Ekle</Button>
+                            <Button variant="outline" className="rounded-xl border-[#f0eceb] hover:border-[#ffedd5] hover:bg-[#faf8f6]">Ürün Ekle</Button>
                         </Link>
                     </>
                 ) : isIptaller ? (
@@ -634,7 +634,7 @@ export function OrdersContent({
                         <ShoppingBag className="w-16 h-16 mx-auto text-[#d1ccc9] mb-4" />
                         <p className="text-sm text-[#6b7280] mb-4">Henüz siparişiniz bulunmuyor</p>
                         <Link href="/market">
-                            <Button variant="outline" className="rounded-xl border-[#f0eceb] hover:border-[#fbeede] hover:bg-[#faf8f6]">Alışverişe Başla</Button>
+                            <Button variant="outline" className="rounded-xl border-[#f0eceb] hover:border-[#ffedd5] hover:bg-[#faf8f6]">Alışverişe Başla</Button>
                         </Link>
                     </>
                 )}
@@ -654,7 +654,7 @@ export function OrdersContent({
                             <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-[#6b7280]" />
                             <Input
                                 placeholder="Ürün, kullanıcı, sipariş ara"
-                                className="pl-9 w-full sm:w-64 h-9 rounded-xl border-[#f0eceb] focus:border-[#fbeede]"
+                                className="pl-9 w-full sm:w-64 h-9 rounded-xl border-[#f0eceb] focus:border-[#ffedd5]"
                             />
                         </div>
                     </div>
@@ -680,7 +680,7 @@ export function OrdersContent({
                     <div className="text-center py-12 bg-[#faf8f6] rounded-2xl border border-[#f0eceb]">
                         <Box className="w-12 h-12 mx-auto text-[#d1ccc9] mb-3" />
                         <p className="text-sm text-[#6b7280]">Bu filtreye uygun sipariş bulunamadı</p>
-                        <Button variant="link" onClick={() => onStatusFilterChange('all')} className="text-[#b8651a]">
+                        <Button variant="link" onClick={() => onStatusFilterChange('all')} className="text-[#ea580c]">
                             Tüm siparişleri göster
                         </Button>
                     </div>
@@ -1188,7 +1188,7 @@ export function OrderDetailView({
     if (isLoading) {
         return (
             <div className="flex items-center justify-center py-12">
-                <Loader2 className="w-8 h-8 animate-spin text-[#b8651a]" />
+                <Loader2 className="w-8 h-8 animate-spin text-[#ea580c]" />
             </div>
         );
     }
@@ -1221,11 +1221,11 @@ export function OrderDetailView({
 
                         {/* Durum */}
                         <div className="flex items-center gap-2">
-                            <Truck className="w-5 h-5 text-[#b8651a]" />
+                            <Truck className="w-5 h-5 text-[#ea580c]" />
                             <span className={cn(
                                 "font-semibold",
-                                sellerOrderDetail.status === 'shipped' && "text-[#b8651a]",
-                                sellerOrderDetail.status === 'delivered' && "text-[#b8651a]",
+                                sellerOrderDetail.status === 'shipped' && "text-[#ea580c]",
+                                sellerOrderDetail.status === 'delivered' && "text-[#ea580c]",
                                 sellerOrderDetail.status === 'returned' && "text-red-600",
                                 sellerOrderDetail.status === 'cancelled' && "text-red-600"
                             )}>
@@ -1249,16 +1249,16 @@ export function OrderDetailView({
                         </div>
 
                         {/* Otomatik Tamamlanma Notu */}
-                        <div className="bg-[#fbeede] border border-[#fbeede] rounded-2xl p-3">
-                            <p className="text-sm text-[#934f12]">
+                        <div className="bg-[#ffedd5] border border-[#ffedd5] rounded-2xl p-3">
+                            <p className="text-sm text-[#c2410c]">
                                 Sipariş {autoCompleteDate.toLocaleDateString('tr-TR')} tarihinde otomatik olarak tamamlanacaktır.
                             </p>
                         </div>
 
                         {/* Fatura Durumu - Sadece fatura kesildiyse goster */}
                         {sellerOrderDetail.invoice && (
-                            <div className="bg-[#fbeede] border border-[#fbeede] rounded-2xl p-3 space-y-2">
-                                <div className="flex items-center gap-2 text-[#b8651a]">
+                            <div className="bg-[#ffedd5] border border-[#ffedd5] rounded-2xl p-3 space-y-2">
+                                <div className="flex items-center gap-2 text-[#ea580c]">
                                     <FileText className="w-4 h-4" />
                                     <span className="font-medium text-sm">Fatura Kesildi</span>
                                 </div>
@@ -1333,7 +1333,7 @@ export function OrderDetailView({
                                             toast.error('Sözleşme indirilemedi');
                                         }
                                     }}
-                                    className="flex items-center gap-1.5 text-sm text-[#b8651a] hover:text-[#b8651a] transition-colors"
+                                    className="flex items-center gap-1.5 text-sm text-[#ea580c] hover:text-[#ea580c] transition-colors"
                                 >
                                     <Download className="w-3.5 h-3.5" />
                                     <span>İndir</span>
@@ -1394,7 +1394,7 @@ export function OrderDetailView({
                             {/* Toplam */}
                             <div className="border-t border-[#f0eceb] p-4 bg-[#faf8f6]">
                                 <div className="flex items-center justify-between mb-2">
-                                    <Button variant="ghost" size="sm" className="text-[#b8651a] hover:text-[#934f12] hover:bg-[#fbeede] rounded-xl">
+                                    <Button variant="ghost" size="sm" className="text-[#ea580c] hover:text-[#c2410c] hover:bg-[#ffedd5] rounded-xl">
                                         Ürün Listesini Yazdır
                                     </Button>
                                     <div className="text-right">
@@ -1425,7 +1425,7 @@ export function OrderDetailView({
                                                 size="sm"
                                                 onClick={() => handleUpdateOrderStatus('confirmed')}
                                                 disabled={isUpdatingOrderStatus}
-                                                className="bg-[#b8651a] hover:bg-[#934f12] text-white rounded-xl"
+                                                className="bg-[#1e3a8a] hover:bg-[#1e40af] text-white rounded-xl"
                                             >
                                                 {isUpdatingOrderStatus ? (
                                                     <Loader2 className="w-4 h-4 mr-2 animate-spin" />
@@ -1455,7 +1455,7 @@ export function OrderDetailView({
                                                 size="sm"
                                                 onClick={() => handleUpdateOrderStatus('shipped')}
                                                 disabled={isUpdatingOrderStatus}
-                                                className="bg-[#b8651a] hover:bg-[#934f12] text-white rounded-xl"
+                                                className="bg-[#1e3a8a] hover:bg-[#1e40af] text-white rounded-xl"
                                             >
                                                 {isUpdatingOrderStatus ? (
                                                     <Loader2 className="w-4 h-4 mr-2 animate-spin" />
@@ -1470,7 +1470,7 @@ export function OrderDetailView({
                                                 size="sm"
                                                 onClick={() => handleUpdateOrderStatus('delivered')}
                                                 disabled={isUpdatingOrderStatus}
-                                                className="bg-[#b8651a] hover:bg-[#934f12] text-white rounded-xl"
+                                                className="bg-[#1e3a8a] hover:bg-[#1e40af] text-white rounded-xl"
                                             >
                                                 {isUpdatingOrderStatus ? (
                                                     <Loader2 className="w-4 h-4 mr-2 animate-spin" />
@@ -1510,7 +1510,7 @@ export function OrderDetailView({
                                         size="sm"
                                         onClick={() => handleUpdateOrderStatus('confirmed')}
                                         disabled={isUpdatingOrderStatus}
-                                        className="w-full bg-[#b8651a] hover:bg-[#934f12] text-white rounded-xl"
+                                        className="w-full bg-[#1e3a8a] hover:bg-[#1e40af] text-white rounded-xl"
                                     >
                                         {isUpdatingOrderStatus ? (
                                             <>
@@ -1588,7 +1588,7 @@ export function OrderDetailView({
                                     <Button
                                         onClick={handleCreateErpInvoice}
                                         disabled={isCreatingErpInvoice || !!sellerOrderDetail.invoice}
-                                        className="w-full bg-[#b8651a] hover:bg-[#934f12] text-white rounded-xl"
+                                        className="w-full bg-[#1e3a8a] hover:bg-[#1e40af] text-white rounded-xl"
                                     >
                                         {isCreatingErpInvoice ? (
                                             <>
@@ -1663,7 +1663,7 @@ export function OrderDetailView({
                                 <Button
                                     onClick={handleCreateShipment}
                                     disabled={isCreatingShipment || sellerOrderDetail.status === 'shipped' || sellerOrderDetail.status === 'delivered' || sellerOrderDetail.status === 'cancelled'}
-                                    className="w-full bg-[#b8651a] hover:bg-[#934f12] text-white rounded-xl"
+                                    className="w-full bg-[#1e3a8a] hover:bg-[#1e40af] text-white rounded-xl"
                                 >
                                     {isCreatingShipment ? (
                                         <>
@@ -1760,7 +1760,7 @@ export function OrderDetailView({
                                                     <Button
                                                         size="sm"
                                                         onClick={() => handleApproveReturn(request.id)}
-                                                        className="flex-1 bg-[#b8651a] hover:bg-[#934f12] text-white rounded-xl"
+                                                        className="flex-1 bg-[#1e3a8a] hover:bg-[#1e40af] text-white rounded-xl"
                                                     >
                                                         <Check className="w-4 h-4 mr-1" />
                                                         Onayla
@@ -1784,8 +1784,8 @@ export function OrderDetailView({
                     )}
 
                     {/* Hakediş Özeti */}
-                    <div className="bg-[#fbeede] border border-[#fbeede] rounded-2xl p-4">
-                        <h3 className="font-black text-[#b8651a] mb-4 flex items-center gap-2">
+                    <div className="bg-[#ffedd5] border border-[#ffedd5] rounded-2xl p-4">
+                        <h3 className="font-black text-[#ea580c] mb-4 flex items-center gap-2">
                             <Wallet className="w-5 h-5" />
                             Hakediş Özeti
                         </h3>
@@ -1803,10 +1803,10 @@ export function OrderDetailView({
                                     </div>
                                 ))
                             }
-                            <div className="border-t border-[#fbeede] pt-2 mt-2">
+                            <div className="border-t border-[#ffedd5] pt-2 mt-2">
                                 <div className="flex justify-between text-lg font-bold">
-                                    <span className="text-[#b8651a]">{sellerOrderDetail.financials.net_amount.label}</span>
-                                    <span className="text-[#b8651a]">{sellerOrderDetail.financials.net_amount.formatted}</span>
+                                    <span className="text-[#ea580c]">{sellerOrderDetail.financials.net_amount.label}</span>
+                                    <span className="text-[#ea580c]">{sellerOrderDetail.financials.net_amount.formatted}</span>
                                 </div>
                             </div>
                         </div>
@@ -1837,8 +1837,8 @@ export function OrderDetailView({
                             <StatusIcon status={order.status} />
                             <span className={cn(
                                 "font-semibold",
-                                order.status === 'shipped' && "text-[#b8651a]",
-                                order.status === 'delivered' && "text-[#b8651a]",
+                                order.status === 'shipped' && "text-[#ea580c]",
+                                order.status === 'delivered' && "text-[#ea580c]",
                                 order.status === 'cancelled' && "text-red-600",
                                 order.status === 'pending' && "text-amber-600"
                             )}>
@@ -1872,7 +1872,7 @@ export function OrderDetailView({
                         {order.delivered_at && (
                             <div>
                                 <p className="text-xs text-[#6b7280]">Teslim Tarihi</p>
-                                <p className="font-medium text-[#b8651a]">{formatDate(order.delivered_at)}</p>
+                                <p className="font-medium text-[#ea580c]">{formatDate(order.delivered_at)}</p>
                             </div>
                         )}
 
@@ -1883,11 +1883,11 @@ export function OrderDetailView({
                             const awaitingConfirm = subs.filter((so: any) => so.status === 'delivered' && !so.buyer_confirmed_at);
                             if (order.buyer_confirmed_at) {
                                 return (
-                                    <div className="bg-[#fbeede] border border-[#fbeede] rounded-2xl p-3 flex items-center gap-2 text-[#b8651a]">
+                                    <div className="bg-[#ffedd5] border border-[#ffedd5] rounded-2xl p-3 flex items-center gap-2 text-[#ea580c]">
                                         <CheckCircle2 className="w-5 h-5 shrink-0" />
                                         <div>
                                             <p className="font-medium text-sm">Tüm Teslimatlar Onaylandı</p>
-                                            <p className="text-xs text-[#b8651a]">{formatDate(order.buyer_confirmed_at)}</p>
+                                            <p className="text-xs text-[#ea580c]">{formatDate(order.buyer_confirmed_at)}</p>
                                         </div>
                                     </div>
                                 );
@@ -1896,7 +1896,7 @@ export function OrderDetailView({
                                 return (
                                     <div className="bg-[#faf8f6] border border-[#f0eceb] rounded-2xl p-3 text-sm text-[#6b7280]">
                                         {confirmed.length > 0 && (
-                                            <p className="text-[#b8651a]">{confirmed.length} teslimat onaylandı</p>
+                                            <p className="text-[#ea580c]">{confirmed.length} teslimat onaylandı</p>
                                         )}
                                         {awaitingConfirm.length > 0 && (
                                             <p className="text-amber-600">{awaitingConfirm.length} teslimat onay bekliyor</p>
@@ -1949,7 +1949,7 @@ export function OrderDetailView({
                                             {item.product?.name || `Ürün #${item.product_id}`}
                                         </p>
                                         {expiryDate && (
-                                            <p className="text-xs text-[#b8651a]">Miat: {expiryDate}</p>
+                                            <p className="text-xs text-[#ea580c]">Miat: {expiryDate}</p>
                                         )}
                                         <p className="text-sm font-medium text-[#1a1a1a]">
                                             Fiyat: {formatPrice(item.total_price)} TL
@@ -1978,7 +1978,7 @@ export function OrderDetailView({
                                                             </span>
                                                         )}
                                                         <div className="flex items-center gap-1.5 flex-1 min-w-0">
-                                                            <Store className="w-4 h-4 text-[#b8651a] shrink-0" />
+                                                            <Store className="w-4 h-4 text-[#ea580c] shrink-0" />
                                                             <span className="text-sm font-semibold text-[#1a1a1a] truncate">
                                                                 {subOrder.seller_name}
                                                             </span>
@@ -1987,8 +1987,8 @@ export function OrderDetailView({
                                                             <StatusIcon status={subOrder.status} />
                                                             <span className={cn(
                                                                 "text-sm font-medium whitespace-nowrap",
-                                                                subOrder.status === 'shipped' && "text-[#b8651a]",
-                                                                subOrder.status === 'delivered' && "text-[#b8651a]",
+                                                                subOrder.status === 'shipped' && "text-[#ea580c]",
+                                                                subOrder.status === 'delivered' && "text-[#ea580c]",
                                                                 subOrder.status === 'returned' && "text-red-600",
                                                                 subOrder.status === 'cancelled' && "text-red-600",
                                                                 subOrder.status === 'pending' && "text-amber-600",
@@ -2003,12 +2003,12 @@ export function OrderDetailView({
 
                                                 {/* Kargo Bilgisi - belirgin banner */}
                                                 {subOrder.tracking_number && (
-                                                    <div className="px-4 py-2.5 bg-[#fbeede] border-b border-[#fbeede] flex items-center gap-3 flex-wrap">
-                                                        <div className="w-8 h-8 bg-white rounded-xl flex items-center justify-center border border-[#fbeede] shrink-0">
-                                                            <Truck className="w-4 h-4 text-[#b8651a]" />
+                                                    <div className="px-4 py-2.5 bg-[#ffedd5] border-b border-[#ffedd5] flex items-center gap-3 flex-wrap">
+                                                        <div className="w-8 h-8 bg-white rounded-xl flex items-center justify-center border border-[#ffedd5] shrink-0">
+                                                            <Truck className="w-4 h-4 text-[#ea580c]" />
                                                         </div>
                                                         <div className="flex-1 min-w-0">
-                                                            <span className="text-xs font-bold text-[#934f12] uppercase block">
+                                                            <span className="text-xs font-bold text-[#c2410c] uppercase block">
                                                                 {subOrder.shipping_provider || 'Kargo'}
                                                             </span>
                                                             <div className="flex items-center gap-1.5">
@@ -2021,7 +2021,7 @@ export function OrderDetailView({
                                                         <Button
                                                             variant="outline"
                                                             size="sm"
-                                                            className="text-[#934f12] border-[#fbeede] bg-white hover:bg-[#fbeede] text-xs rounded-xl shrink-0"
+                                                            className="text-[#c2410c] border-[#ffedd5] bg-white hover:bg-[#ffedd5] text-xs rounded-xl shrink-0"
                                                         >
                                                             <Truck className="w-3.5 h-3.5 mr-1" />
                                                             Takip Et
@@ -2041,16 +2041,16 @@ export function OrderDetailView({
 
                                                 {/* Fatura Bilgisi per sub_order */}
                                                 {subOrder.invoice && (
-                                                    <div className="px-4 py-3 bg-[#fbeede] border-t border-[#fbeede] flex items-center justify-between">
+                                                    <div className="px-4 py-3 bg-[#ffedd5] border-t border-[#ffedd5] flex items-center justify-between">
                                                         <div className="flex items-center gap-2.5">
-                                                            <div className="w-8 h-8 bg-white rounded-xl flex items-center justify-center border border-[#fbeede]">
-                                                                <FileText className="w-4 h-4 text-[#b8651a]" />
+                                                            <div className="w-8 h-8 bg-white rounded-xl flex items-center justify-center border border-[#ffedd5]">
+                                                                <FileText className="w-4 h-4 text-[#ea580c]" />
                                                             </div>
                                                             <div>
-                                                                <p className="text-xs font-medium text-[#b8651a]">
+                                                                <p className="text-xs font-medium text-[#ea580c]">
                                                                     Fatura #{subOrder.invoice.invoice_number}
                                                                 </p>
-                                                                <p className="text-xs text-[#b8651a]">
+                                                                <p className="text-xs text-[#ea580c]">
                                                                     {subOrder.invoice.formatted_total || `${formatPrice(subOrder.invoice.total_amount)} TL`}
                                                                     {' '}&middot;{' '}{subOrder.invoice.created_at}
                                                                 </p>
@@ -2060,7 +2060,7 @@ export function OrderDetailView({
                                                             <Button
                                                                 variant="outline"
                                                                 size="sm"
-                                                                className="text-[#b8651a] border-[#fbeede] bg-white hover:bg-[#fbeede] text-xs rounded-xl"
+                                                                className="text-[#ea580c] border-[#ffedd5] bg-white hover:bg-[#ffedd5] text-xs rounded-xl"
                                                                 onClick={async () => {
                                                                     try {
                                                                         const response = await api.getBlob(`/invoices/${subOrder.invoice.id}/download`);
@@ -2088,7 +2088,7 @@ export function OrderDetailView({
                                                     <div className="px-4 py-3 bg-[#faf8f6] border-t border-[#f0eceb] space-y-2">
                                                         {/* Başlık satırı */}
                                                         <div className="flex items-center gap-2">
-                                                            <FileText className="w-4 h-4 text-[#b8651a] shrink-0" />
+                                                            <FileText className="w-4 h-4 text-[#ea580c] shrink-0" />
                                                             <div>
                                                                 <p className="text-xs font-semibold text-[#1a1a1a]">Mesafeli Satış Sözleşmesi</p>
                                                                 <p className="text-[11px] text-[#6b7280]">{subOrder.seller_name}</p>
@@ -2118,7 +2118,7 @@ export function OrderDetailView({
                                                             <Button
                                                                 variant="outline"
                                                                 size="sm"
-                                                                className="flex-1 text-[#b8651a] border-[#fbeede] bg-white hover:bg-[#fbeede] text-xs rounded-xl h-8"
+                                                                className="flex-1 text-[#ea580c] border-[#ffedd5] bg-white hover:bg-[#ffedd5] text-xs rounded-xl h-8"
                                                                 onClick={async () => {
                                                                     try {
                                                                         const response = await contractsApi.downloadSalesContract(order.id, subOrder.seller_id);
@@ -2146,11 +2146,11 @@ export function OrderDetailView({
 
                                                 {/* Per-sub_order Teslim Aldim butonu */}
                                                 {subOrder.status === 'delivered' && !subOrder.buyer_confirmed_at && (
-                                                    <div className="px-4 py-3 bg-[#fbeede] border-t border-[#fbeede]">
+                                                    <div className="px-4 py-3 bg-[#ffedd5] border-t border-[#ffedd5]">
                                                         <Button
                                                             onClick={() => openDeliveryConfirmDialog(subOrder.id)}
                                                             disabled={isConfirmingDelivery}
-                                                            className="w-full bg-[#b8651a] hover:bg-[#934f12] text-white rounded-xl"
+                                                            className="w-full bg-[#1e3a8a] hover:bg-[#1e40af] text-white rounded-xl"
                                                         >
                                                             {confirmingSubOrderId === subOrder.id ? (
                                                                 <>
@@ -2169,7 +2169,7 @@ export function OrderDetailView({
 
                                                 {/* Onaylandi badge per sub_order */}
                                                 {subOrder.buyer_confirmed_at && (
-                                                    <div className="px-4 py-2.5 bg-[#fbeede] border-t border-[#fbeede] flex items-center gap-2 text-[#b8651a]">
+                                                    <div className="px-4 py-2.5 bg-[#ffedd5] border-t border-[#ffedd5] flex items-center gap-2 text-[#ea580c]">
                                                         <CheckCircle2 className="w-4 h-4 shrink-0" />
                                                         <span className="text-xs font-medium">Teslimat Onaylandı</span>
                                                     </div>
@@ -2207,7 +2207,7 @@ export function OrderDetailView({
                                                             variant="outline"
                                                             size="sm"
                                                             onClick={() => handleRequestReturn(subOrder.id)}
-                                                            className="text-[#b8651a] border-[#fbeede] hover:bg-[#fbeede] hover:text-[#934f12] text-xs rounded-xl"
+                                                            className="text-[#ea580c] border-[#ffedd5] hover:bg-[#ffedd5] hover:text-[#c2410c] text-xs rounded-xl"
                                                         >
                                                             <Box className="w-3.5 h-3.5 mr-1" />
                                                             İade Talebi Oluştur
@@ -2381,7 +2381,7 @@ export function OrderDetailView({
                     <DialogContent className="sm:max-w-md">
                         <DialogHeader>
                             <DialogTitle className="flex items-center gap-2">
-                                <CheckCircle2 className="w-5 h-5 text-[#b8651a]" />
+                                <CheckCircle2 className="w-5 h-5 text-[#ea580c]" />
                                 Teslim Aldım
                             </DialogTitle>
                             <DialogDescription>
@@ -2396,7 +2396,7 @@ export function OrderDetailView({
                                     type="checkbox"
                                     checked={deliveryConfirmChecked}
                                     onChange={(e) => setDeliveryConfirmChecked(e.target.checked)}
-                                    className="mt-0.5 w-5 h-5 rounded border-[#f0eceb] text-[#b8651a] focus:ring-[#b8651a] cursor-pointer"
+                                    className="mt-0.5 w-5 h-5 rounded border-[#f0eceb] text-[#ea580c] focus:ring-[#ea580c] cursor-pointer"
                                 />
                                 <span className="text-sm text-[#6b7280] leading-relaxed group-hover:text-[#1a1a1a]">
                                     Ürünü eksiksiz ve sorunsuz aldığımı kabul ediyorum.
@@ -2413,7 +2413,7 @@ export function OrderDetailView({
                             <Button
                                 onClick={handleConfirmDelivery}
                                 disabled={!deliveryConfirmChecked}
-                                className="bg-[#b8651a] hover:bg-[#934f12] text-white rounded-xl disabled:opacity-50"
+                                className="bg-[#1e3a8a] hover:bg-[#1e40af] text-white rounded-xl disabled:opacity-50"
                             >
                                 <CheckCircle2 className="w-4 h-4 mr-2" />
                                 Teslim Aldım — Onayla
@@ -2453,7 +2453,7 @@ export function OrderDetailView({
                                                 return (
                                                     <div key={item.id} className={cn(
                                                         "flex items-center gap-3 p-2.5 rounded-xl border transition-colors cursor-pointer",
-                                                        isSelected ? "border-[#fbeede] bg-[#fbeede]" : "border-[#f0eceb] hover:bg-[#faf8f6]"
+                                                        isSelected ? "border-[#ffedd5] bg-[#ffedd5]" : "border-[#f0eceb] hover:bg-[#faf8f6]"
                                                     )}
                                                     onClick={() => {
                                                         if (isSelected) {
@@ -2466,7 +2466,7 @@ export function OrderDetailView({
                                                         {/* Checkbox */}
                                                         <div className={cn(
                                                             "w-5 h-5 rounded border-2 flex items-center justify-center shrink-0",
-                                                            isSelected ? "bg-[#b8651a] border-[#b8651a]" : "border-[#d1ccc9]"
+                                                            isSelected ? "bg-[#1e3a8a] border-[#ea580c]" : "border-[#d1ccc9]"
                                                         )}>
                                                             {isSelected && <Check className="w-3.5 h-3.5 text-white" />}
                                                         </div>
@@ -2526,9 +2526,9 @@ export function OrderDetailView({
                                         </div>
                                         {/* Tahmini iade tutarı */}
                                         {selectedItems.length > 0 && (
-                                            <div className="flex items-center justify-between px-3 py-2 bg-[#fbeede] border border-[#fbeede] rounded-xl">
-                                                <span className="text-sm text-[#934f12]">Tahmini iade tutarı</span>
-                                                <span className="text-sm font-bold text-[#b8651a]">{formatPrice(calculateRefundTotal())} TL</span>
+                                            <div className="flex items-center justify-between px-3 py-2 bg-[#ffedd5] border border-[#ffedd5] rounded-xl">
+                                                <span className="text-sm text-[#c2410c]">Tahmini iade tutarı</span>
+                                                <span className="text-sm font-bold text-[#ea580c]">{formatPrice(calculateRefundTotal())} TL</span>
                                             </div>
                                         )}
                                     </div>
@@ -2542,7 +2542,7 @@ export function OrderDetailView({
                                     id="return-reason"
                                     value={selectedReturnReason}
                                     onChange={(e) => setSelectedReturnReason(e.target.value)}
-                                    className="w-full px-3 py-2 border border-[#f0eceb] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#fbeede]"
+                                    className="w-full px-3 py-2 border border-[#f0eceb] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#ffedd5]"
                                 >
                                     <option value="">Neden seçin...</option>
                                     {returnReasons.map((reason) => (
@@ -2584,7 +2584,7 @@ export function OrderDetailView({
                                         </div>
                                     ))}
                                     {returnImages.length < 5 && (
-                                        <label className="w-16 h-16 rounded-xl border-2 border-dashed border-[#d1ccc9] hover:border-[#fbeede] flex items-center justify-center cursor-pointer transition-colors">
+                                        <label className="w-16 h-16 rounded-xl border-2 border-dashed border-[#d1ccc9] hover:border-[#ffedd5] flex items-center justify-center cursor-pointer transition-colors">
                                             <Camera className="w-5 h-5 text-[#6b7280]" />
                                             <input
                                                 type="file"
@@ -2617,7 +2617,7 @@ export function OrderDetailView({
                             <Button
                                 onClick={handleSubmitReturn}
                                 disabled={isRequestingReturn || !selectedReturnReason}
-                                className="bg-[#b8651a] hover:bg-[#934f12] text-white rounded-xl"
+                                className="bg-[#1e3a8a] hover:bg-[#1e40af] text-white rounded-xl"
                             >
                                 {isRequestingReturn ? (
                                     <>
@@ -2642,7 +2642,7 @@ export function OrderDetailView({
         <div className="text-center py-12 bg-[#faf8f6] rounded-2xl border border-[#f0eceb]">
             <Box className="w-16 h-16 mx-auto text-[#d1ccc9] mb-4" />
             <p className="text-sm text-[#6b7280] mb-4">Sipariş bulunamadı</p>
-            <Button variant="outline" onClick={onBack} className="rounded-xl border-[#f0eceb] hover:border-[#fbeede]">Geri Dön</Button>
+            <Button variant="outline" onClick={onBack} className="rounded-xl border-[#f0eceb] hover:border-[#ffedd5]">Geri Dön</Button>
         </div>
     );
 }

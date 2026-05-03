@@ -139,7 +139,7 @@ function MarketCategoryContent() {
             setIsLoading(true);
             try {
                 const response = await productsApi.getAll({
-                    category: lastSlug,
+                    category: fullSlug,
                     page: nextPage,
                     per_page: PER_PAGE,
                     brand: filters.brand || undefined,
@@ -177,7 +177,7 @@ function MarketCategoryContent() {
                 if (filtersRef.current === requestId) setIsLoading(false);
             }
         },
-        [lastSlug, filters, subcategories.length],
+        [fullSlug, filters, subcategories.length],
     );
 
     useEffect(() => {

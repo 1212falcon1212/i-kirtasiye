@@ -107,12 +107,12 @@ function ResetPasswordForm() {
         className="lg:hidden flex justify-center mb-8"
       >
         <Link href="/" className="flex items-center gap-3">
-          <div className="w-12 h-12 bg-[#fbeede] rounded-xl flex items-center justify-center shadow-lg">
+          <div className="w-12 h-12 bg-[#ffedd5] rounded-xl flex items-center justify-center shadow-lg">
             <Cross className="w-7 h-7 text-white" />
           </div>
           <div className="flex flex-col">
             <span className="text-2xl font-bold text-slate-900">i-kirtasiye</span>
-            <span className="text-[10px] font-medium text-[#b8651a] -mt-0.5 tracking-wider uppercase">B2B Kırtasiye</span>
+            <span className="text-[10px] font-medium text-[#ea580c] -mt-0.5 tracking-wider uppercase">B2B Kırtasiye</span>
           </div>
         </Link>
       </motion.div>
@@ -157,7 +157,7 @@ function ResetPasswordForm() {
                 scale: focusedField === 'password' ? 1 : 0.95,
                 opacity: focusedField === 'password' ? 1 : 0,
               }}
-              className="absolute inset-0 bg-gradient-to-r from-[#fbeede]/20 to-teal-500/20 rounded-xl blur-sm -z-10"
+              className="absolute inset-0 bg-gradient-to-r from-[#ffedd5]/20 to-teal-500/20 rounded-xl blur-sm -z-10"
             />
             <div className="relative flex items-center">
               <div className="absolute left-4 text-gray-400">
@@ -175,7 +175,7 @@ function ResetPasswordForm() {
                 onBlur={() => setFocusedField(null)}
                 required
                 minLength={8}
-                className="h-12 pl-12 pr-12 bg-white border-gray-200 rounded-xl focus:border-[#b8651a] focus:ring-[#b8651a]/20 transition-all duration-300"
+                className="h-12 pl-12 pr-12 bg-white border-gray-200 rounded-xl focus:border-[#ea580c] focus:ring-[#ea580c]/20 transition-all duration-300"
               />
               <button
                 type="button"
@@ -208,7 +208,7 @@ function ResetPasswordForm() {
                 scale: focusedField === 'confirmation' ? 1 : 0.95,
                 opacity: focusedField === 'confirmation' ? 1 : 0,
               }}
-              className="absolute inset-0 bg-gradient-to-r from-[#fbeede]/20 to-teal-500/20 rounded-xl blur-sm -z-10"
+              className="absolute inset-0 bg-gradient-to-r from-[#ffedd5]/20 to-teal-500/20 rounded-xl blur-sm -z-10"
             />
             <div className="relative flex items-center">
               <div className="absolute left-4 text-gray-400">
@@ -226,7 +226,7 @@ function ResetPasswordForm() {
                 onBlur={() => setFocusedField(null)}
                 required
                 minLength={8}
-                className="h-12 pl-12 pr-12 bg-white border-gray-200 rounded-xl focus:border-[#b8651a] focus:ring-[#b8651a]/20 transition-all duration-300"
+                className="h-12 pl-12 pr-12 bg-white border-gray-200 rounded-xl focus:border-[#ea580c] focus:ring-[#ea580c]/20 transition-all duration-300"
               />
               <button
                 type="button"
@@ -253,7 +253,7 @@ function ResetPasswordForm() {
           <Button
             type="submit"
             disabled={isLoading}
-            className="relative w-full h-12 bg-gradient-to-r from-[#fbeede] to-teal-600 hover:from-[#fbeede] hover:to-teal-700 text-white font-semibold rounded-xl shadow-sm transition-colors duration-150 hover:shadow-md overflow-hidden group"
+            className="relative w-full h-12 bg-gradient-to-r from-[#ffedd5] to-teal-600 hover:from-[#ffedd5] hover:to-teal-700 text-white font-semibold rounded-xl shadow-sm transition-colors duration-150 hover:shadow-md overflow-hidden group"
           >
             <motion.div
               className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0"

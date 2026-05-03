@@ -15,7 +15,7 @@ const brands: BrandData[] = [
   { name: 'AVENE', color: '#0f766e', tagline: 'Hassas cilt ürünlerinde toptan avantaj', slug: 'avene' },
   { name: 'SOLGAR', color: '#7c3aed', tagline: 'Vitamin takviyelerinde B2B kampanya', slug: 'solgar' },
   { name: 'VICHY', color: '#b45309', tagline: 'Anti-aging serisinde stok fırsatı', slug: 'vichy' },
-  { name: 'NUXE', color: '#b8651a', tagline: 'Vücut & yüz bakım serisinde indirim', slug: 'nuxe' },
+  { name: 'NUXE', color: '#ea580c', tagline: 'Vücut & yüz bakım serisinde indirim', slug: 'nuxe' },
 ];
 
 export function BrandCampaigns() {

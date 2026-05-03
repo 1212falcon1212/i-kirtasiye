@@ -228,7 +228,7 @@ export function IntegrationCard({ id, name, description, logo, integration, onUp
                             variant="outline"
                             className={cn(
                                 "gap-1",
-                                isActive && "bg-[#fbeede] text-[#b8651a] border-[#fbeede]",
+                                isActive && "bg-[#ffedd5] text-[#ea580c] border-[#ffedd5]",
                                 hasError && "bg-red-50 text-red-700 border-red-200",
                                 !isActive && !hasError && "bg-amber-50 text-amber-700 border-amber-200"
                             )}
@@ -253,7 +253,7 @@ export function IntegrationCard({ id, name, description, logo, integration, onUp
                                     <span className="text-slate-500 block mb-1">Durum</span>
                                     <span className={cn(
                                         "font-medium",
-                                        isActive && "text-[#b8651a]",
+                                        isActive && "text-[#ea580c]",
                                         hasError && "text-red-600",
                                         isPending && "text-amber-600",
                                         !isActive && !hasError && !isPending && "text-slate-600"
@@ -390,7 +390,7 @@ export function IntegrationCard({ id, name, description, logo, integration, onUp
                                         setEditMode(false);
                                     }}
                                     disabled={saving}
-                                    className="bg-[#b8651a] hover:bg-[#934f12]"
+                                    className="bg-[#1e3a8a] hover:bg-[#1e40af]"
                                 >
                                     {saving ? (
                                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />

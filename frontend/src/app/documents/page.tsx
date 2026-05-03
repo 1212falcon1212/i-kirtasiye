@@ -41,7 +41,7 @@ const SELLER_DOCUMENT_TYPES = [
 
 const STATUS_CONFIG = {
     pending: { color: "bg-yellow-100 text-yellow-800", icon: Clock, label: "Bekliyor" },
-    approved: { color: "bg-[#fbeede] text-[#934f12]", icon: CheckCircle2, label: "Onaylandı" },
+    approved: { color: "bg-[#ffedd5] text-[#c2410c]", icon: CheckCircle2, label: "Onaylandı" },
     rejected: { color: "bg-red-100 text-red-800", icon: XCircle, label: "Reddedildi" },
 };
 
@@ -203,7 +203,7 @@ export default function DocumentsPage() {
     if (authLoading || loading) {
         return (
             <div className="flex items-center justify-center min-h-screen">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#b8651a]"></div>
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#ea580c]"></div>
             </div>
         );
     }
@@ -221,11 +221,11 @@ export default function DocumentsPage() {
 
                 {/* Status Alert */}
                 {allApproved ? (
-                    <div className="mb-6 bg-[#fbeede] border border-[#fbeede] rounded-lg p-4 flex items-center gap-3">
-                        <CheckCircle2 className="h-6 w-6 text-[#b8651a]" />
+                    <div className="mb-6 bg-[#ffedd5] border border-[#ffedd5] rounded-lg p-4 flex items-center gap-3">
+                        <CheckCircle2 className="h-6 w-6 text-[#ea580c]" />
                         <div>
-                            <h3 className="font-medium text-[#934f12]">Evraklarınız Onaylandı</h3>
-                            <p className="text-sm text-[#934f12]">Tüm gerekli evraklarınız onaylanmış. Platforma tam erişiminiz var.</p>
+                            <h3 className="font-medium text-[#c2410c]">Evraklarınız Onaylandı</h3>
+                            <p className="text-sm text-[#c2410c]">Tüm gerekli evraklarınız onaylanmış. Platforma tam erişiminiz var.</p>
                         </div>
                         <Button
                             className="ml-auto"
@@ -254,11 +254,11 @@ export default function DocumentsPage() {
                 )}
 
                 {/* Registration Contract Section */}
-                <Card className="mb-8 border-[#fbeede] bg-[#fbeede]/30">
+                <Card className="mb-8 border-[#ffedd5] bg-[#ffedd5]/30">
                     <CardHeader>
                         <div className="flex items-center gap-3">
-                            <div className="p-2 rounded-lg bg-[#fbeede]">
-                                <FileText className="h-5 w-5 text-[#b8651a]" />
+                            <div className="p-2 rounded-lg bg-[#ffedd5]">
+                                <FileText className="h-5 w-5 text-[#ea580c]" />
                             </div>
                             <div>
                                 <CardTitle>Üyelik Sözleşmesi</CardTitle>
@@ -272,7 +272,7 @@ export default function DocumentsPage() {
                         <div className="flex flex-col sm:flex-row gap-3">
                             <Button
                                 variant="outline"
-                                className="gap-2 border-[#fbeede] text-[#b8651a] hover:bg-[#934f12]"
+                                className="gap-2 border-[#ffedd5] text-[#ea580c] hover:bg-[#1e40af]"
                                 onClick={handleDownloadContract}
                             >
                                 <Download className="h-4 w-4" />
@@ -300,7 +300,7 @@ export default function DocumentsPage() {
                         {contractDoc && (
                             <div className={`mt-4 p-4 rounded-lg border ${
                                 contractDoc.status === "approved"
-                                    ? "bg-[#fbeede] border-[#fbeede]"
+                                    ? "bg-[#ffedd5] border-[#ffedd5]"
                                     : contractDoc.status === "rejected"
                                     ? "bg-red-50 border-red-200"
                                     : "bg-white border-gray-200"
@@ -309,17 +309,17 @@ export default function DocumentsPage() {
                                     <div className="flex items-center gap-3">
                                         <div className={`p-2 rounded-lg ${
                                             contractDoc.status === "approved"
-                                                ? "bg-[#fbeede]"
+                                                ? "bg-[#ffedd5]"
                                                 : contractDoc.status === "rejected"
                                                 ? "bg-red-100"
-                                                : "bg-[#fbeede]"
+                                                : "bg-[#ffedd5]"
                                         }`}>
                                             <FileText className={`h-5 w-5 ${
                                                 contractDoc.status === "approved"
-                                                    ? "text-[#b8651a]"
+                                                    ? "text-[#ea580c]"
                                                     : contractDoc.status === "rejected"
                                                     ? "text-red-600"
-                                                    : "text-[#b8651a]"
+                                                    : "text-[#ea580c]"
                                             }`} />
                                         </div>
                                         <div>
@@ -514,7 +514,7 @@ export default function DocumentsPage() {
                     <p>
                         Belgeleriniz en kısa sürede incelenecektir.
                         Onay sürecinde herhangi bir sorun yaşarsanız
-                        <a href="mailto:destek@i-kirtasiye.com" className="text-[#b8651a] hover:underline ml-1">
+                        <a href="mailto:destek@i-kirtasiye.com" className="text-[#ea580c] hover:underline ml-1">
                             destek@i-kirtasiye.com
                         </a>
                         {" "}adresinden iletişime geçebilirsiniz.

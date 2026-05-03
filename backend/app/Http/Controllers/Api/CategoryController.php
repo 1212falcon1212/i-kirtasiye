@@ -26,12 +26,19 @@ class CategoryController extends Controller
                 ->orderBy('name')
                 ->get()
                 ->map(function ($category) {
+                    $sampleProduct = Product::active()
+                        ->whereIn('category_id', $category->getDescendantIds())
+                        ->whereNotNull('image')
+                        ->where('image', '!=', '')
+                        ->first(['id', 'image']);
+
                     return [
                         'id' => $category->id,
                         'name' => $category->name,
                         'slug' => $category->slug,
                         'full_slug' => $category->full_slug ?? $category->slug,
                         'description' => $category->description,
+                        'image_url' => $sampleProduct?->image_url,
                         'products_count' => $category->total_products_count,
                         'children' => $category->children->map(function ($child) {
                             return [
@@ -58,7 +65,7 @@ class CategoryController extends Controller
     {
         $category = Category::with('children')->find($id);
 
-        if (!$category) {
+        if (! $category) {
             return response()->json(['message' => 'Kategori bulunamadı.'], 404);
         }
 
@@ -85,7 +92,7 @@ class CategoryController extends Controller
                     'slug' => $category->slug,
                     'description' => $category->description,
                     'parent_id' => $category->parent_id,
-                    'children' => $category->children->map(fn($c) => [
+                    'children' => $category->children->map(fn ($c) => [
                         'id' => $c->id,
                         'name' => $c->name,
                         'slug' => $c->slug,
@@ -111,11 +118,11 @@ class CategoryController extends Controller
         $category = Category::where('full_slug', $slug)->with(['children', 'parent'])->first();
 
         // If not found, try simple slug (backwards compatibility)
-        if (!$category) {
+        if (! $category) {
             $category = Category::where('slug', $slug)->with(['children', 'parent'])->first();
         }
 
-        if (!$category) {
+        if (! $category) {
             return response()->json(['message' => 'Kategori bulunamadı.'], 404);
         }
 
@@ -151,7 +158,7 @@ class CategoryController extends Controller
                         'slug' => $category->parent->slug,
                         'full_slug' => $category->parent->full_slug,
                     ] : null,
-                    'children' => $category->children->map(fn($c) => [
+                    'children' => $category->children->map(fn ($c) => [
                         'id' => $c->id,
                         'name' => $c->name,
                         'slug' => $c->slug,

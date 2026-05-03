@@ -31,7 +31,7 @@ export default function FiyatStokPage() {
                 <h4 className="font-semibold text-gray-800 mb-4">Teklif Durumları</h4>
                 <div className="grid sm:grid-cols-3 gap-4">
                     <div className="flex items-center gap-3">
-                        <span className="w-3 h-3 rounded-full bg-[#fbeede]"></span>
+                        <span className="w-3 h-3 rounded-full bg-[#ffedd5]"></span>
                         <div>
                             <p className="font-medium text-gray-900 text-sm">Aktif</p>
                             <p className="text-gray-500 text-xs">Satışta, alıcılara görünür</p>
@@ -60,8 +60,8 @@ export default function FiyatStokPage() {
 
             <div className="bg-white border border-gray-200 rounded-xl p-6 mb-6">
                 <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 bg-[#fbeede] rounded-xl flex items-center justify-center flex-shrink-0">
-                        <TrendingUp className="w-6 h-6 text-[#b8651a]" />
+                    <div className="w-12 h-12 bg-[#ffedd5] rounded-xl flex items-center justify-center flex-shrink-0">
+                        <TrendingUp className="w-6 h-6 text-[#ea580c]" />
                     </div>
                     <div>
                         <h3 className="font-semibold text-gray-900 mb-2">Fiyat Değiştirme</h3>
@@ -109,12 +109,12 @@ export default function FiyatStokPage() {
                 </div>
             </div>
 
-            <div className="bg-[#fbeede] border border-[#fbeede] rounded-xl p-6 my-6">
-                <h4 className="font-semibold text-[#b8651a] mb-3 flex items-center gap-2">
+            <div className="bg-[#ffedd5] border border-[#ffedd5] rounded-xl p-6 my-6">
+                <h4 className="font-semibold text-[#ea580c] mb-3 flex items-center gap-2">
                     <CheckCircle className="w-5 h-5" />
                     Stok Yönetimi İpuçları
                 </h4>
-                <ul className="text-[#b8651a] space-y-2 text-sm">
+                <ul className="text-[#ea580c] space-y-2 text-sm">
                     <li className="flex items-start gap-2">
                         <CheckCircle className="w-4 h-4 mt-0.5 flex-shrink-0" />
                         Günlük olarak stoklarınızı kontrol edin
@@ -133,7 +133,7 @@ export default function FiyatStokPage() {
             <div className="flex items-center justify-between mt-10">
                 <Link
                     href="/yardim/satici-rehberi/urun-ekleme"
-                    className="text-gray-600 hover:text-[#b8651a] font-medium flex items-center gap-2"
+                    className="text-gray-600 hover:text-[#ea580c] font-medium flex items-center gap-2"
                 >
                     <ArrowLeft className="w-4 h-4" />
                     Önceki: Ürün Ekleme

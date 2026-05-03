@@ -26,8 +26,8 @@ export default function UrunEklemePage() {
             <div className="space-y-8">
                 <div className="bg-white border border-gray-200 rounded-xl p-6">
                     <div className="flex items-start gap-4">
-                        <div className="w-12 h-12 bg-[#fbeede] rounded-xl flex items-center justify-center flex-shrink-0">
-                            <Box className="w-6 h-6 text-[#b8651a]" />
+                        <div className="w-12 h-12 bg-[#ffedd5] rounded-xl flex items-center justify-center flex-shrink-0">
+                            <Box className="w-6 h-6 text-[#ea580c]" />
                         </div>
                         <div>
                             <h3 className="font-semibold text-gray-900 mb-2">1. Ürün Seçimi</h3>
@@ -100,12 +100,12 @@ export default function UrunEklemePage() {
                 Teklifiniz anında diğer eczacılara görünür hale gelecektir.
             </p>
 
-            <div className="bg-[#fbeede] border border-[#fbeede] rounded-xl p-6 my-6">
-                <h4 className="font-semibold text-[#b8651a] mb-3 flex items-center gap-2">
+            <div className="bg-[#ffedd5] border border-[#ffedd5] rounded-xl p-6 my-6">
+                <h4 className="font-semibold text-[#ea580c] mb-3 flex items-center gap-2">
                     <CheckCircle className="w-5 h-5" />
                     Başarılı Satış İçin İpuçları
                 </h4>
-                <ul className="text-[#b8651a] space-y-2 text-sm">
+                <ul className="text-[#ea580c] space-y-2 text-sm">
                     <li className="flex items-start gap-2">
                         <CheckCircle className="w-4 h-4 mt-0.5 flex-shrink-0" />
                         Rekabetçi fiyat belirleyin - sistem size piyasa ortalamalarını gösterir

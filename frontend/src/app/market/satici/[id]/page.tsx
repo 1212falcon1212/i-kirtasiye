@@ -66,7 +66,7 @@ function OfferCard({ offer }: { offer: Offer }) {
     const productImage = offer.product?.image_url || offer.product?.image;
 
     return (
-        <div className="group bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-[#fbeede] dark:hover:border-[#fbeede] transition-all duration-300 overflow-hidden hover:shadow-lg">
+        <div className="group bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-[#ffedd5] dark:hover:border-[#ffedd5] transition-all duration-300 overflow-hidden hover:shadow-lg">
             {/* Product Image */}
             <div className="relative aspect-square bg-slate-50 p-4 flex items-center justify-center">
                 <Link href={`/market/product/${offer.product_id}`} className="absolute inset-0 z-10" />
@@ -84,7 +84,7 @@ function OfferCard({ offer }: { offer: Offer }) {
                 <div className="absolute top-2 right-2 z-20">
                     <Badge className={cn(
                         "text-xs",
-                        offer.stock > 10 ? "bg-[#fbeede] text-[#b8651a]" :
+                        offer.stock > 10 ? "bg-[#ffedd5] text-[#ea580c]" :
                             offer.stock > 0 ? "bg-amber-100 text-amber-700" :
                                 "bg-red-100 text-red-700"
                     )}>
@@ -105,7 +105,7 @@ function OfferCard({ offer }: { offer: Offer }) {
                 {/* Product Name */}
                 <Link
                     href={`/market/product/${offer.product_id}`}
-                    className="text-sm font-bold text-slate-800 dark:text-slate-200 line-clamp-2 h-10 mb-2 hover:text-[#b8651a] transition-colors"
+                    className="text-sm font-bold text-slate-800 dark:text-slate-200 line-clamp-2 h-10 mb-2 hover:text-[#ea580c] transition-colors"
                 >
                     {offer.product?.name || 'Ürün'}
                 </Link>
@@ -134,7 +134,7 @@ function OfferCard({ offer }: { offer: Offer }) {
                             size="sm"
                             onClick={handleAddToCart}
                             disabled={isAdding}
-                            className="bg-[#b8651a] hover:bg-[#934f12]"
+                            className="bg-[#1e3a8a] hover:bg-[#1e40af]"
                         >
                             {isAdding ? (
                                 <Loader2 className="w-4 h-4 animate-spin" />
@@ -300,7 +300,7 @@ export default function SaticiProfilePage() {
             {/* Seller Header */}
             <div className="bg-white rounded-lg p-6 mb-8 border border-slate-200 shadow-sm">
                 <div className="flex items-center gap-4">
-                    <div className="w-16 h-16 bg-gradient-to-br from-[#fbeede] to-teal-600 rounded-full flex items-center justify-center">
+                    <div className="w-16 h-16 bg-gradient-to-br from-[#ffedd5] to-teal-600 rounded-full flex items-center justify-center">
                         <Store className="w-8 h-8 text-white" />
                     </div>
                     <div>
@@ -315,7 +315,7 @@ export default function SaticiProfilePage() {
                         )}
                     </div>
                     <div className="ml-auto">
-                        <Badge className="bg-[#fbeede] text-[#b8651a] text-sm px-3 py-1">
+                        <Badge className="bg-[#ffedd5] text-[#ea580c] text-sm px-3 py-1">
                             <Tag className="w-4 h-4 mr-1" />
                             {pagination.total} ilan
                         </Badge>
@@ -373,7 +373,7 @@ export default function SaticiProfilePage() {
                                                 disabled={loading}
                                                 className={cn(
                                                     "w-8 h-8 p-0",
-                                                    page === currentPage && "bg-[#b8651a]"
+                                                    page === currentPage && "bg-[#1e3a8a]"
                                                 )}
                                             >
                                                 {page}

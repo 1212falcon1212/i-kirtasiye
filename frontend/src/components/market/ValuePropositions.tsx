@@ -7,7 +7,7 @@ const propositions = [
     icon: Tag,
     title: 'Komisyonsuz Satış',
     subtitle: 'Sadece sabit \u20BA50 hizmet bedeli',
-    bg: 'bg-[#b8651a]',
+    bg: 'bg-[#1e3a8a]',
   },
   {
     icon: Truck,
@@ -19,7 +19,7 @@ const propositions = [
     icon: ShieldCheck,
     title: 'Guvenli Tedarik',
     subtitle: 'Onayli kirtasiye ve tedarikcilerden',
-    bg: 'bg-[#934f12]',
+    bg: 'bg-[#1e40af]',
   },
 ] as const;
 

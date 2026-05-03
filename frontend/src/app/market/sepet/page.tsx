@@ -95,7 +95,7 @@ function CartItemRow({
                         <div className="min-w-0 flex-1">
                             <Link
                                 href={`/market/product/${item.product_id}`}
-                                className="text-sm font-medium text-slate-800 hover:text-[#b8651a] transition-colors line-clamp-2 leading-snug"
+                                className="text-sm font-medium text-slate-800 hover:text-[#ea580c] transition-colors line-clamp-2 leading-snug"
                             >
                                 {item.product.name}
                             </Link>
@@ -124,7 +124,7 @@ function CartItemRow({
                         {priceIssue && priceIssue.old_price && priceIssue.new_price ? (
                             <div className="flex items-center gap-1.5">
                                 <span className="text-xs text-slate-400 line-through">{formatPrice(priceIssue.old_price)}</span>
-                                <span className={cn("text-sm font-semibold", priceIssue.new_price > priceIssue.old_price ? "text-red-600" : "text-[#b8651a]")}>
+                                <span className={cn("text-sm font-semibold", priceIssue.new_price > priceIssue.old_price ? "text-red-600" : "text-[#ea580c]")}>
                                     {formatPrice(priceIssue.new_price)}
                                 </span>
                             </div>
@@ -208,16 +208,16 @@ function SellerGroup({
                 <Checkbox
                     checked={isSelected}
                     onCheckedChange={onToggle}
-                    className="h-5 w-5 rounded-md border-2 border-slate-300 data-[state=checked]:bg-[#fbeede] data-[state=checked]:border-[#fbeede]"
+                    className="h-5 w-5 rounded-md border-2 border-slate-300 data-[state=checked]:bg-[#ffedd5] data-[state=checked]:border-[#ffedd5]"
                 />
-                <div className="w-9 h-9 rounded-xl bg-[#fbeede] flex items-center justify-center flex-shrink-0">
-                    <Store className="w-4 h-4 text-[#b8651a]" />
+                <div className="w-9 h-9 rounded-xl bg-[#ffedd5] flex items-center justify-center flex-shrink-0">
+                    <Store className="w-4 h-4 text-[#ea580c]" />
                 </div>
                 <div className="flex-1 min-w-0">
                     {group.seller?.id ? (
                         <Link
                             href={`/market/satici/${group.seller.id}`}
-                            className="font-semibold text-sm text-slate-800 truncate hover:text-[#b8651a] hover:underline transition-colors block"
+                            className="font-semibold text-sm text-slate-800 truncate hover:text-[#ea580c] hover:underline transition-colors block"
                             onClick={(e) => e.stopPropagation()}
                         >
                             {group.seller.nickname || group.seller.business_name || 'Satıcı'}
@@ -263,7 +263,7 @@ function SellerGroup({
             {/* Shipping Info - always free */}
             <div className="flex items-center gap-2.5 px-4 sm:px-5 py-3 bg-slate-50/40 border-t border-slate-100">
                 <Truck className="w-4 h-4 text-slate-400 flex-shrink-0" />
-                <span className="text-xs font-semibold text-[#b8651a] bg-[#fbeede] px-2.5 py-1 rounded-full flex items-center gap-1">
+                <span className="text-xs font-semibold text-[#ea580c] bg-[#ffedd5] px-2.5 py-1 rounded-full flex items-center gap-1">
                     <Gift className="w-3 h-3" />
                     Ücretsiz Kargo
                 </span>
@@ -427,7 +427,7 @@ export default function SepetPage() {
                     </p>
                     <Button
                         asChild
-                        className="bg-[#b8651a] hover:bg-[#934f12] text-white"
+                        className="bg-[#1e3a8a] hover:bg-[#1e40af] text-white"
                         size="lg"
                     >
                         <Link href="/market">
@@ -456,8 +456,8 @@ export default function SepetPage() {
             <div className="flex items-center justify-between mb-8">
                 <div>
                     <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2.5">
-                        <div className="w-8 h-8 rounded-lg bg-[#fbeede] flex items-center justify-center">
-                            <ShoppingCart className="h-4.5 w-4.5 text-[#b8651a]" />
+                        <div className="w-8 h-8 rounded-lg bg-[#ffedd5] flex items-center justify-center">
+                            <ShoppingCart className="h-4.5 w-4.5 text-[#ea580c]" />
                         </div>
                         Sepetim
                         <span className="text-sm font-normal text-slate-400 ml-1">({itemCount} ürün)</span>
@@ -483,9 +483,9 @@ export default function SepetPage() {
             {totalSellerCount > 1 && (
                 <div className="flex flex-wrap items-center gap-3 mb-5 bg-white rounded-xl border border-slate-200 px-4 py-3 shadow-sm">
                     <div className="flex items-center gap-2 flex-1 min-w-[180px]">
-                        <div className="w-2 h-2 rounded-full bg-[#fbeede]" />
+                        <div className="w-2 h-2 rounded-full bg-[#ffedd5]" />
                         <span className="text-sm text-slate-600 font-medium">
-                            Seçili Satıcılar: <span className="text-[#b8651a] font-bold">{selectedCount}</span> / {totalSellerCount}
+                            Seçili Satıcılar: <span className="text-[#ea580c] font-bold">{selectedCount}</span> / {totalSellerCount}
                         </span>
                     </div>
                     <div className="flex gap-2">
@@ -493,8 +493,8 @@ export default function SepetPage() {
                             className={cn(
                                 "px-3.5 py-1.5 rounded-lg text-xs font-semibold border transition-all",
                                 allSelected
-                                    ? "bg-[#fbeede] text-[#b8651a] border-[#fbeede] cursor-default"
-                                    : "text-slate-600 border-slate-200 hover:bg-[#934f12] hover:text-[#b8651a] hover:border-[#fbeede]"
+                                    ? "bg-[#ffedd5] text-[#ea580c] border-[#ffedd5] cursor-default"
+                                    : "text-slate-600 border-slate-200 hover:bg-[#1e40af] hover:text-[#ea580c] hover:border-[#ffedd5]"
                             )}
                             onClick={selectAllSellers}
                             disabled={allSelected}
@@ -584,7 +584,7 @@ export default function SepetPage() {
                                         .map((group, index) => (
                                         <div key={group.seller?.id || `summary-${index}`} className="flex justify-between items-center">
                                             <div className="flex items-center gap-2 min-w-0 mr-3">
-                                                <div className="w-1.5 h-1.5 rounded-full bg-[#fbeede] flex-shrink-0" />
+                                                <div className="w-1.5 h-1.5 rounded-full bg-[#ffedd5] flex-shrink-0" />
                                                 <span className="text-sm text-slate-500 truncate">
                                                     {group.seller?.nickname || group.seller?.business_name || 'Satıcı'}
                                                 </span>
@@ -613,7 +613,7 @@ export default function SepetPage() {
                                     </div>
                                     <div className="flex justify-between text-sm">
                                         <span className="text-slate-500">Kargo</span>
-                                        <span className="font-medium tabular-nums text-[#b8651a]">
+                                        <span className="font-medium tabular-nums text-[#ea580c]">
                                             Ücretsiz
                                         </span>
                                     </div>
@@ -636,7 +636,7 @@ export default function SepetPage() {
                             <div className="px-5 pb-5 space-y-3">
                                 <Button
                                     asChild={!noneSelected && !isBelowMinOrder}
-                                    className="w-full h-12 bg-[#b8651a] hover:bg-[#934f12] text-white font-semibold rounded-xl shadow-lg shadow-[#b8651a]/15 transition-all hover:shadow-[#b8651a]/25"
+                                    className="w-full h-12 bg-[#1e3a8a] hover:bg-[#1e40af] text-white font-semibold rounded-xl shadow-lg shadow-[#ea580c]/15 transition-all hover:shadow-[#ea580c]/25"
                                     size="lg"
                                     disabled={isLoading || hasBlockingIssues || noneSelected || isBelowMinOrder}
                                 >

@@ -194,7 +194,7 @@ function BestSellersContent() {
                 <Button
                     variant="outline"
                     size="sm"
-                    className="w-full mt-2 h-8 text-xs bg-[#fbeede] text-[#b8651a] border-[#fbeede] hover:bg-[#934f12] dark:bg-[#934f12]/30 dark:text-[#fbeede] dark:border-[#934f12] dark:hover:bg-[#934f12]/50"
+                    className="w-full mt-2 h-8 text-xs bg-[#ffedd5] text-[#ea580c] border-[#ffedd5] hover:bg-[#1e40af] dark:bg-[#1e40af]/30 dark:text-[#ffedd5] dark:border-[#c2410c] dark:hover:bg-[#1e40af]/50"
                     onClick={() => applyFilters(filters)}
                 >
                     Fiyat Uygula
@@ -229,7 +229,7 @@ function BestSellersContent() {
             </div>
 
             {/* Header */}
-            <div className="bg-gradient-to-r from-amber-500 to-[#934f12] rounded-lg p-6 mb-6">
+            <div className="bg-gradient-to-r from-amber-500 to-[#c2410c] rounded-lg p-6 mb-6">
                 <div className="flex items-center gap-4">
                     <div className="w-14 h-14 bg-white/20 rounded-xl flex items-center justify-center">
                         <Award className="w-8 h-8 text-white" />
@@ -248,7 +248,7 @@ function BestSellersContent() {
             {/* Filter Button */}
             <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center gap-2">
-                    <Flame className="w-5 h-5 text-[#b8651a]" />
+                    <Flame className="w-5 h-5 text-[#ea580c]" />
                     <span className="text-slate-600 dark:text-slate-400">Teklif sayısına göre sıralanmış</span>
                 </div>
                 <Sheet open={mobileFilterOpen} onOpenChange={setMobileFilterOpen}>
@@ -298,8 +298,8 @@ function BestSellersContent() {
                 {/* Desktop Sidebar - Sticky */}
                 <aside className="hidden lg:block w-60 flex-shrink-0">
                     <div className="sticky top-20 bg-white dark:bg-slate-900 rounded-xl border border-black/10 dark:border-slate-700">
-                        <div className="px-5 py-3 border-b border-black/5 dark:border-white/5 bg-gradient-to-r from-[#fbeede]/80 to-teal-50/50 dark:from-[#934f12]/20 dark:to-teal-950/10 rounded-t-xl">
-                            <h2 className="text-xs font-semibold text-[#b8651a] dark:text-[#fbeede] uppercase tracking-widest flex items-center gap-2">
+                        <div className="px-5 py-3 border-b border-black/5 dark:border-white/5 bg-gradient-to-r from-[#ffedd5]/80 to-teal-50/50 dark:from-[#c2410c]/20 dark:to-teal-950/10 rounded-t-xl">
+                            <h2 className="text-xs font-semibold text-[#ea580c] dark:text-[#ffedd5] uppercase tracking-widest flex items-center gap-2">
                                 <SlidersHorizontal className="w-3.5 h-3.5" />
                                 Filtreler
                             </h2>
@@ -349,7 +349,7 @@ function BestSellersContent() {
                             {products.map((product, index) => (
                                 <div key={product.id} className="relative">
                                     {index < 3 && (
-                                        <div className="absolute top-2 left-2 z-10 w-7 h-7 bg-gradient-to-br from-amber-500 to-[#934f12] rounded-full flex items-center justify-center text-white text-xs font-bold shadow-md">
+                                        <div className="absolute top-2 left-2 z-10 w-7 h-7 bg-gradient-to-br from-amber-500 to-[#c2410c] rounded-full flex items-center justify-center text-white text-xs font-bold shadow-md">
                                             {index + 1}
                                         </div>
                                     )}

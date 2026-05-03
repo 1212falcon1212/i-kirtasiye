@@ -25,14 +25,14 @@ import type { UserNotification } from "@/lib/api";
 
 const NOTIFICATION_ICONS: Record<string, React.ReactNode> = {
   order_created: <ShoppingBag className="w-4 h-4 text-blue-500" />,
-  new_order: <ShoppingBag className="w-4 h-4 text-[#b8651a]" />,
-  order_confirmed: <Box className="w-4 h-4 text-[#b8651a]" />,
+  new_order: <ShoppingBag className="w-4 h-4 text-[#ea580c]" />,
+  order_confirmed: <Box className="w-4 h-4 text-[#ea580c]" />,
   order_shipped: <Truck className="w-4 h-4 text-blue-500" />,
-  order_delivered: <PackageCheck className="w-4 h-4 text-[#b8651a]" />,
-  buyer_confirmed: <ClipboardCheck className="w-4 h-4 text-[#b8651a]" />,
-  wallet_released: <Wallet className="w-4 h-4 text-[#b8651a]" />,
+  order_delivered: <PackageCheck className="w-4 h-4 text-[#ea580c]" />,
+  buyer_confirmed: <ClipboardCheck className="w-4 h-4 text-[#ea580c]" />,
+  wallet_released: <Wallet className="w-4 h-4 text-[#ea580c]" />,
   order_cancelled: <XCircle className="w-4 h-4 text-red-500" />,
-  price_drop: <TrendingDown className="w-4 h-4 text-[#b8651a]" />,
+  price_drop: <TrendingDown className="w-4 h-4 text-[#ea580c]" />,
   wishlist_added: <TrendingDown className="w-4 h-4 text-accent-soft0" />,
   welcome: <PartyPopper className="w-4 h-4 text-purple-500" />,
 };
@@ -164,7 +164,7 @@ export function NotificationDropdown() {
       <button
         ref={buttonRef}
         onClick={handleToggle}
-        className="hidden sm:flex items-center text-slate-600 dark:text-slate-300 hover:text-[#b8651a] transition-colors cursor-pointer relative"
+        className="hidden sm:flex items-center text-slate-600 dark:text-slate-300 hover:text-[#ea580c] transition-colors cursor-pointer relative"
       >
         <div className="relative">
           <Bell className={cn("w-[22px] h-[22px]", pendingOrdersCount > 0 && "animate-[wiggle_1s_ease-in-out]")} />
@@ -193,7 +193,7 @@ export function NotificationDropdown() {
             {unreadCount > 0 && (
               <button
                 onClick={handleMarkAllRead}
-                className="flex items-center gap-1 text-xs text-[#b8651a] hover:text-[#b8651a] font-medium transition-colors"
+                className="flex items-center gap-1 text-xs text-[#ea580c] hover:text-[#ea580c] font-medium transition-colors"
               >
                 <CheckCheck className="w-3.5 h-3.5" />
                 Tümünü okundu işaretle
@@ -210,20 +210,20 @@ export function NotificationDropdown() {
                   router.push('/market/hesabim?tab=siparislerim&sub=sattiklarim');
                   setOpen(false);
                 }}
-                className="w-full flex items-center gap-3 px-4 py-3 bg-[#fbeede] dark:bg-[#934f12]/20 border-b border-[#fbeede] dark:border-[#934f12]/30 hover:bg-[#fbeede] dark:hover:bg-[#934f12]/30 transition-colors"
+                className="w-full flex items-center gap-3 px-4 py-3 bg-[#ffedd5] dark:bg-[#1e40af]/20 border-b border-[#ffedd5] dark:border-[#c2410c]/30 hover:bg-[#ffedd5] dark:hover:bg-[#1e40af]/30 transition-colors"
               >
-                <div className="w-9 h-9 rounded-full bg-[#fbeede] dark:bg-[#934f12]/40 flex items-center justify-center flex-shrink-0">
-                  <AlertTriangle className="w-4.5 h-4.5 text-[#b8651a] dark:text-[#fbeede]" />
+                <div className="w-9 h-9 rounded-full bg-[#ffedd5] dark:bg-[#1e40af]/40 flex items-center justify-center flex-shrink-0">
+                  <AlertTriangle className="w-4.5 h-4.5 text-[#ea580c] dark:text-[#ffedd5]" />
                 </div>
                 <div className="flex-1 text-left">
-                  <p className="text-sm font-semibold text-[#934f12] dark:text-[#fbeede]">
+                  <p className="text-sm font-semibold text-[#c2410c] dark:text-[#ffedd5]">
                     {pendingOrdersCount} bekleyen siparisiniz var
                   </p>
-                  <p className="text-xs text-[#b8651a] dark:text-[#fbeede] mt-0.5">
+                  <p className="text-xs text-[#ea580c] dark:text-[#ffedd5] mt-0.5">
                     Onaylamanız bekleniyor — tıklayarak görüntüleyin
                   </p>
                 </div>
-                <div className="flex-shrink-0 w-6 h-6 bg-[#b8651a] rounded-full flex items-center justify-center">
+                <div className="flex-shrink-0 w-6 h-6 bg-[#1e3a8a] rounded-full flex items-center justify-center">
                   <span className="text-xs font-bold text-white">{pendingOrdersCount}</span>
                 </div>
               </button>
@@ -250,7 +250,7 @@ export function NotificationDropdown() {
                     onClick={() => handleNotificationClick(notification)}
                     className={cn(
                       "w-full flex items-start gap-3 px-4 py-3 text-left hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors",
-                      !notification.is_read && "bg-[#fbeede]/50 dark:bg-[#934f12]/10"
+                      !notification.is_read && "bg-[#ffedd5]/50 dark:bg-[#1e40af]/10"
                     )}
                   >
                     {/* Unread indicator + Icon */}
@@ -261,7 +261,7 @@ export function NotificationDropdown() {
                         )}
                       </div>
                       {!notification.is_read && (
-                        <span className="absolute -top-0.5 -left-0.5 w-2.5 h-2.5 bg-[#fbeede] rounded-full border-2 border-white dark:border-slate-800" />
+                        <span className="absolute -top-0.5 -left-0.5 w-2.5 h-2.5 bg-[#ffedd5] rounded-full border-2 border-white dark:border-slate-800" />
                       )}
                     </div>
 

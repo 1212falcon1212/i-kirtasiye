@@ -92,7 +92,7 @@ export default function ContactPage() {
     if (loading) {
         return (
             <div className="min-h-screen bg-white">
-                <div className="bg-gradient-to-br from-slate-900 via-[#0a4f63] to-[#b8651a] py-20">
+                <div className="bg-gradient-to-br from-slate-900 via-[#0a4f63] to-[#ea580c] py-20">
                     <div className="max-w-4xl mx-auto px-4 text-center space-y-3">
                         <Skeleton className="h-10 w-48 mx-auto bg-white/10" />
                         <Skeleton className="h-5 w-80 mx-auto bg-white/10" />
@@ -136,11 +136,11 @@ export default function ContactPage() {
         <div className="min-h-screen bg-white">
             {/* Hero */}
             <section className="relative py-16 sm:py-20 overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-[#0a4f63] to-[#b8651a]" />
+                <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-[#0a4f63] to-[#ea580c]" />
 
                 {/* Mesh blobs */}
                 <div className="absolute top-0 right-0 w-[50%] h-[50%] bg-[#d99248]/20 rounded-full blur-[120px]" />
-                <div className="absolute bottom-0 left-0 w-[40%] h-[40%] bg-[#b8651a]/20 rounded-full blur-[100px]" />
+                <div className="absolute bottom-0 left-0 w-[40%] h-[40%] bg-[#1e3a8a]/20 rounded-full blur-[100px]" />
 
                 {/* Dot grid */}
                 <div
@@ -201,10 +201,10 @@ export default function ContactPage() {
                             )}
 
                             {(footer?.hours_weekday || footer?.hours_saturday || footer?.hours_sunday) && (
-                                <div className="bg-white rounded-2xl border border-slate-200 p-5 hover:shadow-md hover:border-[#b8651a]/30 transition-all">
+                                <div className="bg-white rounded-2xl border border-slate-200 p-5 hover:shadow-md hover:border-[#ea580c]/30 transition-all">
                                     <div className="flex items-start gap-4">
-                                        <div className="w-11 h-11 rounded-xl bg-[#fbeede] flex items-center justify-center flex-shrink-0">
-                                            <Clock className="w-5 h-5 text-[#b8651a]" />
+                                        <div className="w-11 h-11 rounded-xl bg-[#ffedd5] flex items-center justify-center flex-shrink-0">
+                                            <Clock className="w-5 h-5 text-[#ea580c]" />
                                         </div>
                                         <div className="flex-1">
                                             <p className="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-2">
@@ -249,7 +249,7 @@ export default function ContactPage() {
                                                 target="_blank"
                                                 rel="noopener noreferrer"
                                                 aria-label={label}
-                                                className="w-10 h-10 rounded-xl bg-slate-50 hover:bg-[#b8651a] text-slate-500 hover:text-white flex items-center justify-center transition-all"
+                                                className="w-10 h-10 rounded-xl bg-slate-50 hover:bg-[#1e3a8a] text-slate-500 hover:text-white flex items-center justify-center transition-all"
                                             >
                                                 <Icon className="w-4 h-4" />
                                             </a>
@@ -259,9 +259,9 @@ export default function ContactPage() {
                             )}
 
                             {/* Trust badge */}
-                            <div className="bg-gradient-to-br from-[#fbeede] to-white rounded-2xl border border-[#fbeede]/50 p-5">
+                            <div className="bg-gradient-to-br from-[#ffedd5] to-white rounded-2xl border border-[#ffedd5]/50 p-5">
                                 <div className="flex items-start gap-3">
-                                    <div className="w-9 h-9 rounded-lg bg-[#b8651a] flex items-center justify-center flex-shrink-0">
+                                    <div className="w-9 h-9 rounded-lg bg-[#1e3a8a] flex items-center justify-center flex-shrink-0">
                                         <Shield className="w-4 h-4 text-white" />
                                     </div>
                                     <div>
@@ -348,7 +348,7 @@ export default function ContactPage() {
                                         <Button
                                             type="submit"
                                             disabled={isSubmitting}
-                                            className="h-12 px-8 bg-[#b8651a] hover:bg-[#934f12] text-white font-bold rounded-xl shadow-lg shadow-[#b8651a]/20 gap-2 transition-all hover:shadow-xl"
+                                            className="h-12 px-8 bg-[#1e3a8a] hover:bg-[#1e40af] text-white font-bold rounded-xl shadow-lg shadow-[#ea580c]/20 gap-2 transition-all hover:shadow-xl"
                                         >
                                             {isSubmitting ? (
                                                 <>
@@ -393,11 +393,11 @@ function ContactCard({
     return (
         <Wrap
             href={href}
-            className={`block bg-white rounded-2xl border border-slate-200 p-5 transition-all ${href ? 'hover:shadow-md hover:border-[#b8651a]/30 hover:-translate-y-0.5' : ''}`}
+            className={`block bg-white rounded-2xl border border-slate-200 p-5 transition-all ${href ? 'hover:shadow-md hover:border-[#ea580c]/30 hover:-translate-y-0.5' : ''}`}
         >
             <div className="flex items-start gap-4">
-                <div className="w-11 h-11 rounded-xl bg-[#fbeede] flex items-center justify-center flex-shrink-0">
-                    <Icon className="w-5 h-5 text-[#b8651a]" />
+                <div className="w-11 h-11 rounded-xl bg-[#ffedd5] flex items-center justify-center flex-shrink-0">
+                    <Icon className="w-5 h-5 text-[#ea580c]" />
                 </div>
                 <div className="flex-1 min-w-0">
                     <p className="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-1">
@@ -425,7 +425,7 @@ function FormField({
         <div className="space-y-1.5">
             <Label htmlFor={htmlFor} className="text-sm font-semibold text-slate-700">
                 {label}
-                {required && <span className="text-[#b8651a] ml-0.5">*</span>}
+                {required && <span className="text-[#ea580c] ml-0.5">*</span>}
             </Label>
             {children}
         </div>

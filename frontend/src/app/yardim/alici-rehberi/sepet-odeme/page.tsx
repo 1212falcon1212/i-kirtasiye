@@ -25,8 +25,8 @@ export default function SepetOdemePage() {
 
             <div className="bg-white border border-gray-200 rounded-xl p-6 mb-6">
                 <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 bg-[#fbeede] rounded-xl flex items-center justify-center flex-shrink-0">
-                        <ShoppingCart className="w-6 h-6 text-[#b8651a]" />
+                    <div className="w-12 h-12 bg-[#ffedd5] rounded-xl flex items-center justify-center flex-shrink-0">
+                        <ShoppingCart className="w-6 h-6 text-[#ea580c]" />
                     </div>
                     <div>
                         <h3 className="font-semibold text-gray-900 mb-2">Ürün Ekleme</h3>
@@ -53,15 +53,15 @@ export default function SepetOdemePage() {
             </p>
             <ul className="text-gray-600 space-y-2 mb-6">
                 <li className="flex items-start gap-2">
-                    <CheckCircle className="w-4 h-4 mt-1 text-[#b8651a] flex-shrink-0" />
+                    <CheckCircle className="w-4 h-4 mt-1 text-[#ea580c] flex-shrink-0" />
                     Ürünlerin miktarını değiştirebilirsiniz
                 </li>
                 <li className="flex items-start gap-2">
-                    <CheckCircle className="w-4 h-4 mt-1 text-[#b8651a] flex-shrink-0" />
+                    <CheckCircle className="w-4 h-4 mt-1 text-[#ea580c] flex-shrink-0" />
                     Ürün çıkarabilirsiniz
                 </li>
                 <li className="flex items-start gap-2">
-                    <CheckCircle className="w-4 h-4 mt-1 text-[#b8651a] flex-shrink-0" />
+                    <CheckCircle className="w-4 h-4 mt-1 text-[#ea580c] flex-shrink-0" />
                     Kargo ve toplam tutarı görebilirsiniz
                 </li>
             </ul>
@@ -111,12 +111,12 @@ export default function SepetOdemePage() {
                 </div>
             </div>
 
-            <div className="bg-[#fbeede] border border-[#fbeede] rounded-xl p-6 my-6">
-                <h4 className="font-semibold text-[#b8651a] mb-3 flex items-center gap-2">
+            <div className="bg-[#ffedd5] border border-[#ffedd5] rounded-xl p-6 my-6">
+                <h4 className="font-semibold text-[#ea580c] mb-3 flex items-center gap-2">
                     <CheckCircle className="w-5 h-5" />
                     Güvenli Ödeme
                 </h4>
-                <ul className="text-[#b8651a] space-y-2 text-sm">
+                <ul className="text-[#ea580c] space-y-2 text-sm">
                     <li className="flex items-start gap-2">
                         <CheckCircle className="w-4 h-4 mt-0.5 flex-shrink-0" />
                         Tüm ödemeler 256-bit SSL ile şifrelenir
@@ -152,7 +152,7 @@ export default function SepetOdemePage() {
             <div className="flex items-center justify-between mt-10">
                 <Link
                     href="/yardim/alici-rehberi/fiyat-karsilastirma"
-                    className="text-gray-600 hover:text-[#b8651a] font-medium flex items-center gap-2"
+                    className="text-gray-600 hover:text-[#ea580c] font-medium flex items-center gap-2"
                 >
                     <ArrowLeft className="w-4 h-4" />
                     Önceki: Fiyat Karşılaştırma

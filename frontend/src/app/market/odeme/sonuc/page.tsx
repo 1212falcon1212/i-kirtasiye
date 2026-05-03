@@ -30,11 +30,11 @@ function PaymentResultContent() {
     if (isSuccess) {
         return (
             <div className="max-w-lg mx-auto px-4 py-12">
-                <Card className="border-[#b8651a]/20">
+                <Card className="border-[#ea580c]/20">
                     <CardContent className="pt-8 pb-8">
                         <div className="text-center">
-                            <div className="w-20 h-20 bg-[#b8651a]/10 rounded-full flex items-center justify-center mx-auto mb-6">
-                                <CheckCircle2 className="h-10 w-10 text-[#b8651a]" />
+                            <div className="w-20 h-20 bg-[#1e3a8a]/10 rounded-full flex items-center justify-center mx-auto mb-6">
+                                <CheckCircle2 className="h-10 w-10 text-[#ea580c]" />
                             </div>
                             <h1 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">
                                 Ödemeniz Başarıyla Alındı
@@ -49,7 +49,7 @@ function PaymentResultContent() {
                             )}
 
                             <div className="space-y-3">
-                                <Button asChild className="w-full h-12 bg-[#b8651a] hover:bg-[#934f12] gap-2">
+                                <Button asChild className="w-full h-12 bg-[#1e3a8a] hover:bg-[#1e40af] gap-2">
                                     <Link href="/market/hesabim?tab=siparislerim&sub=satin-aldiklarim">
                                         <ShoppingBag className="h-4 w-4" />
                                         Siparişlerimi Gör
@@ -118,7 +118,7 @@ function PaymentResultContent() {
                 <CardContent className="pt-8 pb-8">
                     <div className="text-center">
                         <div className="w-16 h-16 bg-slate-100 dark:bg-slate-700 rounded-full flex items-center justify-center mx-auto mb-6">
-                            <div className="h-8 w-8 animate-spin rounded-full border-4 border-[#b8651a] border-t-transparent" />
+                            <div className="h-8 w-8 animate-spin rounded-full border-4 border-[#ea580c] border-t-transparent" />
                         </div>
                         <h1 className="text-xl font-bold text-slate-900 dark:text-white mb-2">
                             Ödeme Durumu Kontrol Ediliyor
@@ -146,7 +146,7 @@ export default function PaymentResultPage() {
                     <CardContent className="pt-8 pb-8">
                         <div className="text-center">
                             <div className="w-16 h-16 bg-slate-100 dark:bg-slate-700 rounded-full flex items-center justify-center mx-auto mb-6">
-                                <div className="h-8 w-8 animate-spin rounded-full border-4 border-[#b8651a] border-t-transparent" />
+                                <div className="h-8 w-8 animate-spin rounded-full border-4 border-[#ea580c] border-t-transparent" />
                             </div>
                             <p className="text-slate-500 dark:text-slate-400">Yükleniyor...</p>
                         </div>

@@ -3,9 +3,7 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ShoppingCart, Check, Loader2 } from 'lucide-react';
-import { useCartStore } from '@/stores/useCartStore';
-import { useAuth } from '@/contexts/AuthContext';
+import { ArrowRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Stars } from '@/components/market/Stars';
 
@@ -59,13 +57,8 @@ export const ProductCard = React.memo(function ProductCard({
     style = 'solid',
     className,
 }: ProductCardProps) {
-    const [adding, setAdding] = useState(false);
-    const [added, setAdded] = useState(false);
     const [imgError, setImgError] = useState(false);
-    const addItem = useCartStore((s) => s.addItem);
-    const { user } = useAuth();
 
-    const canBuy = !user || user.role !== 'seller';
     const isList = layout === 'list';
 
     const offersCount =
@@ -74,20 +67,6 @@ export const ProductCard = React.memo(function ProductCard({
             : parseInt(String(product.offers_count || 0)) || 0;
 
     const outOfStock = product.stock_status === 'out_of_stock' || offersCount === 0;
-
-    const handleAddToCart = async (e: React.MouseEvent) => {
-        e.preventDefault();
-        e.stopPropagation();
-        if (outOfStock || !product.default_offer_id || !canBuy || adding) return;
-        setAdding(true);
-        try {
-            await addItem(product.default_offer_id, 1);
-            setAdded(true);
-            setTimeout(() => setAdded(false), 2000);
-        } finally {
-            setAdding(false);
-        }
-    };
 
     const href = product.slug ? `/market/product/${product.slug}` : `/market/product/${product.id}`;
     const img = product.image_url || product.image;
@@ -214,31 +193,18 @@ export const ProductCard = React.memo(function ProductCard({
                     )}
                 </div>
 
-                {canBuy && (
-                    <button
-                        type="button"
-                        onClick={handleAddToCart}
-                        disabled={adding || outOfStock}
-                        className="btn btn-soft btn-sm w-full"
-                        aria-label="Sepete ekle"
-                    >
-                        {adding ? (
-                            <>
-                                <Loader2 className="w-3.5 h-3.5 animate-spin" /> Ekleniyor
-                            </>
-                        ) : added ? (
-                            <>
-                                <Check className="w-3.5 h-3.5" /> Eklendi
-                            </>
-                        ) : outOfStock ? (
-                            'Stokta yok'
-                        ) : (
-                            <>
-                                <ShoppingCart className="w-3.5 h-3.5" /> Sepete ekle
-                            </>
-                        )}
-                    </button>
-                )}
+                <div
+                    className="btn btn-soft btn-sm w-full pointer-events-none"
+                    aria-hidden
+                >
+                    {outOfStock ? (
+                        'Stokta yok'
+                    ) : (
+                        <>
+                            İlanı incele <ArrowRight className="w-3.5 h-3.5" />
+                        </>
+                    )}
+                </div>
             </div>
         </Link>
     );

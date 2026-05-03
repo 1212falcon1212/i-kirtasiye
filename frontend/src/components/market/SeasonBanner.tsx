@@ -5,7 +5,7 @@ import Link from 'next/link';
 export function SeasonBanner() {
   return (
     <Link href="/market/kampanyalar" className="block">
-      <div className="w-full rounded-3xl h-[180px] relative overflow-hidden hover:scale-[1.005] transition-transform cursor-pointer bg-gradient-to-r from-[#934f12] to-[#d99248]">
+      <div className="w-full rounded-3xl h-[180px] relative overflow-hidden hover:scale-[1.005] transition-transform cursor-pointer bg-gradient-to-r from-[#c2410c] to-[#d99248]">
         {/* Decorative circles */}
         <div className="absolute -top-10 -left-10 w-40 h-40 bg-white/[0.04] rounded-full" />
         <div className="absolute -bottom-8 -right-8 w-32 h-32 bg-white/[0.06] rounded-full" />

@@ -203,7 +203,7 @@ function RecommendedContent() {
                 <Button
                     variant="outline"
                     size="sm"
-                    className="w-full mt-2 h-8 text-xs bg-[#fbeede] text-[#b8651a] border-[#fbeede] hover:bg-[#934f12] dark:bg-[#934f12]/30 dark:text-[#fbeede] dark:border-[#934f12] dark:hover:bg-[#934f12]/50"
+                    className="w-full mt-2 h-8 text-xs bg-[#ffedd5] text-[#ea580c] border-[#ffedd5] hover:bg-[#1e40af] dark:bg-[#1e40af]/30 dark:text-[#ffedd5] dark:border-[#c2410c] dark:hover:bg-[#1e40af]/50"
                     onClick={() => applyFilters(filters)}
                 >
                     Fiyat Uygula
@@ -318,8 +318,8 @@ function RecommendedContent() {
                 {/* Desktop Sidebar - Sticky */}
                 <aside className="hidden lg:block w-60 flex-shrink-0">
                     <div className="sticky top-20 bg-white dark:bg-slate-900 rounded-xl border border-black/10 dark:border-slate-700">
-                        <div className="px-5 py-3 border-b border-black/5 dark:border-white/5 bg-gradient-to-r from-[#fbeede]/80 to-teal-50/50 dark:from-[#934f12]/20 dark:to-teal-950/10 rounded-t-xl">
-                            <h2 className="text-xs font-semibold text-[#b8651a] dark:text-[#fbeede] uppercase tracking-widest flex items-center gap-2">
+                        <div className="px-5 py-3 border-b border-black/5 dark:border-white/5 bg-gradient-to-r from-[#ffedd5]/80 to-teal-50/50 dark:from-[#c2410c]/20 dark:to-teal-950/10 rounded-t-xl">
+                            <h2 className="text-xs font-semibold text-[#ea580c] dark:text-[#ffedd5] uppercase tracking-widest flex items-center gap-2">
                                 <SlidersHorizontal className="w-3.5 h-3.5" />
                                 Filtreler
                             </h2>

@@ -43,7 +43,7 @@ export default function LandingHeader() {
               <div
                 className={`w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-300 ${
                   scrolled
-                    ? "bg-[#b8651a] shadow-md shadow-cyan-200"
+                    ? "bg-[#1e3a8a] shadow-md shadow-cyan-200"
                     : "bg-white/20 backdrop-blur-sm border border-white/30"
                 }`}
               >
@@ -64,7 +64,7 @@ export default function LandingHeader() {
                 </span>
                 <span
                   className={`text-[9px] font-bold tracking-[0.15em] uppercase transition-colors duration-300 whitespace-nowrap ${
-                    scrolled ? "text-[#b8651a]" : "text-accent-soft"
+                    scrolled ? "text-[#ea580c]" : "text-accent-soft"
                   }`}
                 >
                   B2B Kırtasiye Pazaryeri
@@ -80,7 +80,7 @@ export default function LandingHeader() {
                   href={item.href}
                   className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
                     scrolled
-                      ? "text-slate-600 hover:text-[#b8651a] hover:bg-accent-soft/60"
+                      ? "text-slate-600 hover:text-[#ea580c] hover:bg-accent-soft/60"
                       : "text-white/80 hover:text-white hover:bg-white/10"
                   }`}
                 >
@@ -95,7 +95,7 @@ export default function LandingHeader() {
                 href="/login"
                 className={`px-5 py-2 rounded-lg text-sm font-semibold transition-all duration-200 ${
                   scrolled
-                    ? "text-slate-700 hover:text-[#b8651a] hover:bg-accent-soft/60"
+                    ? "text-slate-700 hover:text-[#ea580c] hover:bg-accent-soft/60"
                     : "text-white/90 hover:text-white hover:bg-white/10"
                 }`}
               >
@@ -105,8 +105,8 @@ export default function LandingHeader() {
                 href="/register"
                 className={`px-5 py-2.5 rounded-xl text-sm font-bold transition-all duration-200 ${
                   scrolled
-                    ? "bg-[#b8651a] text-white hover:bg-[#934f12] shadow-md shadow-cyan-200/50"
-                    : "bg-white text-[#b8651a] hover:bg-accent-soft shadow-lg shadow-black/10"
+                    ? "bg-[#1e3a8a] text-white hover:bg-[#1e40af] shadow-md shadow-cyan-200/50"
+                    : "bg-white text-[#ea580c] hover:bg-accent-soft shadow-lg shadow-black/10"
                 }`}
               >
                 Ücretsiz Başla
@@ -164,7 +164,7 @@ export default function LandingHeader() {
                     key={item.href}
                     href={item.href}
                     onClick={closeMobile}
-                    className="block px-4 py-3 rounded-xl text-slate-700 font-medium hover:bg-accent-soft hover:text-[#b8651a] transition-colors"
+                    className="block px-4 py-3 rounded-xl text-slate-700 font-medium hover:bg-accent-soft hover:text-[#ea580c] transition-colors"
                   >
                     {item.label}
                   </a>
@@ -175,14 +175,14 @@ export default function LandingHeader() {
                 <Link
                   href="/login"
                   onClick={closeMobile}
-                  className="block w-full text-center px-5 py-3 rounded-xl border-2 border-slate-200 text-slate-700 font-semibold hover:border-accent-soft hover:text-[#b8651a] transition-colors"
+                  className="block w-full text-center px-5 py-3 rounded-xl border-2 border-slate-200 text-slate-700 font-semibold hover:border-accent-soft hover:text-[#ea580c] transition-colors"
                 >
                   Giriş Yap
                 </Link>
                 <Link
                   href="/register"
                   onClick={closeMobile}
-                  className="block w-full text-center px-5 py-3 rounded-xl bg-[#b8651a] text-white font-bold hover:bg-[#934f12] transition-colors"
+                  className="block w-full text-center px-5 py-3 rounded-xl bg-[#1e3a8a] text-white font-bold hover:bg-[#1e40af] transition-colors"
                 >
                   Ücretsiz Başla
                 </Link>

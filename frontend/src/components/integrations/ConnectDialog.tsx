@@ -189,7 +189,7 @@ export function ConnectDialog({ erpType, erpName, isOpen, onOpenChange, onSucces
                         <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
                             Iptal
                         </Button>
-                        <Button type="submit" disabled={loading} className="bg-[#b8651a] hover:bg-[#934f12]">
+                        <Button type="submit" disabled={loading} className="bg-[#1e3a8a] hover:bg-[#1e40af]">
                             {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                             Baglan
                         </Button>

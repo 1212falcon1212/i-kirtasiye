@@ -56,8 +56,8 @@ export function FlashDeals({ products }: FlashDealsProps) {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-5">
         <div>
           <div className="flex items-center gap-2 sm:gap-3">
-            <div className="w-9 h-9 sm:w-[44px] sm:h-[44px] bg-[#fbeede] rounded-xl flex items-center justify-center flex-shrink-0">
-              <Zap className="w-4 h-4 sm:w-5 sm:h-5 text-[#b8651a]" />
+            <div className="w-9 h-9 sm:w-[44px] sm:h-[44px] bg-[#ffedd5] rounded-xl flex items-center justify-center flex-shrink-0">
+              <Zap className="w-4 h-4 sm:w-5 sm:h-5 text-[#ea580c]" />
             </div>
             <span className="text-xl sm:text-[26px] font-black text-[#1a1a1a]">Flaş Fırsatlar</span>
             <span className="bg-[#fef2f2] text-[#dc2626] text-[10px] font-bold px-2 py-0.5 rounded-full animate-pulse">
@@ -84,7 +84,7 @@ export function FlashDeals({ products }: FlashDealsProps) {
               <Link
                 key={product.id}
                 href={`/market/product/${product.id}`}
-                className="flex flex-row bg-white rounded-3xl border border-[#f0eceb] overflow-hidden hover:border-[#fbeede] transition-colors group"
+                className="flex flex-row bg-white rounded-3xl border border-[#f0eceb] overflow-hidden hover:border-[#ffedd5] transition-colors group"
               >
                 {/* Left: Image */}
                 <div className="w-[130px] sm:w-[210px] md:w-[240px] h-[150px] sm:h-[180px] md:h-[210px] flex-shrink-0 bg-white relative flex items-center justify-center">
@@ -97,7 +97,7 @@ export function FlashDeals({ products }: FlashDealsProps) {
                   ) : (
                     <Zap className="w-12 h-12 text-[#d1d5db]" />
                   )}
-                  <span className="absolute top-3 left-3 bg-[#b8651a] text-white text-[12px] font-extrabold rounded-md px-2.5 py-1">
+                  <span className="absolute top-3 left-3 bg-[#1e3a8a] text-white text-[12px] font-extrabold rounded-md px-2.5 py-1">
                     %{discount}
                   </span>
                 </div>
@@ -105,11 +105,11 @@ export function FlashDeals({ products }: FlashDealsProps) {
                 {/* Right: Info */}
                 <div className="flex-1 min-w-0 p-4 sm:p-6 flex flex-col justify-center">
                   {product.brand && (
-                    <p className="text-[12px] font-extrabold text-[#b8651a] uppercase tracking-wider mb-2 truncate">
+                    <p className="text-[12px] font-extrabold text-[#ea580c] uppercase tracking-wider mb-2 truncate">
                       {product.brand}
                     </p>
                   )}
-                  <p className="text-sm sm:text-base font-semibold text-[#1a1a1a] line-clamp-2 mb-3 group-hover:text-[#b8651a] transition-colors">
+                  <p className="text-sm sm:text-base font-semibold text-[#1a1a1a] line-clamp-2 mb-3 group-hover:text-[#ea580c] transition-colors">
                     {product.name}
                   </p>
                   {product.lowest_price != null && (

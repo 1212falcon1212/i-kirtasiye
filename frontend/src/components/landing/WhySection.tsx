@@ -78,14 +78,14 @@ export default function WhySection({
           transition={{ duration: 0.5 }}
           className="text-center mb-16 lg:mb-20"
         >
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-accent-soft text-[#b8651a] text-sm font-semibold mb-5">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-accent-soft text-[#ea580c] text-sm font-semibold mb-5">
             <Shield className="w-3.5 h-3.5" />
             Avantajlar
           </div>
           <h2 className="text-3xl sm:text-4xl lg:text-[2.75rem] font-extrabold text-slate-900 leading-tight">
             {title}
           </h2>
-          <div className="mx-auto mt-4 w-16 h-1 rounded-full bg-gradient-to-r from-[#b8651a] to-[#d99248]" />
+          <div className="mx-auto mt-4 w-16 h-1 rounded-full bg-gradient-to-r from-[#ea580c] to-[#d99248]" />
           <p className="mt-5 text-lg text-slate-500 max-w-2xl mx-auto leading-relaxed">
             {subtitle}
           </p>
@@ -136,7 +136,7 @@ export default function WhySection({
                 </div>
 
                 {/* Hover accent line */}
-                <div className="absolute bottom-0 left-6 right-6 h-0.5 bg-gradient-to-r from-[#b8651a] to-[#d99248] rounded-full scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
+                <div className="absolute bottom-0 left-6 right-6 h-0.5 bg-gradient-to-r from-[#ea580c] to-[#d99248] rounded-full scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
               </motion.div>
             );
           })}

@@ -104,7 +104,7 @@ export function MiniCart() {
             {/* Cart trigger */}
             <button
                 className={cn(
-                    "flex items-center gap-1.5 text-slate-600 dark:text-slate-300 hover:text-[#b8651a] cursor-pointer transition-all duration-300",
+                    "flex items-center gap-1.5 text-slate-600 dark:text-slate-300 hover:text-[#ea580c] cursor-pointer transition-all duration-300",
                     isShaking && "animate-shake"
                 )}
                 onClick={() => {
@@ -117,7 +117,7 @@ export function MiniCart() {
                     <ShoppingCart className="h-[22px] w-[22px]" />
                     {itemCount > 0 && (
                         <span className={cn(
-                            "absolute -top-2 -right-2.5 min-w-[18px] h-[18px] px-1 rounded-full bg-[#b8651a] text-white text-[10px] flex items-center justify-center font-bold transition-transform pointer-events-none",
+                            "absolute -top-2 -right-2.5 min-w-[18px] h-[18px] px-1 rounded-full bg-[#1e3a8a] text-white text-[10px] flex items-center justify-center font-bold transition-transform pointer-events-none",
                             isShaking && "scale-125"
                         )}>
                             {itemCount > 99 ? '99+' : itemCount}
@@ -133,7 +133,7 @@ export function MiniCart() {
                     {/* Header */}
                     <SheetHeader className="p-4 bg-slate-50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-700 space-y-0">
                         <div className="flex items-center gap-2">
-                            <ShoppingCart className="h-5 w-5 text-[#b8651a]" />
+                            <ShoppingCart className="h-5 w-5 text-[#ea580c]" />
                             <SheetTitle className="text-base">Sepetim</SheetTitle>
                             <Badge variant="secondary" className="text-xs">
                                 {itemCount} ürün
@@ -182,11 +182,11 @@ export function MiniCart() {
                                         <div key={group.seller?.id || 'unknown'} className="space-y-2">
                                             {/* Seller header */}
                                             <div className="flex items-center gap-2 text-xs text-slate-500">
-                                                <div className="w-1.5 h-1.5 rounded-full bg-[#b8651a]" />
+                                                <div className="w-1.5 h-1.5 rounded-full bg-[#1e3a8a]" />
                                                 {group.seller?.id ? (
                                                     <Link
                                                         href={`/market/satici/${group.seller.id}`}
-                                                        className="font-medium text-slate-700 dark:text-slate-300 hover:text-[#b8651a] hover:underline transition-colors"
+                                                        className="font-medium text-slate-700 dark:text-slate-300 hover:text-[#ea580c] hover:underline transition-colors"
                                                         onClick={() => setIsOpen(false)}
                                                     >
                                                         {group.seller.nickname || group.seller.business_name || 'Satıcı'}
@@ -207,7 +207,7 @@ export function MiniCart() {
                                                     key={item.id}
                                                     className={cn(
                                                         "flex gap-3 p-2 rounded-lg bg-slate-50 dark:bg-slate-800/50 transition-all duration-300",
-                                                        lastAddedItemId === item.id && "ring-2 ring-[#b8651a] ring-offset-2 bg-[#fbeede]",
+                                                        lastAddedItemId === item.id && "ring-2 ring-[#ea580c] ring-offset-2 bg-[#ffedd5]",
                                                         removingItemId === item.id && "opacity-0 translate-x-4"
                                                     )}
                                                 >
@@ -226,7 +226,7 @@ export function MiniCart() {
                                                                 return (
                                                                     <div className="flex items-center gap-1.5">
                                                                         <span className="text-xs text-slate-400 line-through">{formatPrice(priceIssue.old_price)}</span>
-                                                                        <span className={cn("text-xs font-medium", priceIssue.new_price > priceIssue.old_price ? "text-red-600" : "text-[#b8651a]")}>
+                                                                        <span className={cn("text-xs font-medium", priceIssue.new_price > priceIssue.old_price ? "text-red-600" : "text-[#ea580c]")}>
                                                                             {formatPrice(priceIssue.new_price)}
                                                                         </span>
                                                                     </div>
@@ -303,7 +303,7 @@ export function MiniCart() {
                                             </Link>
                                         </Button>
                                         <Button
-                                            className="flex-1 bg-[#b8651a] hover:bg-[#934f12] text-white"
+                                            className="flex-1 bg-[#1e3a8a] hover:bg-[#1e40af] text-white"
                                             asChild
                                             onClick={() => setIsOpen(false)}
                                         >

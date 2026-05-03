@@ -44,29 +44,43 @@ export function MarketFooter() {
     return (
         <footer
             style={{
-                background: 'var(--bg-muted)',
-                borderTop: '1px solid var(--border)',
+                background: 'var(--accent)',
+                color: 'var(--accent-on)',
                 marginTop: 48,
             }}
         >
-            <div className="max-w-[1440px] mx-auto px-6 pt-10 pb-6">
+            <div className="max-w-[1440px] mx-auto px-6 pt-12 pb-6">
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[1.5fr_1fr_1fr_1fr_1fr] gap-8">
                     <div>
                         <Logo size="md" />
-                        <p className="mt-3 text-sm max-w-[280px]" style={{ color: 'var(--fg-muted)' }}>
+                        <p
+                            className="mt-3 text-sm max-w-[280px]"
+                            style={{ color: 'var(--accent-on-muted)' }}
+                        >
                             Türkiye&apos;nin B2B kırtasiye ve ofis malzemeleri toptan pazaryeri. Bayiler ve toptancılar için.
                         </p>
                     </div>
                     {COLUMNS.map((col) => (
                         <div key={col.h}>
-                            <div className="eyebrow mb-3">{col.h}</div>
+                            <div
+                                className="text-[11px] font-bold uppercase tracking-[0.08em] mb-3"
+                                style={{ color: '#ffffff' }}
+                            >
+                                {col.h}
+                            </div>
                             <ul className="grid gap-2">
                                 {col.links.map((l) => (
                                     <li key={l.href}>
                                         <Link
                                             href={l.href}
-                                            className="text-[13px] hover:underline"
-                                            style={{ color: 'var(--fg-muted)' }}
+                                            className="text-[13px] transition-opacity hover:opacity-100"
+                                            style={{ color: 'var(--accent-on-muted)', opacity: 1 }}
+                                            onMouseEnter={(e) => {
+                                                e.currentTarget.style.color = '#ffffff';
+                                            }}
+                                            onMouseLeave={(e) => {
+                                                e.currentTarget.style.color = 'var(--accent-on-muted)';
+                                            }}
                                         >
                                             {l.label}
                                         </Link>
@@ -78,8 +92,11 @@ export function MarketFooter() {
                 </div>
 
                 <div
-                    className="mt-8 pt-5 flex flex-col sm:flex-row gap-2 justify-between text-xs"
-                    style={{ borderTop: '1px solid var(--border)', color: 'var(--fg-soft)' }}
+                    className="mt-10 pt-5 flex flex-col sm:flex-row gap-2 justify-between text-xs"
+                    style={{
+                        borderTop: '1px solid rgba(255,255,255,0.18)',
+                        color: 'var(--accent-on-muted)',
+                    }}
                 >
                     <span>© {new Date().getFullYear()} i-kirtasiye B2B</span>
                     <span className="mono">Tüm fiyatlar KDV dahil</span>

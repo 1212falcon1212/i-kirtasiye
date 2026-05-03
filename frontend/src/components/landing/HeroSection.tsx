@@ -32,7 +32,7 @@ function renderTitle(title: string, highlight: string) {
     <>
       {parts[0]}
       <span className="relative inline-block">
-        <span className="relative z-10 bg-gradient-to-r from-[#b8651a] to-[#d99248] bg-clip-text text-transparent">
+        <span className="relative z-10 bg-gradient-to-r from-[#ea580c] to-[#d99248] bg-clip-text text-transparent">
           {highlight}
         </span>
         <motion.span
@@ -80,7 +80,7 @@ export default function HeroSection({ content }: HeroSectionProps) {
         <div className={`absolute inset-0 ${content.image ? 'bg-gradient-to-r from-slate-900/90 via-slate-900/70 to-slate-900/50' : 'bg-gradient-to-br from-slate-900 via-[#1a0a14] to-[#2d0a1e]'}`} />
 
         {/* Mesh gradient blobs */}
-        <div className="absolute top-0 right-0 w-[60%] h-[60%] bg-[#b8651a]/15 rounded-full blur-[120px]" />
+        <div className="absolute top-0 right-0 w-[60%] h-[60%] bg-[#1e3a8a]/15 rounded-full blur-[120px]" />
         <div className="absolute bottom-0 left-0 w-[50%] h-[50%] bg-[#d99248]/10 rounded-full blur-[100px]" />
         <div className="absolute top-1/3 left-1/4 w-[30%] h-[30%] bg-purple-900/15 rounded-full blur-[80px]" />
 
@@ -173,7 +173,7 @@ export default function HeroSection({ content }: HeroSectionProps) {
                 {["E", "S", "M", "A", "K"].map((letter, i) => (
                   <div
                     key={i}
-                    className="w-9 h-9 rounded-full bg-gradient-to-br from-[#b8651a] to-[#d99248] border-2 border-slate-900 flex items-center justify-center text-white font-bold text-xs"
+                    className="w-9 h-9 rounded-full bg-gradient-to-br from-[#ea580c] to-[#d99248] border-2 border-slate-900 flex items-center justify-center text-white font-bold text-xs"
                     style={{ zIndex: 5 - i }}
                   >
                     {letter}
@@ -211,12 +211,12 @@ export default function HeroSection({ content }: HeroSectionProps) {
           >
             <div className="relative">
               {/* Glow behind card */}
-              <div className="absolute -inset-4 bg-gradient-to-br from-[#b8651a]/20 to-purple-600/10 rounded-3xl blur-2xl" />
+              <div className="absolute -inset-4 bg-gradient-to-br from-[#ea580c]/20 to-purple-600/10 rounded-3xl blur-2xl" />
 
               {/* Card */}
               <div className="relative bg-white/[0.07] backdrop-blur-xl border border-white/[0.12] rounded-2xl p-8 lg:p-10">
                 <div className="text-center mb-8">
-                  <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-[#b8651a] to-[#d99248] mb-4 shadow-lg shadow-cyan-500/25">
+                  <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-[#ea580c] to-[#d99248] mb-4 shadow-lg shadow-cyan-500/25">
                     <BadgeCheck className="w-7 h-7 text-white" />
                   </div>
                   <h2 className="text-xl font-bold text-white">
@@ -235,7 +235,7 @@ export default function HeroSection({ content }: HeroSectionProps) {
                       onChange={(e) => setGln(e.target.value)}
                       placeholder="10 haneli vergi numaranız"
                       maxLength={13}
-                      className="w-full px-5 py-4 bg-white/[0.08] border border-white/[0.12] rounded-xl text-white placeholder:text-white/30 font-mono text-base focus:outline-none focus:border-[#b8651a]/60 focus:bg-white/[0.12] focus:ring-2 focus:ring-[#b8651a]/20 transition-all"
+                      className="w-full px-5 py-4 bg-white/[0.08] border border-white/[0.12] rounded-xl text-white placeholder:text-white/30 font-mono text-base focus:outline-none focus:border-[#ea580c]/60 focus:bg-white/[0.12] focus:ring-2 focus:ring-[#ea580c]/20 transition-all"
                     />
                     {gln.length === 13 && (
                       <motion.div
@@ -250,7 +250,7 @@ export default function HeroSection({ content }: HeroSectionProps) {
 
                   <button
                     type="submit"
-                    className="w-full flex items-center justify-center gap-2.5 px-6 py-4 bg-gradient-to-r from-[#b8651a] to-[#e11d72] hover:from-[#934f12] hover:to-[#b8651a] text-white rounded-xl font-bold text-base shadow-lg shadow-cyan-600/25 transition-all duration-200 hover:shadow-xl hover:shadow-cyan-600/30 active:scale-[0.98]"
+                    className="w-full flex items-center justify-center gap-2.5 px-6 py-4 bg-gradient-to-r from-[#ea580c] to-[#e11d72] hover:from-[#c2410c] hover:to-[#ea580c] text-white rounded-xl font-bold text-base shadow-lg shadow-cyan-600/25 transition-all duration-200 hover:shadow-xl hover:shadow-cyan-600/30 active:scale-[0.98]"
                   >
                     {content.cta_primary_text}
                     <ArrowRight className="w-5 h-5" />

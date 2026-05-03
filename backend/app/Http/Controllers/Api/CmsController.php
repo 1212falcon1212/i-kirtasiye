@@ -197,6 +197,32 @@ class CmsController extends Controller
     }
 
     /**
+     * Rastgele 16 ilanlı ürünü döndürür (ana sayfa "Tüm Ürünler" bölümü için).
+     */
+    public function randomProducts(): JsonResponse
+    {
+        $products = Product::with([
+            'category:id,name,slug',
+            'offers' => function ($q) {
+                $q->where('status', 'active')->where('stock', '>', 0)->orderBy('price');
+            },
+        ])
+            ->listable()
+            ->withCount(['activeOffers as offers_count'])
+            ->withMin('activeOffers as lowest_price', 'price')
+            ->inRandomOrder()
+            ->take(16)
+            ->get()
+            ->map(fn ($product) => $this->formatProductForApi($product))
+            ->values()
+            ->toArray();
+
+        return response()->json([
+            'products' => $products,
+        ]);
+    }
+
+    /**
      * Belirli lokasyondaki bannerlari getirir
      */
     public function banners(string $location): JsonResponse
@@ -347,10 +373,10 @@ class CmsController extends Controller
                     $q->where('status', 'active')->where('stock', '>', 0)->orderBy('price');
                 },
             ])
-                ->active()
+                ->listable()
                 ->withCount(['activeOffers as offers_count'])
                 ->withCount('orderItems')
-                ->orderByDesc('offers_count')  // Teklifli olanlar en ustte
+                ->orderByDesc('offers_count')
                 ->orderByDesc('order_items_count')
                 ->take($limit)
                 ->get();
@@ -372,7 +398,7 @@ class CmsController extends Controller
                     $q->where('status', 'active')->where('stock', '>', 0)->orderBy('price');
                 },
             ])
-                ->active()
+                ->listable()
                 ->withCount(['activeOffers as offers_count'])
                 ->orderByDesc('offers_count')
                 ->take($limit * 3)
@@ -410,7 +436,7 @@ class CmsController extends Controller
                         ->orderBy('price');
                 },
             ])
-                ->active()
+                ->listable()
                 ->whereIn('category_id', $categoryIds)
                 ->withCount(['activeOffers as offers_count'])
                 ->orderByDesc('offers_count')
@@ -447,7 +473,7 @@ class CmsController extends Controller
                 $q->where('status', 'active')->where('stock', '>', 0)->orderBy('price');
             },
         ])
-            ->active()
+            ->listable()
             ->withCount(['activeOffers as offers_count']);
 
         $usePhpShuffle = false;

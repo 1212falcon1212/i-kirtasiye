@@ -414,12 +414,12 @@ export default function CheckoutPage() {
                     {/* Brand */}
                     <Link href="/market" className="inline-block mb-8">
                         <div className="flex items-center gap-2.5">
-                            <div className="w-10 h-10 bg-[#b8651a] rounded-xl flex items-center justify-center">
+                            <div className="w-10 h-10 bg-[#1e3a8a] rounded-xl flex items-center justify-center">
                                 <span className="text-white font-black text-lg leading-none">i</span>
                             </div>
                             <div className="flex flex-col -space-y-0.5">
                                 <span className="font-black text-2xl text-slate-900 tracking-tighter leading-none">i-kirtasiye</span>
-                                <span className="text-[8px] font-bold text-[#b8651a] tracking-[2px] uppercase">B2B Kırtasiye Pazaryeri</span>
+                                <span className="text-[8px] font-bold text-[#ea580c] tracking-[2px] uppercase">B2B Kırtasiye Pazaryeri</span>
                             </div>
                         </div>
                     </Link>
@@ -558,10 +558,10 @@ export default function CheckoutPage() {
                             {appliedCoupon ? (
                                 <div className="flex items-center justify-between p-3 bg-white rounded-lg border border-[#e3e3e3]">
                                     <div className="flex items-center gap-2">
-                                        <Tag className="w-4 h-4 text-[#b8651a]" />
+                                        <Tag className="w-4 h-4 text-[#ea580c]" />
                                         <div>
                                             <p className="text-[13px] font-bold text-[#202223]">{appliedCoupon.code}</p>
-                                            <p className="text-[11px] text-[#b8651a]">{appliedCoupon.formatted_discount} indirim</p>
+                                            <p className="text-[11px] text-[#ea580c]">{appliedCoupon.formatted_discount} indirim</p>
                                         </div>
                                     </div>
                                     <button onClick={handleRemoveCoupon} className="p-1 text-[#6d7175] hover:text-[#202223]"><X className="w-4 h-4" /></button>
@@ -605,7 +605,7 @@ export default function CheckoutPage() {
                             {couponDiscount > 0 && (
                                 <div className="flex justify-between items-center">
                                     <span className="text-[#202223]">İndirim</span>
-                                    <span className="text-[#b8651a] font-semibold">-{formatPrice(couponDiscount)}</span>
+                                    <span className="text-[#ea580c] font-semibold">-{formatPrice(couponDiscount)}</span>
                                 </div>
                             )}
                         </div>
@@ -640,7 +640,7 @@ export default function CheckoutPage() {
                     <div className="relative w-full max-w-lg bg-white rounded-2xl shadow-2xl overflow-hidden">
                         <div className="px-4 py-3 bg-slate-50 border-b flex items-center justify-between">
                             <div className="flex items-center gap-2">
-                                <Shield className="h-5 w-5 text-[#b8651a]" />
+                                <Shield className="h-5 w-5 text-[#ea580c]" />
                                 <span className="font-semibold text-slate-900">3D Secure Doğrulama</span>
                             </div>
                             <button onClick={() => setThreeDSecureHtml(null)} className="text-slate-400 hover:text-slate-600">
@@ -824,7 +824,7 @@ function ShippingStep(props: {
                             <div key={sellerId} className="rounded-xl border border-slate-200 p-4 bg-white">
                                 <div className="flex items-center justify-between mb-3">
                                     <p className="text-sm font-bold text-slate-900">{sellerName}</p>
-                                    <span className="text-[11px] font-semibold px-2 py-0.5 bg-[#fbeede] text-[#b8651a] rounded-full">Ücretsiz Kargo</span>
+                                    <span className="text-[11px] font-semibold px-2 py-0.5 bg-[#ffedd5] text-[#ea580c] rounded-full">Ücretsiz Kargo</span>
                                 </div>
                                 {!data || data.loading ? (
                                     <div className="flex items-center gap-2 py-3 text-slate-400 text-sm">
@@ -845,7 +845,7 @@ function ShippingStep(props: {
                                                     </span>
                                                     <span className="text-sm font-medium text-slate-900">{opt.name}</span>
                                                 </div>
-                                                <span className="text-sm text-[#b8651a] font-semibold">Ücretsiz</span>
+                                                <span className="text-sm text-[#ea580c] font-semibold">Ücretsiz</span>
                                             </button>
                                         ))}
                                     </div>
@@ -953,7 +953,7 @@ function AddressOption({ selected, onClick, title, subtitle, body, badge }: {
                 <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">
                         <span className="text-sm font-bold text-slate-900">{title}</span>
-                        {badge && <span className="text-[10px] font-semibold px-2 py-0.5 bg-[#fbeede] text-[#b8651a] rounded-full uppercase tracking-wide">{badge}</span>}
+                        {badge && <span className="text-[10px] font-semibold px-2 py-0.5 bg-[#ffedd5] text-[#ea580c] rounded-full uppercase tracking-wide">{badge}</span>}
                     </div>
                     {subtitle && <p className="text-xs text-slate-500 mt-0.5">{subtitle}</p>}
                     {body && <p className="text-sm text-slate-600 mt-1 line-clamp-2">{body}</p>}

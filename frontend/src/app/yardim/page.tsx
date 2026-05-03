@@ -66,7 +66,7 @@ export default function YardimPage() {
                         <input
                             type="text"
                             placeholder="Yardım konularında ara..."
-                            className="w-full pl-12 pr-4 py-3 rounded-xl border border-gray-200 focus:border-[#b8651a] focus:ring-2 focus:ring-[#b8651a]/20 outline-none transition-all"
+                            className="w-full pl-12 pr-4 py-3 rounded-xl border border-gray-200 focus:border-[#ea580c] focus:ring-2 focus:ring-[#ea580c]/20 outline-none transition-all"
                         />
                     </div>
                 </div>
@@ -78,7 +78,7 @@ export default function YardimPage() {
                     <Link
                         key={item.href}
                         href={item.href}
-                        className="group bg-gray-50 hover:bg-white rounded-xl p-6 border border-gray-100 hover:border-[#fbeede] hover:shadow-lg transition-all"
+                        className="group bg-gray-50 hover:bg-white rounded-xl p-6 border border-gray-100 hover:border-[#ffedd5] hover:shadow-lg transition-all"
                     >
                         <div className={`w-12 h-12 bg-${item.color}-100 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
                             <item.icon className={`w-6 h-6 text-${item.color}-600`} />
@@ -104,8 +104,8 @@ export default function YardimPage() {
                             href={topic.href}
                             className="flex items-center gap-3 p-4 rounded-lg hover:bg-gray-50 transition-colors group"
                         >
-                            <CheckCircle className="w-5 h-5 text-[#b8651a]" />
-                            <span className="text-gray-700 group-hover:text-[#b8651a] transition-colors">
+                            <CheckCircle className="w-5 h-5 text-[#ea580c]" />
+                            <span className="text-gray-700 group-hover:text-[#ea580c] transition-colors">
                                 {topic.title}
                             </span>
                             <ArrowRight className="w-4 h-4 ml-auto text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -115,7 +115,7 @@ export default function YardimPage() {
             </div>
 
             {/* Contact CTA */}
-            <div className="mt-12 p-6 bg-gradient-to-r from-[#fbeede] to-teal-50 rounded-xl border border-[#fbeede]">
+            <div className="mt-12 p-6 bg-gradient-to-r from-[#ffedd5] to-teal-50 rounded-xl border border-[#ffedd5]">
                 <h3 className="font-semibold text-gray-900 mb-2">
                     Aradığınızı bulamadınız mı?
                 </h3>
@@ -124,7 +124,7 @@ export default function YardimPage() {
                 </p>
                 <a
                     href="mailto:destek@i-kirtasiye.com"
-                    className="inline-flex items-center gap-2 bg-[#fbeede] text-white px-4 py-2 rounded-lg font-medium hover:bg-[#934f12] transition-colors text-sm"
+                    className="inline-flex items-center gap-2 bg-[#ffedd5] text-white px-4 py-2 rounded-lg font-medium hover:bg-[#1e40af] transition-colors text-sm"
                 >
                     Bize Ulaşın
                     <ArrowRight className="w-4 h-4" />

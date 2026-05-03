@@ -2,42 +2,44 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { ArrowRight } from 'lucide-react';
+import Image from 'next/image';
+import { ArrowRight, Box } from 'lucide-react';
+import { cmsApi, type RecentlySoldItem } from '@/lib/api';
 
 const formatTL = (n: number) =>
     new Intl.NumberFormat('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(
         n,
     ) + ' ₺';
 
-interface SaleItem {
-    id: number | string;
-    name: string;
-    brand?: string;
-    lowest?: number;
-    highlighted?: boolean;
-}
-
-const SEED: SaleItem[] = [
-    { id: 's1', name: "Pelikan 30'lu Kuru Boya Kalem Seti", brand: 'PELIKAN', lowest: 76.2 },
-    { id: 's2', name: 'Faber-Castell Plastik Silgi 30\'lu Paket', brand: 'FABER', lowest: 41.5, highlighted: true },
-    { id: 's3', name: 'Mas A4 80gr Fotokopi Kağıdı 5 paket', brand: 'MAS', lowest: 612 },
-    { id: 's4', name: "Bic Roller 0.7mm 12'li", brand: 'BIC', lowest: 89.4 },
-];
-
 export function RecentSalesFeed() {
-    const [items, setItems] = useState<SaleItem[]>(SEED);
+    const [items, setItems] = useState<RecentlySoldItem[]>([]);
+    const [highlightIdx, setHighlightIdx] = useState<number>(1);
 
     useEffect(() => {
-        // Lightweight rotation simulating a live feed
+        let active = true;
+        const load = () => {
+            cmsApi
+                .getFeaturedSections()
+                .then((res) => {
+                    if (!active) return;
+                    const list = res.data?.recently_sold ?? [];
+                    setItems(list.slice(0, 8));
+                })
+                .catch(() => {});
+        };
+        load();
+        // Refresh + rotate highlight every 8s
         const t = setInterval(() => {
-            setItems((prev) => {
-                const next = [...prev];
-                next.unshift(next.pop()!);
-                return next.map((it, idx) => ({ ...it, highlighted: idx === 1 }));
-            });
+            if (!active) return;
+            setHighlightIdx((idx) => (idx + 1) % 8);
         }, 8000);
-        return () => clearInterval(t);
+        return () => {
+            active = false;
+            clearInterval(t);
+        };
     }, []);
+
+    if (items.length === 0) return null;
 
     return (
         <section className="max-w-[1440px] mx-auto px-4 sm:px-6 pt-6">
@@ -76,42 +78,64 @@ export function RecentSalesFeed() {
                     </span>
                 </div>
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5">
-                    {items.map((p) => (
-                        <Link
-                            key={p.id}
-                            href={`/market/product/${p.id}`}
-                            className="grid gap-2.5 p-2.5"
-                            style={{
-                                gridTemplateColumns: '60px 1fr',
-                                border: '1px solid var(--border)',
-                                borderRadius: 'var(--radius)',
-                                background: p.highlighted
-                                    ? 'var(--accent-soft)'
-                                    : 'var(--bg)',
-                            }}
-                        >
-                            <div
-                                className="ph-image"
-                                style={{ aspectRatio: '1 / 1', width: 60, fontSize: 8 }}
+                    {items.slice(0, 4).map((p, idx) => {
+                        const img = p.image_url || p.image;
+                        const highlighted = idx === highlightIdx % 4;
+                        return (
+                            <Link
+                                key={p.id}
+                                href={`/market/product/${p.product_id}`}
+                                className="grid gap-2.5 p-2.5 transition-all hover:shadow-md"
+                                style={{
+                                    gridTemplateColumns: '60px 1fr',
+                                    border: highlighted
+                                        ? '1px solid var(--accent)'
+                                        : '1px solid var(--border)',
+                                    borderRadius: 'var(--radius)',
+                                    background: highlighted ? 'var(--accent-soft)' : 'var(--bg)',
+                                }}
                             >
-                                {(p.brand || '').slice(0, 4)}
-                            </div>
-                            <div className="min-w-0">
                                 <div
-                                    className="text-xs font-medium leading-tight line-clamp-2"
-                                    style={{ color: 'var(--fg)' }}
+                                    className="relative overflow-hidden flex-shrink-0"
+                                    style={{
+                                        aspectRatio: '1 / 1',
+                                        width: 60,
+                                        background: '#ffffff',
+                                        border: '1px solid var(--border)',
+                                        borderRadius: 6,
+                                    }}
                                 >
-                                    {p.name}
+                                    {img ? (
+                                        <Image
+                                            src={img}
+                                            alt={p.name}
+                                            fill
+                                            sizes="60px"
+                                            className="object-contain p-1"
+                                        />
+                                    ) : (
+                                        <div className="w-full h-full flex items-center justify-center">
+                                            <Box className="w-5 h-5" style={{ color: 'var(--fg-soft)' }} />
+                                        </div>
+                                    )}
                                 </div>
-                                <div
-                                    className="mono text-[13px] font-bold mt-0.5"
-                                    style={{ color: p.highlighted ? 'var(--accent)' : 'var(--fg)' }}
-                                >
-                                    {p.lowest != null ? formatTL(p.lowest) : '---'}
+                                <div className="min-w-0">
+                                    <div
+                                        className="text-xs font-medium leading-tight line-clamp-2"
+                                        style={{ color: 'var(--fg)' }}
+                                    >
+                                        {p.name}
+                                    </div>
+                                    <div
+                                        className="mono text-[13px] font-bold mt-0.5"
+                                        style={{ color: highlighted ? 'var(--accent)' : 'var(--fg)' }}
+                                    >
+                                        {p.price != null ? formatTL(p.price) : '---'}
+                                    </div>
                                 </div>
-                            </div>
-                        </Link>
-                    ))}
+                            </Link>
+                        );
+                    })}
                 </div>
             </div>
         </section>

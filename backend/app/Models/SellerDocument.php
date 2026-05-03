@@ -51,12 +51,12 @@ class SellerDocument extends Model
     ];
 
     /**
-     * Required document types for retailer approval
+     * Required document types for retailer (kırtasiyeci) approval
      */
-    public const REQUIRED_TYPES = ['ruhsat', 'oda_kaydi', 'vergi_levhasi'];
+    public const REQUIRED_TYPES = ['vergi_levhasi', 'kimlik'];
 
     /**
-     * Required document types for company approval
+     * Required document types for seller (tedarikçi) approval
      */
     public const REQUIRED_TYPES_COMPANY = ['vergi_levhasi', 'kimlik'];
 
@@ -68,6 +68,7 @@ class SellerDocument extends Model
         if ($role === 'seller') {
             return self::REQUIRED_TYPES_COMPANY;
         }
+
         return self::REQUIRED_TYPES;
     }
 
@@ -138,6 +139,6 @@ class SellerDocument extends Model
      */
     public function getFileUrlAttribute(): string
     {
-        return asset('storage/' . $this->file_path);
+        return asset('storage/'.$this->file_path);
     }
 }

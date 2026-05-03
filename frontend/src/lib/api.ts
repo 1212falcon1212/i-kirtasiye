@@ -562,7 +562,9 @@ export interface Category {
   id: number;
   name: string;
   slug: string;
+  full_slug?: string;
   description?: string;
+  image_url?: string | null;
   commission_rate: number;
   is_active: boolean;
   products_count?: number;
@@ -571,6 +573,7 @@ export interface Category {
 
 export interface Product {
   id: number;
+  slug?: string;
   barcode: string;
   name: string;
   brand?: string;
@@ -1566,6 +1569,7 @@ export const cmsApi = {
   getHomepage: () => api.get<CmsHomepageResponse>('/cms/homepage'),
   getBanners: (location: string) => api.get<Banner[]>(`/cms/banners/${location}`),
   getFeaturedSections: () => api.get<FeaturedSectionsResponse>('/cms/featured-sections'),
+  getRandomProducts: () => api.get<{ products: Product[] }>('/cms/random-products'),
   getPage: (slug: string) => api.get<CmsPage>(`/cms/pages/${slug}`),
 };
 

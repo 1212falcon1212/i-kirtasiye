@@ -7,19 +7,12 @@ import { toast } from 'sonner';
 import {
     Eye, EyeOff, Mail, Lock, Phone, User as UserIcon, Building2,
     MapPin, ArrowRight, ArrowLeft, Check, AlertCircle, Loader2,
-    Hash, ShieldCheck, Pencil, Truck,
+    Hash, Pencil, Truck,
 } from 'lucide-react';
 import { api, authApi, RegisterData } from '@/lib/api';
 import { useAuth } from '@/contexts/AuthContext';
 
 type AccountType = 'retailer' | 'seller' | null;
-
-interface VergiInfo {
-    business_name?: string;
-    city?: string;
-    district?: string;
-    address?: string;
-}
 
 const stepsFor = (t: AccountType) => {
     const base = [
@@ -57,10 +50,6 @@ export default function RegisterPage() {
     const [currentStep, setCurrentStep] = useState(0);
 
     const [vergiNo, setVergiNo] = useState('');
-    const [vergiInfo, setVergiInfo] = useState<VergiInfo>({});
-    const [vergiVerified, setVergiVerified] = useState(false);
-    const [vergiBlocked, setVergiBlocked] = useState(false);
-    const [verifying, setVerifying] = useState(false);
 
     const [formData, setFormData] = useState({
         email: '',
@@ -115,64 +104,20 @@ export default function RegisterPage() {
         setCurrentStep(id);
     };
 
-    const handleVerify = async () => {
+    const handleVergiNext = () => {
         setError('');
         setFieldErrors({});
         if (!/^\d{10}$/.test(vergiNo)) {
             setFieldErrors({ vergi_no: 'Vergi numarası 10 haneli olmalıdır' });
             return;
         }
-        setVerifying(true);
-        const res = await authApi.verifyVergiNo(vergiNo);
-        setVerifying(false);
-
-        if (!res.data) {
-            const msg = res.error || 'Doğrulama servisi yanıt vermedi';
-            setError(msg);
-            toast.error('Doğrulama başarısız', { description: msg });
-            return;
-        }
-
-        if (res.data.already_registered) {
-            setError('Bu vergi numarası zaten kayıtlı.');
-            toast.error('Vergi numarası zaten kayıtlı');
-            return;
-        }
-
-        if (!res.data.whitelisted) {
-            setVergiBlocked(true);
-            setError('Onaylı listede değilsiniz. Lütfen iletişim formundan başvurun.');
-            toast.error('Onaylı listede yok', {
-                description: 'İletişim formundan başvuru yapabilirsiniz.',
-            });
-            return;
-        }
-
-        const info: VergiInfo = {
-            business_name: res.data.company_name || res.data.business_name,
-            city: res.data.city,
-            district: res.data.district,
-            address: res.data.address,
-        };
-        setVergiInfo(info);
-        setVergiVerified(true);
-        setFormData((p) => ({
-            ...p,
-            business_name: info.business_name || p.business_name,
-            city: info.city || p.city,
-            district: info.district || p.district,
-            address: info.address || p.address,
-        }));
-        toast.success('Vergi numarası doğrulandı', { description: info.business_name });
+        goTo(2);
     };
 
     const handleStartOver = () => {
         setAccountType(null);
         setCurrentStep(0);
         setVergiNo('');
-        setVergiInfo({});
-        setVergiVerified(false);
-        setVergiBlocked(false);
     };
 
     const validateCompanyStep = () => {
@@ -320,7 +265,7 @@ export default function RegisterPage() {
                             type: 'retailer' as const,
                             Icon: Pencil,
                             title: 'Kırtasiyeci (alıcı)',
-                            desc: 'Vergi numaranızı doğrulayın, onaylı tedarikçilerden toptan satın alın.',
+                            desc: 'Vergi numaranızı girin, tedarikçilerden komisyonsuz toptan satın alın.',
                             tags: ['Vergi No zorunlu', 'Satın al'],
                         },
                         {
@@ -400,79 +345,28 @@ export default function RegisterPage() {
                 <div className="space-y-4">
                     <div>
                         <FieldLabel htmlFor="vergi_no">Vergi numarası</FieldLabel>
-                        <div className="flex gap-2">
-                            <div className="relative flex-1">
-                                <Hash
-                                    className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4"
-                                    style={{ color: 'var(--fg-soft)' }}
-                                />
-                                <input
-                                    id="vergi_no"
-                                    inputMode="numeric"
-                                    maxLength={10}
-                                    value={vergiNo}
-                                    onChange={(e) => {
-                                        const v = e.target.value.replace(/\D/g, '').slice(0, 10);
-                                        setVergiNo(v);
-                                        setVergiVerified(false);
-                                        setVergiBlocked(false);
-                                    }}
-                                    placeholder="10 haneli vergi no"
-                                    className={inputClass}
-                                    style={{ paddingLeft: 36, fontFamily: 'var(--font-mono)' }}
-                                    disabled={vergiVerified}
-                                />
-                            </div>
-                            <button
-                                type="button"
-                                onClick={handleVerify}
-                                disabled={verifying || vergiVerified || vergiNo.length !== 10}
-                                className="btn btn-primary"
-                                style={{ minWidth: 110 }}
-                            >
-                                {verifying ? (
-                                    <>
-                                        <Loader2 className="w-4 h-4 animate-spin" /> Doğrulanıyor
-                                    </>
-                                ) : vergiVerified ? (
-                                    <>
-                                        <Check className="w-4 h-4" /> Doğrulandı
-                                    </>
-                                ) : (
-                                    'Doğrula'
-                                )}
-                            </button>
+                        <div className="relative">
+                            <Hash
+                                className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4"
+                                style={{ color: 'var(--fg-soft)' }}
+                            />
+                            <input
+                                id="vergi_no"
+                                inputMode="numeric"
+                                maxLength={10}
+                                value={vergiNo}
+                                onChange={(e) => {
+                                    const v = e.target.value.replace(/\D/g, '').slice(0, 10);
+                                    setVergiNo(v);
+                                }}
+                                placeholder="10 haneli vergi no"
+                                className={inputClass}
+                                style={{ paddingLeft: 36, fontFamily: 'var(--font-mono)' }}
+                            />
                         </div>
                         <ErrorText>{fieldErrors.vergi_no}</ErrorText>
-                        {!vergiBlocked && helpText('10 haneli kurum vergi numaranızı girin.')}
+                        {helpText('10 haneli kurum vergi numaranızı girin.')}
                     </div>
-
-                    {vergiVerified && vergiInfo.business_name && (
-                        <div
-                            className="p-4 rounded-md flex gap-3"
-                            style={{ background: 'var(--success-soft)', color: 'var(--success)' }}
-                        >
-                            <ShieldCheck className="w-5 h-5 flex-shrink-0 mt-0.5" />
-                            <div className="text-sm">
-                                <p className="font-semibold">{vergiInfo.business_name}</p>
-                                <p className="opacity-80">
-                                    {[vergiInfo.district, vergiInfo.city].filter(Boolean).join(', ')}
-                                </p>
-                            </div>
-                        </div>
-                    )}
-
-                    {vergiBlocked && (
-                        <div className="p-4 rounded-md" style={{ background: 'var(--warning-soft)', color: 'var(--warning)' }}>
-                            <p className="text-sm font-medium">
-                                Onaylı listede değilsiniz. Başvuru için lütfen{' '}
-                                <Link href="/iletisim" className="underline font-semibold">
-                                    iletişim formunu
-                                </Link>{' '}
-                                doldurun.
-                            </p>
-                        </div>
-                    )}
 
                     <div className="flex justify-between gap-2 pt-2">
                         <button type="button" onClick={() => goTo(0)} className="btn btn-ghost">
@@ -480,8 +374,8 @@ export default function RegisterPage() {
                         </button>
                         <button
                             type="button"
-                            onClick={() => goTo(2)}
-                            disabled={!vergiVerified}
+                            onClick={handleVergiNext}
+                            disabled={vergiNo.length !== 10}
                             className="btn btn-primary"
                         >
                             Devam et <ArrowRight className="w-4 h-4" />

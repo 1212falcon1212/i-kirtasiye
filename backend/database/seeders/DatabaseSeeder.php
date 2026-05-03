@@ -30,6 +30,8 @@ class DatabaseSeeder extends Seeder
             PageSeeder::class,
             // CMS bannerlar / menüler
             CmsSeeder::class,
+            // Ana sayfa hero bannerlari (4 banner)
+            HomeHeroBannerSeeder::class,
         ]);
 
         $this->command->newLine();

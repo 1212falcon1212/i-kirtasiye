@@ -113,7 +113,7 @@ export default function CtaSection({ content, stats }: CtaSectionProps) {
             backgroundSize: "32px 32px",
           }}
         />
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#b8651a]/10 rounded-full blur-[120px]" />
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#1e3a8a]/10 rounded-full blur-[120px]" />
         <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-purple-600/8 rounded-full blur-[100px]" />
 
         <div className="relative max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
@@ -146,7 +146,7 @@ export default function CtaSection({ content, stats }: CtaSectionProps) {
       </div>
 
       {/* CTA section */}
-      <div className="py-24 lg:py-28 bg-gradient-to-br from-[#b8651a] via-[#a5165a] to-[#831843] relative">
+      <div className="py-24 lg:py-28 bg-gradient-to-br from-[#ea580c] via-[#a5165a] to-[#831843] relative">
         {/* Background */}
         <div className="absolute inset-0 opacity-10">
           <div
@@ -192,7 +192,7 @@ export default function CtaSection({ content, stats }: CtaSectionProps) {
               />
               <button
                 type="submit"
-                className="px-7 py-4 bg-white text-[#b8651a] rounded-xl font-bold shadow-xl shadow-black/10 hover:bg-accent-soft transition-all duration-200 flex items-center justify-center gap-2 whitespace-nowrap active:scale-[0.98]"
+                className="px-7 py-4 bg-white text-[#ea580c] rounded-xl font-bold shadow-xl shadow-black/10 hover:bg-accent-soft transition-all duration-200 flex items-center justify-center gap-2 whitespace-nowrap active:scale-[0.98]"
               >
                 {content.cta_primary_text}
                 <ArrowRight className="w-5 h-5" />

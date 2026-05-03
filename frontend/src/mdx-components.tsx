@@ -41,7 +41,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
         a: ({ href, children }) => (
             <Link
                 href={href || '#'}
-                className="text-[#b8651a] hover:text-[#934f12] underline underline-offset-2"
+                className="text-[#ea580c] hover:text-[#c2410c] underline underline-offset-2"
             >
                 {children}
             </Link>
@@ -57,7 +57,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
             </pre>
         ),
         blockquote: ({ children }) => (
-            <blockquote className="border-l-4 border-[#b8651a] pl-4 py-2 my-4 bg-[#fbeede] rounded-r-lg">
+            <blockquote className="border-l-4 border-[#ea580c] pl-4 py-2 my-4 bg-[#ffedd5] rounded-r-lg">
                 {children}
             </blockquote>
         ),

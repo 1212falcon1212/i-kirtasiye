@@ -5,8 +5,8 @@ use App\Http\Controllers\Api\BlogController;
 use App\Http\Controllers\Api\CampaignController;
 use App\Http\Controllers\Api\CartController;
 use App\Http\Controllers\Api\CategoryController;
-use App\Http\Controllers\Api\DistributorRetailerLinkController;
 use App\Http\Controllers\Api\CouponController;
+use App\Http\Controllers\Api\DistributorRetailerLinkController;
 use App\Http\Controllers\Api\DocumentController;
 use App\Http\Controllers\Api\FcmTokenController;
 use App\Http\Controllers\Api\ForgotPasswordController;
@@ -335,6 +335,7 @@ Route::prefix('cms')->middleware('cache.headers:600')->group(function () {
     Route::get('/homepage', [\App\Http\Controllers\Api\CmsController::class, 'homepage']);
     Route::get('/banners/{location}', [\App\Http\Controllers\Api\CmsController::class, 'banners']);
     Route::get('/featured-sections', [\App\Http\Controllers\Api\CmsController::class, 'featuredSections']);
+    Route::get('/random-products', [\App\Http\Controllers\Api\CmsController::class, 'randomProducts']);
     Route::get('/pages/{slug}', [\App\Http\Controllers\Api\CmsController::class, 'page']);
 });
 
@@ -350,7 +351,7 @@ Route::prefix('brands')->middleware('cache.headers:600')->group(function () {
 });
 
 // Category Routes (Public for frontend consumption)
-Route::prefix('categories')->middleware('cache.headers:600')->group(function () {
+Route::prefix('categories')->middleware('cache.headers:60')->group(function () {
     Route::get('/', [CategoryController::class, 'index']);
     Route::get('/slug/{slug}', [CategoryController::class, 'showBySlug']);
     Route::get('/{category}', [CategoryController::class, 'show']);

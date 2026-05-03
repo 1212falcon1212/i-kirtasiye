@@ -104,7 +104,7 @@ function MonthYearPicker({
     return (
         <div className="relative" ref={ref}>
             <div
-                className="flex items-center h-9 w-full rounded-xl border border-[#f0eceb] bg-white px-3 text-sm cursor-pointer hover:border-[#b8651a] transition-colors"
+                className="flex items-center h-9 w-full rounded-xl border border-[#f0eceb] bg-white px-3 text-sm cursor-pointer hover:border-[#ea580c] transition-colors"
                 onClick={() => setIsOpen(!isOpen)}
             >
                 <Calendar className="w-3.5 h-3.5 text-[#6b7280] mr-2 flex-shrink-0" />
@@ -158,7 +158,7 @@ function MonthYearPicker({
                                         ${disabled
                                             ? 'text-[#f0eceb] cursor-not-allowed'
                                             : selected
-                                                ? 'bg-[#b8651a] text-white'
+                                                ? 'bg-[#1e3a8a] text-white'
                                                 : 'text-[#6b7280] hover:bg-[#faf8f6] hover:text-[#1a1a1a]'
                                         }
                                     `}
@@ -193,7 +193,7 @@ const OFFER_STATUS_LABELS: Record<string, string> = {
 
 const OFFER_STATUS_COLORS: Record<string, string> = {
     'pending': 'bg-amber-50 text-amber-700',
-    'active': 'bg-[#fbeede] text-[#934f12]',
+    'active': 'bg-[#ffedd5] text-[#c2410c]',
     'inactive': 'bg-slate-100 text-slate-600',
     'sold_out': 'bg-red-50 text-red-700',
     'rejected': 'bg-red-50 text-red-700',
@@ -434,12 +434,12 @@ export function ListingsContent({ subNav }: { subNav: string }) {
                         <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-[#6b7280]" />
                         <Input
                             placeholder="Ilan ara..."
-                            className="pl-9 w-full sm:w-64 border-[#f0eceb] rounded-xl focus:border-[#b8651a] focus:ring-[#b8651a]"
+                            className="pl-9 w-full sm:w-64 border-[#f0eceb] rounded-xl focus:border-[#ea580c] focus:ring-[#ea580c]"
                         />
                     </div>
 
                     <Link href="/market/hesabim/ilanlarim/yeni">
-                        <Button className="bg-[#b8651a] hover:bg-[#934f12] text-white rounded-xl font-semibold w-full sm:w-auto">
+                        <Button className="bg-[#1e3a8a] hover:bg-[#1e40af] text-white rounded-xl font-semibold w-full sm:w-auto">
                             <Plus className="w-4 h-4 mr-2" />
                             Yeni İlan Ekle
                         </Button>
@@ -455,9 +455,9 @@ export function ListingsContent({ subNav }: { subNav: string }) {
                                 <DialogHeader>
                                     <DialogTitle className="text-lg font-black text-[#1a1a1a] flex items-center gap-2">
                                         {editingOffer ? (
-                                            <><Edit className="w-4 h-4 text-[#b8651a]" /> İlanı Düzenle</>
+                                            <><Edit className="w-4 h-4 text-[#ea580c]" /> İlanı Düzenle</>
                                         ) : (
-                                            <><Plus className="w-4 h-4 text-[#b8651a]" /> Yeni İlan Oluştur</>
+                                            <><Plus className="w-4 h-4 text-[#ea580c]" /> Yeni İlan Oluştur</>
                                         )}
                                     </DialogTitle>
                                     <DialogDescription className="text-xs text-[#6b7280]">
@@ -481,11 +481,11 @@ export function ListingsContent({ subNav }: { subNav: string }) {
                                                 placeholder="Ürün adi veya barkod ile arayin..."
                                                 value={searchQuery}
                                                 onChange={(e) => handleProductSearch(e.target.value)}
-                                                className="pl-9 h-10 bg-[#faf8f6] border-[#f0eceb] rounded-xl focus:bg-white focus:border-[#b8651a] focus:ring-[#b8651a] transition-colors"
+                                                className="pl-9 h-10 bg-[#faf8f6] border-[#f0eceb] rounded-xl focus:bg-white focus:border-[#ea580c] focus:ring-[#ea580c] transition-colors"
                                                 autoFocus
                                             />
                                             {isSearching && (
-                                                <Loader2 className="w-4 h-4 absolute right-3 top-1/2 -translate-y-1/2 animate-spin text-[#b8651a]" />
+                                                <Loader2 className="w-4 h-4 absolute right-3 top-1/2 -translate-y-1/2 animate-spin text-[#ea580c]" />
                                             )}
                                         </div>
 
@@ -518,14 +518,14 @@ export function ListingsContent({ subNav }: { subNav: string }) {
                                                                 <div className="flex items-center gap-2 mt-0.5">
                                                                     <span className="text-[11px] text-[#6b7280] font-mono">{product.barcode}</span>
                                                                     {product.brand && (
-                                                                        <span className="text-[10px] text-[#b8651a] uppercase font-semibold">{product.brand}</span>
+                                                                        <span className="text-[10px] text-[#ea580c] uppercase font-semibold">{product.brand}</span>
                                                                     )}
                                                                 </div>
                                                             </div>
                                                             <div className="flex-shrink-0 text-right">
                                                                 {product.lowest_price != null && product.lowest_price > 0 ? (
                                                                     <div>
-                                                                        <p className="text-xs font-semibold text-[#b8651a]">{formatPrice(product.lowest_price)}</p>
+                                                                        <p className="text-xs font-semibold text-[#ea580c]">{formatPrice(product.lowest_price)}</p>
                                                                         <p className="text-[10px] text-[#6b7280]">{product.offers_count || 0} ilan</p>
                                                                     </div>
                                                                 ) : (
@@ -562,7 +562,7 @@ export function ListingsContent({ subNav }: { subNav: string }) {
                                                     <Image src={(selectedProduct.image_url || selectedProduct.image) as string} alt="" width={48} height={48} className="w-12 h-12 object-cover rounded-xl flex-shrink-0 border border-[#f0eceb]" loading="lazy" />
                                                 ) : (
                                                     <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center flex-shrink-0 border border-[#f0eceb]">
-                                                        <Package className="w-5 h-5 text-[#b8651a]" />
+                                                        <Package className="w-5 h-5 text-[#ea580c]" />
                                                     </div>
                                                 )}
                                                 <div className="flex-1 min-w-0">
@@ -570,7 +570,7 @@ export function ListingsContent({ subNav }: { subNav: string }) {
                                                     <div className="flex items-center gap-2 mt-0.5">
                                                         <span className="text-[11px] text-[#6b7280] font-mono">{selectedProduct.barcode}</span>
                                                         {selectedProduct.brand && (
-                                                            <span className="text-[10px] text-[#b8651a] uppercase font-semibold">{selectedProduct.brand}</span>
+                                                            <span className="text-[10px] text-[#ea580c] uppercase font-semibold">{selectedProduct.brand}</span>
                                                         )}
                                                     </div>
                                                 </div>
@@ -588,9 +588,9 @@ export function ListingsContent({ subNav }: { subNav: string }) {
                                             {/* Competitive Price Indicator */}
                                             {selectedProduct.lowest_price != null && selectedProduct.lowest_price > 0 && (
                                                 <div className="px-3 py-2 border-t border-[#f0eceb] bg-white flex items-center gap-2">
-                                                    <TrendingDown className="w-3.5 h-3.5 text-[#b8651a] flex-shrink-0" />
+                                                    <TrendingDown className="w-3.5 h-3.5 text-[#ea580c] flex-shrink-0" />
                                                     <p className="text-xs text-[#6b7280]">
-                                                        En dusuk fiyat: <span className="font-bold text-[#b8651a]">{formatPrice(selectedProduct.lowest_price)}</span>
+                                                        En dusuk fiyat: <span className="font-bold text-[#ea580c]">{formatPrice(selectedProduct.lowest_price)}</span>
                                                         <span className="text-[#6b7280] ml-1">({selectedProduct.offers_count || 0} aktif ilan)</span>
                                                     </p>
                                                 </div>
@@ -614,7 +614,7 @@ export function ListingsContent({ subNav }: { subNav: string }) {
                                                             placeholder="0.00"
                                                             value={formData.price}
                                                             onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                                                            className="h-10 pr-9 border-[#f0eceb] rounded-xl focus:border-[#b8651a] focus:ring-[#b8651a]"
+                                                            className="h-10 pr-9 border-[#f0eceb] rounded-xl focus:border-[#ea580c] focus:ring-[#ea580c]"
                                                         />
                                                         <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-[#6b7280] font-medium">TL</span>
                                                     </div>
@@ -622,7 +622,7 @@ export function ListingsContent({ subNav }: { subNav: string }) {
                                                     {formData.price && selectedProduct?.lowest_price != null && selectedProduct.lowest_price > 0 && (
                                                         <p className={`text-[10px] font-medium ${
                                                             parseFloat(formData.price) < selectedProduct.lowest_price
-                                                                ? 'text-[#b8651a]'
+                                                                ? 'text-[#ea580c]'
                                                                 : parseFloat(formData.price) === selectedProduct.lowest_price
                                                                     ? 'text-amber-600'
                                                                     : 'text-[#6b7280]'
@@ -646,7 +646,7 @@ export function ListingsContent({ subNav }: { subNav: string }) {
                                                             placeholder="0"
                                                             value={formData.stock}
                                                             onChange={(e) => setFormData({ ...formData, stock: e.target.value })}
-                                                            className="h-10 pr-12 border-[#f0eceb] rounded-xl focus:border-[#b8651a] focus:ring-[#b8651a]"
+                                                            className="h-10 pr-12 border-[#f0eceb] rounded-xl focus:border-[#ea580c] focus:ring-[#ea580c]"
                                                         />
                                                         <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-[#6b7280] font-medium">adet</span>
                                                     </div>
@@ -679,7 +679,7 @@ export function ListingsContent({ subNav }: { subNav: string }) {
                                                         placeholder="Opsiyonel"
                                                         value={formData.batch_number}
                                                         onChange={(e) => setFormData({ ...formData, batch_number: e.target.value })}
-                                                        className="h-9 border-[#f0eceb] rounded-xl focus:border-[#b8651a] focus:ring-[#b8651a]"
+                                                        className="h-9 border-[#f0eceb] rounded-xl focus:border-[#ea580c] focus:ring-[#ea580c]"
                                                     />
                                                 </div>
                                             </div>
@@ -694,7 +694,7 @@ export function ListingsContent({ subNav }: { subNav: string }) {
                                                     placeholder="Opsiyonel notlar..."
                                                     value={formData.notes}
                                                     onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
-                                                    className="h-9 border-[#f0eceb] rounded-xl focus:border-[#b8651a] focus:ring-[#b8651a]"
+                                                    className="h-9 border-[#f0eceb] rounded-xl focus:border-[#ea580c] focus:ring-[#ea580c]"
                                                 />
                                             </div>
                                         </div>
@@ -711,7 +711,7 @@ export function ListingsContent({ subNav }: { subNav: string }) {
                                     size="sm"
                                     onClick={handleCreateOffer}
                                     disabled={!selectedProduct || isSubmitting || !formData.price || !formData.stock}
-                                    className="bg-[#b8651a] hover:bg-[#934f12] text-white rounded-xl font-semibold min-w-[120px]"
+                                    className="bg-[#1e3a8a] hover:bg-[#1e40af] text-white rounded-xl font-semibold min-w-[120px]"
                                 >
                                     {isSubmitting ? (
                                         <>
@@ -775,7 +775,7 @@ export function ListingsContent({ subNav }: { subNav: string }) {
                                     {offer.product?.name || 'Urun'}
                                 </h4>
                                 {offer.product?.brand && (
-                                    <p className="text-xs text-[#b8651a] uppercase font-semibold mt-0.5">{offer.product.brand}</p>
+                                    <p className="text-xs text-[#ea580c] uppercase font-semibold mt-0.5">{offer.product.brand}</p>
                                 )}
                                 <p className="text-sm font-black text-[#1a1a1a] mt-1">{formatPrice(offer.price)}</p>
                                 <div className="flex flex-wrap gap-3 mt-1 text-xs text-[#6b7280]">
@@ -816,7 +816,7 @@ export function ListingsContent({ subNav }: { subNav: string }) {
                                     {/* Edit */}
                                     <button
                                         onClick={() => handleEditOffer(offer)}
-                                        className="p-1.5 rounded-lg hover:bg-[#faf8f6] text-[#6b7280] hover:text-[#b8651a] transition-colors"
+                                        className="p-1.5 rounded-lg hover:bg-[#faf8f6] text-[#6b7280] hover:text-[#ea580c] transition-colors"
                                         title="Duzenle"
                                     >
                                         <Edit className="w-4 h-4" />

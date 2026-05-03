@@ -250,8 +250,8 @@ function KartlarimContent({ subNav }: { subNav: string }) {
     const getCardBrandColor = (brand: string): string => {
         const b = brand.toLowerCase();
         if (b.includes('visa')) return 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400';
-        if (b.includes('master')) return 'bg-[#fbeede] text-[#934f12] dark:bg-[#934f12]/30 dark:text-[#fbeede]';
-        if (b.includes('troy')) return 'bg-[#fbeede] text-[#b8651a] dark:bg-[#934f12]/30 dark:text-[#fbeede]';
+        if (b.includes('master')) return 'bg-[#ffedd5] text-[#c2410c] dark:bg-[#1e40af]/30 dark:text-[#ffedd5]';
+        if (b.includes('troy')) return 'bg-[#ffedd5] text-[#ea580c] dark:bg-[#1e40af]/30 dark:text-[#ffedd5]';
         if (b.includes('amex')) return 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400';
         return 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-400';
     };
@@ -447,7 +447,7 @@ function FavoritesContent({ subNav }: { subNav: string }) {
 
                         {/* Product Info */}
                         <div className="flex-1 min-w-0">
-                            <Link href={`/market/product/${item.product_id}`} className="hover:text-[#b8651a] transition-colors">
+                            <Link href={`/market/product/${item.product_id}`} className="hover:text-[#ea580c] transition-colors">
                                 <h4 className="font-semibold text-slate-900 line-clamp-2 mb-1">
                                     {item.product?.name || `Ürün #${item.product_id}`}
                                 </h4>
@@ -459,7 +459,7 @@ function FavoritesContent({ subNav }: { subNav: string }) {
                                 <p className="text-xs text-slate-400">{item.product.category.name}</p>
                             )}
                             {item.product?.lowest_price && (
-                                <p className="text-lg font-bold text-[#b8651a] mt-2">
+                                <p className="text-lg font-bold text-[#ea580c] mt-2">
                                     {formatPrice(item.product.lowest_price)} TL
                                 </p>
                             )}
@@ -468,7 +468,7 @@ function FavoritesContent({ subNav }: { subNav: string }) {
                         {/* Actions */}
                         <div className="flex flex-col gap-2 shrink-0">
                             <Link href={`/market/product/${item.product_id}`}>
-                                <Button size="sm" className="bg-[#b8651a] hover:bg-[#b8651a] text-white w-full">
+                                <Button size="sm" className="bg-[#1e3a8a] hover:bg-[#1e3a8a] text-white w-full">
                                     <Eye className="w-4 h-4 mr-1" />
                                     Görüntüle
                                 </Button>
@@ -796,10 +796,10 @@ function AddressesContent({ user }: { user: import('@/lib/api').User | null }) {
                     {addresses.map((address) => (
                         <div key={address.id} className={cn(
                             "bg-white rounded-xl border p-4",
-                            address.is_default && "border-[#fbeede] shadow-sm"
+                            address.is_default && "border-[#ffedd5] shadow-sm"
                         )}>
                             {address.is_default && (
-                                <Badge className="bg-[#fbeede] text-[#b8651a] mb-2">Varsayılan</Badge>
+                                <Badge className="bg-[#ffedd5] text-[#ea580c] mb-2">Varsayılan</Badge>
                             )}
                             <div className="flex items-start gap-3">
                                 <MapPin className="w-5 h-5 text-slate-400 mt-1 flex-shrink-0" />
@@ -1412,7 +1412,7 @@ function KullaniciBilgileriContent({ user }: { user: import('@/lib/api').User | 
                 </div>
                 <div className="bg-white rounded-xl border border-slate-200 p-4">
                     <div className="flex items-center gap-2 mb-2">
-                        <Calendar className="w-4 h-4 text-[#b8651a]" />
+                        <Calendar className="w-4 h-4 text-[#ea580c]" />
                         <p className="text-sm font-medium text-slate-700">Kayıt Tarihi</p>
                     </div>
                     <p className="text-slate-900 font-semibold">
@@ -1421,10 +1421,10 @@ function KullaniciBilgileriContent({ user }: { user: import('@/lib/api').User | 
                 </div>
                 <div className="bg-white rounded-xl border border-slate-200 p-4">
                     <div className="flex items-center gap-2 mb-2">
-                        <CheckCircle2 className="w-4 h-4 text-[#b8651a]" />
+                        <CheckCircle2 className="w-4 h-4 text-[#ea580c]" />
                         <p className="text-sm font-medium text-slate-700">Doğrulama Durumu</p>
                     </div>
-                    <p className={cn("font-semibold", user?.is_verified ? 'text-[#b8651a]' : 'text-amber-600')}>
+                    <p className={cn("font-semibold", user?.is_verified ? 'text-[#ea580c]' : 'text-amber-600')}>
                         {user?.is_verified ? 'Doğrulanmış' : 'Doğrulanmamış'}
                     </p>
                 </div>
@@ -1544,8 +1544,8 @@ function BankAccountInlineForm({
     return (
         <div className={cn(
             "bg-white rounded-xl border p-5 space-y-4",
-            account?.is_default ? "border-[#fbeede]" : "border-slate-200",
-            !account && "border-dashed border-[#fbeede] bg-[#fbeede]/30"
+            account?.is_default ? "border-[#ffedd5]" : "border-slate-200",
+            !account && "border-dashed border-[#ffedd5] bg-[#ffedd5]/30"
         )}>
             {/* Header */}
             <div className="flex items-center justify-between">
@@ -1554,7 +1554,7 @@ function BankAccountInlineForm({
                     <h4 className="font-semibold text-slate-900">
                         {account ? (account.account_holder || 'Hesap Bilgileri') : 'Yeni Hesap Bilgileri'}
                     </h4>
-                    {account?.is_default && <Badge className="bg-[#fbeede] text-[#b8651a] border-[#fbeede]">Varsayılan</Badge>}
+                    {account?.is_default && <Badge className="bg-[#ffedd5] text-[#ea580c] border-[#ffedd5]">Varsayılan</Badge>}
                 </div>
                 {account && onDelete && (
                     <Button
@@ -1766,7 +1766,7 @@ function SatisBilgileriContent({ user }: { user: import('@/lib/api').User | null
 
                 {loading ? (
                     <div className="flex items-center justify-center py-8">
-                        <Loader2 className="w-6 h-6 animate-spin text-[#b8651a]" />
+                        <Loader2 className="w-6 h-6 animate-spin text-[#ea580c]" />
                     </div>
                 ) : (
                     <div className="space-y-4">
@@ -2039,7 +2039,7 @@ function SettingsContent({ subNav, user }: { subNav: string; user: import('@/lib
 
                     {loadingIntegrations ? (
                         <div className="flex items-center justify-center py-12">
-                            <Loader2 className="w-8 h-8 animate-spin text-[#b8651a]" />
+                            <Loader2 className="w-8 h-8 animate-spin text-[#ea580c]" />
                         </div>
                     ) : (
                         <div className="space-y-3">
@@ -2141,7 +2141,7 @@ function FirmaIstekleriContent({ subNav }: { subNav: string }) {
             case 'pending':
                 return <Badge className="bg-amber-100 text-amber-700 border-amber-200">Bekliyor</Badge>;
             case 'approved':
-                return <Badge className="bg-[#fbeede] text-[#b8651a] border-[#fbeede]">Onaylandı</Badge>;
+                return <Badge className="bg-[#ffedd5] text-[#ea580c] border-[#ffedd5]">Onaylandı</Badge>;
             case 'rejected':
                 return <Badge className="bg-red-100 text-red-700 border-red-200">Reddedildi</Badge>;
             default:
@@ -2151,11 +2151,11 @@ function FirmaIstekleriContent({ subNav }: { subNav: string }) {
 
     return (
         <div className="space-y-6">
-            <div className="bg-[#fbeede] border border-[#fbeede] rounded-xl p-4 flex items-start gap-3">
-                <Info className="w-5 h-5 text-[#b8651a] flex-shrink-0 mt-0.5" />
+            <div className="bg-[#ffedd5] border border-[#ffedd5] rounded-xl p-4 flex items-start gap-3">
+                <Info className="w-5 h-5 text-[#ea580c] flex-shrink-0 mt-0.5" />
                 <div>
-                    <p className="text-sm text-[#b8651a] font-medium">Tedarikçi Bağlantı İstekleri</p>
-                    <p className="text-sm text-[#b8651a] mt-1">
+                    <p className="text-sm text-[#ea580c] font-medium">Tedarikçi Bağlantı İstekleri</p>
+                    <p className="text-sm text-[#ea580c] mt-1">
                         Tedarikçiler sizinle bağlantı kurmak için istek gönderebilir.
                         Onayladığınız tedarikçilerden vadeli alışveriş ve özel fiyat avantajı sağlayabilirsiniz.
                     </p>
@@ -2164,7 +2164,7 @@ function FirmaIstekleriContent({ subNav }: { subNav: string }) {
 
             {loading ? (
                 <div className="flex items-center justify-center py-12">
-                    <Loader2 className="w-8 h-8 animate-spin text-[#b8651a]" />
+                    <Loader2 className="w-8 h-8 animate-spin text-[#ea580c]" />
                 </div>
             ) : links.length === 0 ? (
                 <div className="text-center py-12 bg-slate-50 rounded-xl">
@@ -2181,8 +2181,8 @@ function FirmaIstekleriContent({ subNav }: { subNav: string }) {
                         <div key={link.id} className="bg-white rounded-xl border border-slate-200 p-5">
                             <div className="flex items-start justify-between gap-4">
                                 <div className="flex items-start gap-4">
-                                    <div className="w-12 h-12 bg-[#fbeede] rounded-xl flex items-center justify-center">
-                                        <Building2 className="w-6 h-6 text-[#b8651a]" />
+                                    <div className="w-12 h-12 bg-[#ffedd5] rounded-xl flex items-center justify-center">
+                                        <Building2 className="w-6 h-6 text-[#ea580c]" />
                                     </div>
                                     <div>
                                         <h4 className="font-semibold text-slate-900">{link.distributor?.nickname || link.distributor?.business_name || 'Tedarikçi'}</h4>
@@ -2208,7 +2208,7 @@ function FirmaIstekleriContent({ subNav }: { subNav: string }) {
                                                 size="sm"
                                                 onClick={() => handleApprove(link.id)}
                                                 disabled={processingId === link.id}
-                                                className="bg-[#b8651a] hover:bg-[#934f12]"
+                                                className="bg-[#1e3a8a] hover:bg-[#1e40af]"
                                             >
                                                 {processingId === link.id ? (
                                                     <Loader2 className="w-4 h-4 animate-spin" />
@@ -2338,7 +2338,7 @@ function IstekYollaContent({ subNav }: { subNav: string }) {
             case 'pending':
                 return <Badge className="bg-amber-100 text-amber-700 border-amber-200">Bekliyor</Badge>;
             case 'approved':
-                return <Badge className="bg-[#fbeede] text-[#b8651a] border-[#fbeede]">Onaylandı</Badge>;
+                return <Badge className="bg-[#ffedd5] text-[#ea580c] border-[#ffedd5]">Onaylandı</Badge>;
             case 'rejected':
                 return <Badge className="bg-red-100 text-red-700 border-red-200">Reddedildi</Badge>;
             default:
@@ -2348,11 +2348,11 @@ function IstekYollaContent({ subNav }: { subNav: string }) {
 
     return (
         <div className="space-y-6">
-            <div className="bg-[#fbeede] border border-[#fbeede] rounded-xl p-4 flex items-start gap-3">
-                <Info className="w-5 h-5 text-[#b8651a] flex-shrink-0 mt-0.5" />
+            <div className="bg-[#ffedd5] border border-[#ffedd5] rounded-xl p-4 flex items-start gap-3">
+                <Info className="w-5 h-5 text-[#ea580c] flex-shrink-0 mt-0.5" />
                 <div>
-                    <p className="text-sm text-[#b8651a] font-medium">Kırtasiyelerle Bağlantı Kurma</p>
-                    <p className="text-sm text-[#b8651a] mt-1">
+                    <p className="text-sm text-[#ea580c] font-medium">Kırtasiyelerle Bağlantı Kurma</p>
+                    <p className="text-sm text-[#ea580c] mt-1">
                         Tedarikçi olarak kırtasiyelere bağlantı isteği gönderebilirsiniz.
                         Onaylanan kırtasiyeler özel fiyatlarınızı görüntüleyebilir ve vadeli alışveriş yapabilir.
                     </p>
@@ -2372,14 +2372,14 @@ function IstekYollaContent({ subNav }: { subNav: string }) {
                                 className="pl-10"
                             />
                         </div>
-                        <Button type="submit" className="bg-[#b8651a] hover:bg-[#934f12]">
+                        <Button type="submit" className="bg-[#1e3a8a] hover:bg-[#1e40af]">
                             Ara
                         </Button>
                     </form>
 
                     {loading ? (
                         <div className="flex items-center justify-center py-12">
-                            <Loader2 className="w-8 h-8 animate-spin text-[#b8651a]" />
+                            <Loader2 className="w-8 h-8 animate-spin text-[#ea580c]" />
                         </div>
                     ) : retailers.length === 0 ? (
                         <div className="text-center py-12 bg-slate-50 rounded-xl">
@@ -2392,8 +2392,8 @@ function IstekYollaContent({ subNav }: { subNav: string }) {
                                 <div key={retailer.id} className="bg-white rounded-xl border border-slate-200 p-5">
                                     <div className="flex items-start justify-between gap-4">
                                         <div className="flex items-start gap-4">
-                                            <div className="w-12 h-12 bg-[#fbeede] rounded-xl flex items-center justify-center">
-                                                <Store className="w-6 h-6 text-[#b8651a]" />
+                                            <div className="w-12 h-12 bg-[#ffedd5] rounded-xl flex items-center justify-center">
+                                                <Store className="w-6 h-6 text-[#ea580c]" />
                                             </div>
                                             <div>
                                                 <h4 className="font-semibold text-slate-900">{retailer.nickname || retailer.business_name}</h4>
@@ -2417,7 +2417,7 @@ function IstekYollaContent({ subNav }: { subNav: string }) {
                                                     {getStatusBadge(retailer.link_status)}
                                                     {retailer.link_status === 'approved' && (
                                                         <Link href={`/market/satici/${retailer.id}`}>
-                                                            <Button size="sm" className="bg-[#b8651a] hover:bg-[#934f12] mt-2">
+                                                            <Button size="sm" className="bg-[#1e3a8a] hover:bg-[#1e40af] mt-2">
                                                                 <Store className="w-4 h-4 mr-1" />
                                                                 İlanları Gör
                                                             </Button>
@@ -2439,7 +2439,7 @@ function IstekYollaContent({ subNav }: { subNav: string }) {
                                                                     size="sm"
                                                                     onClick={() => handleSendRequest(retailer.id)}
                                                                     disabled={sendingTo === retailer.id}
-                                                                    className="flex-1 bg-[#b8651a] hover:bg-[#934f12]"
+                                                                    className="flex-1 bg-[#1e3a8a] hover:bg-[#1e40af]"
                                                                 >
                                                                     {sendingTo === retailer.id ? (
                                                                         <Loader2 className="w-4 h-4 animate-spin" />
@@ -2463,7 +2463,7 @@ function IstekYollaContent({ subNav }: { subNav: string }) {
                                                         <Button
                                                             size="sm"
                                                             onClick={() => setShowMessageModal(retailer.id)}
-                                                            className="bg-[#b8651a] hover:bg-[#934f12]"
+                                                            className="bg-[#1e3a8a] hover:bg-[#1e40af]"
                                                         >
                                                             <Send className="w-4 h-4 mr-1" />
                                                             İstek Gönder
@@ -2484,7 +2484,7 @@ function IstekYollaContent({ subNav }: { subNav: string }) {
                 <>
                     {loading ? (
                         <div className="flex items-center justify-center py-12">
-                            <Loader2 className="w-8 h-8 animate-spin text-[#b8651a]" />
+                            <Loader2 className="w-8 h-8 animate-spin text-[#ea580c]" />
                         </div>
                     ) : myRequests.length === 0 ? (
                         <div className="text-center py-12 bg-slate-50 rounded-xl">
@@ -2497,8 +2497,8 @@ function IstekYollaContent({ subNav }: { subNav: string }) {
                                 <div key={link.id} className="bg-white rounded-xl border border-slate-200 p-5">
                                     <div className="flex items-start justify-between gap-4">
                                         <div className="flex items-start gap-4">
-                                            <div className="w-12 h-12 bg-[#fbeede] rounded-xl flex items-center justify-center">
-                                                <Store className="w-6 h-6 text-[#b8651a]" />
+                                            <div className="w-12 h-12 bg-[#ffedd5] rounded-xl flex items-center justify-center">
+                                                <Store className="w-6 h-6 text-[#ea580c]" />
                                             </div>
                                             <div>
                                                 <h4 className="font-semibold text-slate-900">{link.retailer?.nickname || link.retailer?.business_name || 'Kırtasiye'}</h4>
@@ -2540,7 +2540,7 @@ function IstekYollaContent({ subNav }: { subNav: string }) {
                                             )}
                                             {link.status === 'approved' && (
                                                 <Link href={`/market/satici/${link.retailer_id}`}>
-                                                    <Button size="sm" className="bg-[#b8651a] hover:bg-[#934f12] mt-2">
+                                                    <Button size="sm" className="bg-[#1e3a8a] hover:bg-[#1e40af] mt-2">
                                                         <Store className="w-4 h-4 mr-1" />
                                                         İlanları Gör
                                                     </Button>
@@ -2770,7 +2770,7 @@ function HesabimContent() {
 
                 {/* Breadcrumb */}
                 <div className="text-sm text-[#6b7280] mb-6">
-                    <Link href="/market" className="hover:text-[#b8651a]">Ana Sayfa</Link>
+                    <Link href="/market" className="hover:text-[#ea580c]">Ana Sayfa</Link>
                     <span className="mx-2">/</span>
                     <span className="text-[#1a1a1a] font-medium">{currentTabLabel}</span>
                 </div>
@@ -2784,8 +2784,8 @@ function HesabimContent() {
                             </h1>
                             <p className="text-sm text-[#6b7280] mt-1">{user?.email}</p>
                         </div>
-                        <div className="w-12 h-12 rounded-2xl bg-[#fbeede] flex items-center justify-center">
-                            <User className="w-6 h-6 text-[#b8651a]" />
+                        <div className="w-12 h-12 rounded-2xl bg-[#ffedd5] flex items-center justify-center">
+                            <User className="w-6 h-6 text-[#ea580c]" />
                         </div>
                     </div>
 
@@ -2807,28 +2807,28 @@ function HesabimContent() {
                             <>
                                 <div className="bg-white border border-[#f0eceb] rounded-2xl p-4">
                                     <div className="flex items-center gap-2 mb-2">
-                                        <TrendingUp className="w-4 h-4 text-[#b8651a]" />
+                                        <TrendingUp className="w-4 h-4 text-[#ea580c]" />
                                         <span className="text-xs font-medium text-[#6b7280]">Toplam Satış</span>
                                     </div>
                                     <p className="text-xl font-black text-[#1a1a1a]">{stats?.total_sales?.formatted || '₺0'}</p>
                                 </div>
                                 <div className="bg-white border border-[#f0eceb] rounded-2xl p-4">
                                     <div className="flex items-center gap-2 mb-2">
-                                        <ShoppingBag className="w-4 h-4 text-[#b8651a]" />
+                                        <ShoppingBag className="w-4 h-4 text-[#ea580c]" />
                                         <span className="text-xs font-medium text-[#6b7280]">Aktif Sipariş</span>
                                     </div>
                                     <p className="text-xl font-black text-[#1a1a1a]">{stats?.pending_orders?.formatted || '0'}</p>
                                 </div>
                                 <div className="bg-white border border-[#f0eceb] rounded-2xl p-4">
                                     <div className="flex items-center gap-2 mb-2">
-                                        <Wallet className="w-4 h-4 text-[#b8651a]" />
+                                        <Wallet className="w-4 h-4 text-[#ea580c]" />
                                         <span className="text-xs font-medium text-[#6b7280]">Cuzdan</span>
                                     </div>
                                     <p className="text-xl font-black text-[#1a1a1a]">{stats?.wallet_balance?.formatted || '₺0'}</p>
                                 </div>
                                 <div className="bg-white border border-[#f0eceb] rounded-2xl p-4">
                                     <div className="flex items-center gap-2 mb-2">
-                                        <Star className="w-4 h-4 text-[#b8651a]" />
+                                        <Star className="w-4 h-4 text-[#ea580c]" />
                                         <span className="text-xs font-medium text-[#6b7280]">Aktif Ilan</span>
                                     </div>
                                     <p className="text-xl font-black text-[#1a1a1a]">{stats?.active_offers?.formatted || '0'}</p>
@@ -2853,14 +2853,14 @@ function HesabimContent() {
                                         className={cn(
                                             'px-4 py-3.5 text-[15px] font-medium whitespace-nowrap border-b-2 transition-colors flex items-center gap-2',
                                             activeTab === tab.id
-                                                ? 'text-[#b8651a] border-[#b8651a] font-bold'
+                                                ? 'text-[#ea580c] border-[#ea580c] font-bold'
                                                 : 'text-[#6b7280] border-transparent hover:text-[#1a1a1a]'
                                         )}
                                     >
                                         <Icon className="w-4 h-4" />
                                         {tab.label}
                                         {tab.badge && (
-                                            <span className="bg-[#b8651a] text-white text-[10px] font-bold rounded-full min-w-[18px] h-[18px] flex items-center justify-center px-1">
+                                            <span className="bg-[#1e3a8a] text-white text-[10px] font-bold rounded-full min-w-[18px] h-[18px] flex items-center justify-center px-1">
                                                 {tab.badge}
                                             </span>
                                         )}
@@ -2883,7 +2883,7 @@ function HesabimContent() {
                                         <span className="text-[17px] font-black text-[#1a1a1a]">Sattıklarım</span>
                                         <button
                                             onClick={() => { handleSubNavChange('sattiklarim'); setOrderStatusFilter('all'); }}
-                                            className="text-[13px] text-[#b8651a] hover:underline font-medium"
+                                            className="text-[13px] text-[#ea580c] hover:underline font-medium"
                                         >
                                             Tümünü Gör
                                         </button>
@@ -2924,7 +2924,7 @@ function HesabimContent() {
                                         <span className="text-[17px] font-black text-[#1a1a1a]">Aldıklarım</span>
                                         <button
                                             onClick={() => { handleSubNavChange('satin-aldiklarim'); setOrderStatusFilter('all'); }}
-                                            className="text-[13px] text-[#b8651a] hover:underline font-medium"
+                                            className="text-[13px] text-[#ea580c] hover:underline font-medium"
                                         >
                                             Tümünü Gör
                                         </button>
@@ -3041,7 +3041,7 @@ function HesabimContent() {
                             </h3>
                             <Link
                                 href="/market/blog"
-                                className="text-sm text-[#b8651a] hover:text-[#934f12] font-medium flex items-center gap-1"
+                                className="text-sm text-[#ea580c] hover:text-[#c2410c] font-medium flex items-center gap-1"
                             >
                                 Tum Yazilar
                                 <ArrowRight className="w-3.5 h-3.5" />

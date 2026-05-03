@@ -77,12 +77,12 @@ export default function ForgotPasswordPage() {
         className="lg:hidden flex justify-center mb-8"
       >
         <Link href="/" className="flex items-center gap-3">
-          <div className="w-12 h-12 bg-[#fbeede] rounded-xl flex items-center justify-center shadow-lg">
+          <div className="w-12 h-12 bg-[#ffedd5] rounded-xl flex items-center justify-center shadow-lg">
             <Cross className="w-7 h-7 text-white" />
           </div>
           <div className="flex flex-col">
             <span className="text-2xl font-bold text-slate-900">i-kirtasiye</span>
-            <span className="text-[10px] font-medium text-[#b8651a] -mt-0.5 tracking-wider uppercase">B2B Kırtasiye</span>
+            <span className="text-[10px] font-medium text-[#ea580c] -mt-0.5 tracking-wider uppercase">B2B Kırtasiye</span>
           </div>
         </Link>
       </motion.div>
@@ -122,7 +122,7 @@ export default function ForgotPasswordPage() {
             <div className="text-center">
               <Link
                 href="/login"
-                className="inline-flex items-center gap-2 font-semibold text-[#b8651a] hover:text-[#b8651a] transition-colors"
+                className="inline-flex items-center gap-2 font-semibold text-[#ea580c] hover:text-[#ea580c] transition-colors"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
@@ -171,7 +171,7 @@ export default function ForgotPasswordPage() {
                       scale: focusedField === 'email' ? 1 : 0.95,
                       opacity: focusedField === 'email' ? 1 : 0,
                     }}
-                    className="absolute inset-0 bg-gradient-to-r from-[#fbeede]/20 to-teal-500/20 rounded-xl blur-sm -z-10"
+                    className="absolute inset-0 bg-gradient-to-r from-[#ffedd5]/20 to-teal-500/20 rounded-xl blur-sm -z-10"
                   />
                   <div className="relative flex items-center">
                     <div className="absolute left-4 text-gray-400">
@@ -188,7 +188,7 @@ export default function ForgotPasswordPage() {
                       onFocus={() => setFocusedField('email')}
                       onBlur={() => setFocusedField(null)}
                       required
-                      className="h-12 pl-12 pr-4 bg-white border-gray-200 rounded-xl focus:border-[#b8651a] focus:ring-[#b8651a]/20 transition-all duration-300"
+                      className="h-12 pl-12 pr-4 bg-white border-gray-200 rounded-xl focus:border-[#ea580c] focus:ring-[#ea580c]/20 transition-all duration-300"
                     />
                   </div>
                 </div>
@@ -199,7 +199,7 @@ export default function ForgotPasswordPage() {
                 <Button
                   type="submit"
                   disabled={isLoading}
-                  className="relative w-full h-12 bg-gradient-to-r from-[#fbeede] to-teal-600 hover:from-[#fbeede] hover:to-teal-700 text-white font-semibold rounded-xl shadow-sm transition-colors duration-150 hover:shadow-md overflow-hidden group"
+                  className="relative w-full h-12 bg-gradient-to-r from-[#ffedd5] to-teal-600 hover:from-[#ffedd5] hover:to-teal-700 text-white font-semibold rounded-xl shadow-sm transition-colors duration-150 hover:shadow-md overflow-hidden group"
                 >
                   <motion.div
                     className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0"

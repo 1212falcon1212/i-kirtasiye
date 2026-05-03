@@ -31,7 +31,7 @@ import { toast } from 'sonner';
 const STATUS_COLORS: Record<string, string> = {
     open: 'bg-blue-50 text-blue-700',
     in_progress: 'bg-amber-50 text-amber-700',
-    waiting: 'bg-[#fbeede] text-[#b8651a]',
+    waiting: 'bg-[#ffedd5] text-[#ea580c]',
     resolved: 'bg-accent-soft text-accent-hover',
     closed: 'bg-[#faf8f6] text-[#6b7280]',
 };
@@ -39,14 +39,14 @@ const STATUS_COLORS: Record<string, string> = {
 const STATUS_DOT_COLORS: Record<string, string> = {
     open: 'bg-blue-500',
     in_progress: 'bg-amber-500',
-    waiting: 'bg-[#b8651a]',
-    resolved: 'bg-[#b8651a]',
+    waiting: 'bg-[#1e3a8a]',
+    resolved: 'bg-[#1e3a8a]',
     closed: 'bg-[#6b7280]',
 };
 
 const CATEGORY_COLORS: Record<string, string> = {
     order: 'bg-purple-50 text-purple-700',
-    payment: 'bg-[#fbeede] text-[#b8651a]',
+    payment: 'bg-[#ffedd5] text-[#ea580c]',
     shipping: 'bg-sky-50 text-sky-700',
     product: 'bg-amber-50 text-amber-700',
     account: 'bg-accent-soft text-accent-hover',
@@ -162,7 +162,7 @@ function FilePicker({ files, onChange, disabled }: { files: File[]; onChange: (f
                             {file.type.startsWith('image/') ? (
                                 <ImageIcon className="w-3.5 h-3.5 text-blue-500 shrink-0" />
                             ) : (
-                                <FileText className="w-3.5 h-3.5 text-[#b8651a] shrink-0" />
+                                <FileText className="w-3.5 h-3.5 text-[#ea580c] shrink-0" />
                             )}
                             <span className="truncate max-w-[120px]">{file.name}</span>
                             <span className="text-[#6b7280]">({formatFileSize(file.size)})</span>
@@ -209,8 +209,8 @@ function AttachmentList({ attachments, isStaff }: { attachments: SupportTicketAt
                         rel="noopener noreferrer"
                         className={`flex items-center gap-1.5 rounded-xl px-2.5 py-1.5 text-xs transition border ${
                             isStaff
-                                ? 'bg-white border-[#f0eceb] text-[#1a1a1a] hover:border-[#fbeede]'
-                                : 'bg-[#faf8f6] border-[#f0eceb] text-[#1a1a1a] hover:border-[#fbeede]'
+                                ? 'bg-white border-[#f0eceb] text-[#1a1a1a] hover:border-[#ffedd5]'
+                                : 'bg-[#faf8f6] border-[#f0eceb] text-[#1a1a1a] hover:border-[#ffedd5]'
                         }`}
                     >
                         <FileText className="w-3.5 h-3.5 shrink-0" />
@@ -272,7 +272,7 @@ function TicketList({ onSelectTicket }: { onSelectTicket: (id: number) => void }
                 <button
                     key={ticket.id}
                     onClick={() => onSelectTicket(ticket.id)}
-                    className="w-full text-left bg-white border border-[#f0eceb] rounded-2xl p-4 hover:border-[#fbeede] transition-colors"
+                    className="w-full text-left bg-white border border-[#f0eceb] rounded-2xl p-4 hover:border-[#ffedd5] transition-colors"
                 >
                     <div className="flex items-center gap-3">
                         {/* Status dot */}
@@ -304,7 +304,7 @@ function TicketList({ onSelectTicket }: { onSelectTicket: (id: number) => void }
                             {ticket.last_message && (
                                 <p className="text-xs text-[#6b7280] truncate">
                                     {ticket.last_message.is_staff_reply && (
-                                        <span className="text-[#b8651a] font-medium">Destek: </span>
+                                        <span className="text-[#ea580c] font-medium">Destek: </span>
                                     )}
                                     {ticket.last_message.message}
                                 </p>
@@ -509,7 +509,7 @@ function TicketDetail({ ticketId, onBack }: { ticketId: number; onBack: () => vo
                             <div className="flex items-center justify-between mb-1">
                                 {msg.is_staff_reply ? (
                                     <div className="flex items-center gap-1.5">
-                                        <Headphones className="w-3.5 h-3.5 text-[#b8651a]" />
+                                        <Headphones className="w-3.5 h-3.5 text-[#ea580c]" />
                                         <span className="text-sm font-bold text-[#1a1a1a]">Destek Ekibi</span>
                                     </div>
                                 ) : (
@@ -540,7 +540,7 @@ function TicketDetail({ ticketId, onBack }: { ticketId: number; onBack: () => vo
                                     {file.type.startsWith('image/') ? (
                                         <ImageIcon className="w-3.5 h-3.5 text-blue-500 shrink-0" />
                                     ) : (
-                                        <FileText className="w-3.5 h-3.5 text-[#b8651a] shrink-0" />
+                                        <FileText className="w-3.5 h-3.5 text-[#ea580c] shrink-0" />
                                     )}
                                     <span className="truncate max-w-[100px]">{file.name}</span>
                                     <button type="button" onClick={() => setMessageFiles(prev => prev.filter((_, idx) => idx !== i))} className="text-[#6b7280] hover:text-red-500">
@@ -586,7 +586,7 @@ function TicketDetail({ ticketId, onBack }: { ticketId: number; onBack: () => vo
                         <Button
                             onClick={handleSendMessage}
                             disabled={(!newMessage.trim() && messageFiles.length === 0) || sending}
-                            className="shrink-0 bg-[#b8651a] hover:bg-[#934f12] text-white rounded-xl h-auto min-h-[60px]"
+                            className="shrink-0 bg-[#1e3a8a] hover:bg-[#1e40af] text-white rounded-xl h-auto min-h-[60px]"
                         >
                             {sending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
                         </Button>
@@ -661,8 +661,8 @@ function NewTicketForm({ onCreated }: { onCreated: () => void }) {
     if (submitted) {
         return (
             <div className="text-center py-16 max-w-md mx-auto">
-                <div className="w-16 h-16 mx-auto bg-[#fbeede] rounded-2xl flex items-center justify-center mb-4">
-                    <CheckCircle2 className="w-8 h-8 text-[#b8651a]" />
+                <div className="w-16 h-16 mx-auto bg-[#ffedd5] rounded-2xl flex items-center justify-center mb-4">
+                    <CheckCircle2 className="w-8 h-8 text-[#ea580c]" />
                 </div>
                 <h3 className="text-lg font-black text-[#1a1a1a] mb-2">Talebiniz Oluşturuldu</h3>
                 <p className="text-sm text-[#6b7280] mb-6">
@@ -682,7 +682,7 @@ function NewTicketForm({ onCreated }: { onCreated: () => void }) {
                 >
                     Yeni Talep Oluştur
                 </Button>
-                <Button onClick={onCreated} className="bg-[#b8651a] hover:bg-[#934f12] text-white rounded-xl">
+                <Button onClick={onCreated} className="bg-[#1e3a8a] hover:bg-[#1e40af] text-white rounded-xl">
                     Taleplerime Git
                 </Button>
             </div>
@@ -710,7 +710,7 @@ function NewTicketForm({ onCreated }: { onCreated: () => void }) {
                     id="ticket-category"
                     value={category}
                     onChange={e => setCategory(e.target.value)}
-                    className="mt-1.5 w-full rounded-xl border border-[#f0eceb] bg-white px-3 py-2 text-sm text-[#1a1a1a] focus:outline-none focus:ring-2 focus:ring-[#fbeede] focus:border-[#fbeede]"
+                    className="mt-1.5 w-full rounded-xl border border-[#f0eceb] bg-white px-3 py-2 text-sm text-[#1a1a1a] focus:outline-none focus:ring-2 focus:ring-[#ffedd5] focus:border-[#ffedd5]"
                     required
                 >
                     {CATEGORY_OPTIONS.map(opt => (
@@ -725,7 +725,7 @@ function NewTicketForm({ onCreated }: { onCreated: () => void }) {
                     id="ticket-order"
                     value={orderId ?? ''}
                     onChange={e => setOrderId(e.target.value ? Number(e.target.value) : null)}
-                    className="mt-1.5 w-full rounded-xl border border-[#f0eceb] bg-white px-3 py-2 text-sm text-[#1a1a1a] focus:outline-none focus:ring-2 focus:ring-[#fbeede] focus:border-[#fbeede]"
+                    className="mt-1.5 w-full rounded-xl border border-[#f0eceb] bg-white px-3 py-2 text-sm text-[#1a1a1a] focus:outline-none focus:ring-2 focus:ring-[#ffedd5] focus:border-[#ffedd5]"
                     disabled={loadingOrders}
                 >
                     <option value="">Sipariş seçin (opsiyonel)</option>
@@ -763,7 +763,7 @@ function NewTicketForm({ onCreated }: { onCreated: () => void }) {
             <Button
                 type="submit"
                 disabled={!subject.trim() || !description.trim() || submitting}
-                className="bg-[#b8651a] hover:bg-[#934f12] text-white rounded-xl w-full font-semibold"
+                className="bg-[#1e3a8a] hover:bg-[#1e40af] text-white rounded-xl w-full font-semibold"
             >
                 {submitting ? (
                     <>

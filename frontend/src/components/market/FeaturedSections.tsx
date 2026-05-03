@@ -62,15 +62,15 @@ export function FeaturedSections() {
             {/* Deal of Day - Full width hero style */}
             {hasDealOfDay && dealOfDay && (
                 <Link href={`/market/product/${dealOfDay.product_id}`} className="block">
-                    <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-[#fbeede] via-[#fbeede] to-[#fbeede] border border-[#fbeede]/50 p-8 md:p-10 group hover:shadow-xl transition-shadow">
+                    <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-[#ffedd5] via-[#ffedd5] to-[#ffedd5] border border-[#ffedd5]/50 p-8 md:p-10 group hover:shadow-xl transition-shadow">
                         {/* Decorative elements */}
-                        <div className="absolute top-0 right-0 w-80 h-80 bg-[#b8651a]/5 rounded-full blur-3xl" />
+                        <div className="absolute top-0 right-0 w-80 h-80 bg-[#1e3a8a]/5 rounded-full blur-3xl" />
                         <div className="absolute bottom-0 left-0 w-60 h-60 bg-[#d99248]/5 rounded-full blur-3xl" />
 
                         <div className="relative flex flex-col md:flex-row items-center gap-8">
                             {/* Left: Badge + Text */}
                             <div className="flex-1 text-center md:text-left">
-                                <div className="inline-flex items-center gap-2 bg-[#b8651a] text-white text-xs font-bold px-4 py-1.5 rounded-full mb-4">
+                                <div className="inline-flex items-center gap-2 bg-[#1e3a8a] text-white text-xs font-bold px-4 py-1.5 rounded-full mb-4">
                                     <Flame className="w-3.5 h-3.5" />
                                     GÜNÜN FIRSATI
                                 </div>
@@ -81,12 +81,12 @@ export function FeaturedSections() {
                                     Satıcı: {dealOfDay.seller}
                                 </p>
                                 <div className="flex items-baseline gap-2 justify-center md:justify-start">
-                                    <span className="text-4xl md:text-5xl font-black text-[#b8651a]">
+                                    <span className="text-4xl md:text-5xl font-black text-[#ea580c]">
                                         {formatPrice(dealOfDay.price)}
                                     </span>
                                 </div>
                                 <div className="mt-6">
-                                    <span className="inline-flex items-center gap-2 bg-[#b8651a] text-white font-extrabold text-sm px-7 py-3 rounded-xl group-hover:bg-[#934f12] group-hover:scale-105 transition-all">
+                                    <span className="inline-flex items-center gap-2 bg-[#1e3a8a] text-white font-extrabold text-sm px-7 py-3 rounded-xl group-hover:bg-[#1e40af] group-hover:scale-105 transition-all">
                                         Fırsatı Yakala
                                         <TrendingUp className="w-4 h-4" />
                                     </span>
@@ -120,9 +120,9 @@ export function FeaturedSections() {
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                     {/* Season Highlights */}
                     {hasSeasonData && (
-                        <div className="bg-gradient-to-br from-[#fbeede] to-white rounded-3xl border border-[#fbeede]/40 p-6 overflow-hidden">
+                        <div className="bg-white rounded-3xl border border-[#f0eceb] p-6 overflow-hidden">
                             <div className="flex items-center gap-2 mb-5">
-                                <div className="w-9 h-9 bg-[#b8651a] rounded-xl flex items-center justify-center">
+                                <div className="w-9 h-9 bg-[#1e3a8a] rounded-xl flex items-center justify-center">
                                     <Sparkles className="w-4.5 h-4.5 text-white" />
                                 </div>
                                 <h3 className="text-lg font-black text-[#1a1a1a]">Sezonun Öne Çıkanları</h3>
@@ -134,7 +134,7 @@ export function FeaturedSections() {
                                         href={`/market/product/${item.product_id}`}
                                         className="group"
                                     >
-                                        <div className="relative w-full aspect-square bg-white rounded-2xl border border-[#f0eceb] overflow-hidden mb-2 group-hover:border-[#fbeede] group-hover:shadow-md transition-all">
+                                        <div className="relative w-full aspect-square bg-white rounded-2xl border border-[#f0eceb] overflow-hidden mb-2 group-hover:border-[#ffedd5] group-hover:shadow-md transition-all">
                                             {(item.image_url || item.image) ? (
                                                 <Image
                                                     src={(item.image_url || item.image)!}
@@ -159,9 +159,9 @@ export function FeaturedSections() {
 
                     {/* Week Products */}
                     {hasWeekData && (
-                        <div className="bg-gradient-to-br from-[#fbeede] to-white rounded-3xl border border-[#fbeede]/40 p-6 overflow-hidden">
+                        <div className="bg-white rounded-3xl border border-[#f0eceb] p-6 overflow-hidden">
                             <div className="flex items-center gap-2 mb-5">
-                                <div className="w-9 h-9 bg-[#934f12] rounded-xl flex items-center justify-center">
+                                <div className="w-9 h-9 bg-[#1e40af] rounded-xl flex items-center justify-center">
                                     <Clock className="w-4.5 h-4.5 text-white" />
                                 </div>
                                 <h3 className="text-lg font-black text-[#1a1a1a]">Haftanın Ürünleri</h3>
@@ -173,7 +173,7 @@ export function FeaturedSections() {
                                         href={`/market/product/${item.product_id}`}
                                         className="group"
                                     >
-                                        <div className="relative w-full aspect-square bg-white rounded-2xl border border-[#f0eceb] overflow-hidden mb-2 group-hover:border-[#fbeede] group-hover:shadow-md transition-all">
+                                        <div className="relative w-full aspect-square bg-white rounded-2xl border border-[#f0eceb] overflow-hidden mb-2 group-hover:border-[#ffedd5] group-hover:shadow-md transition-all">
                                             {(item.image_url || item.image) ? (
                                                 <Image
                                                     src={(item.image_url || item.image)!}
@@ -202,8 +202,8 @@ export function FeaturedSections() {
             {hasRecentlySoldData && (
                 <div className="bg-white -mx-4 sm:-mx-7 px-4 sm:px-7 border-y border-[#f0eceb] py-6 sm:py-12">
                     <div className="flex items-center gap-2 sm:gap-3 mb-7">
-                        <div className="w-9 h-9 sm:w-[44px] sm:h-[44px] bg-[#fbeede] rounded-xl flex items-center justify-center flex-shrink-0">
-                            <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5 text-[#b8651a]" />
+                        <div className="w-9 h-9 sm:w-[44px] sm:h-[44px] bg-[#ffedd5] rounded-xl flex items-center justify-center flex-shrink-0">
+                            <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5 text-[#ea580c]" />
                         </div>
                         <h3 className="text-xl sm:text-[26px] font-black text-[#1a1a1a]">Son Satılanlar</h3>
                         <span className="ml-auto text-xs text-[#6b7280] font-medium">Canlı güncellemeler</span>
@@ -211,7 +211,7 @@ export function FeaturedSections() {
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
                         {recentlySold.slice(0, 6).map((product, idx) => (
                             <Link key={product.id || idx} href={`/market/product/${product.product_id}`}
-                                className="flex flex-row bg-white rounded-3xl border border-[#f0eceb] overflow-hidden hover:border-[#fbeede] transition-colors group">
+                                className="flex flex-row bg-white rounded-3xl border border-[#f0eceb] overflow-hidden hover:border-[#ffedd5] transition-colors group">
                                 {/* Left: Image */}
                                 <div className="w-[130px] sm:w-[210px] md:w-[240px] h-[150px] sm:h-[180px] md:h-[210px] flex-shrink-0 bg-white relative flex items-center justify-center">
                                     {(product.image_url || product.image) ? (
@@ -228,13 +228,13 @@ export function FeaturedSections() {
                                 </div>
                                 {/* Right: Info */}
                                 <div className="flex-1 min-w-0 p-4 sm:p-6 flex flex-col justify-center">
-                                    <p className="text-sm sm:text-base font-semibold text-[#1a1a1a] line-clamp-2 mb-3 group-hover:text-[#b8651a] transition-colors">
+                                    <p className="text-sm sm:text-base font-semibold text-[#1a1a1a] line-clamp-2 mb-3 group-hover:text-[#ea580c] transition-colors">
                                         {product.name}
                                     </p>
                                     <div className="flex flex-wrap items-center gap-2">
                                         <span className="text-xl sm:text-2xl font-black text-[#1a1a1a]">{formatPrice(product.price)}</span>
                                         {(product.offers_count ?? 0) > 0 && (
-                                            <span className="text-[11px] font-bold px-2 py-0.5 rounded-md bg-[#fbeede] text-[#b8651a]">
+                                            <span className="text-[11px] font-bold px-2 py-0.5 rounded-md bg-[#ffedd5] text-[#ea580c]">
                                                 {product.offers_count} ilan
                                             </span>
                                         )}

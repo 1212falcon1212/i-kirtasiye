@@ -96,12 +96,12 @@ function MonthYearPicker({
                 className={cn(
                     'flex items-center w-full h-11 rounded-xl border px-4 text-sm transition-all cursor-pointer select-none',
                     isOpen
-                        ? 'border-[#b8651a] ring-2 ring-[#b8651a]/20 bg-white'
-                        : 'border-[#e5e1de] bg-white hover:border-[#b8651a]',
+                        ? 'border-[#ea580c] ring-2 ring-[#ea580c]/20 bg-white'
+                        : 'border-[#e5e1de] bg-white hover:border-[#ea580c]',
                     !displayValue && 'text-[#9ca3af]'
                 )}
             >
-                <Calendar className="w-4 h-4 text-[#b8651a] mr-2.5 flex-shrink-0" />
+                <Calendar className="w-4 h-4 text-[#ea580c] mr-2.5 flex-shrink-0" />
                 <span className={displayValue ? 'text-[#1a1a1a]' : 'text-[#9ca3af]'}>
                     {displayValue || 'Ay / Yıl seçin'}
                 </span>
@@ -152,7 +152,7 @@ function MonthYearPicker({
                                         disabled
                                             ? 'text-[#d1ccc9] cursor-not-allowed'
                                             : selected
-                                                ? 'bg-[#b8651a] text-white shadow-sm'
+                                                ? 'bg-[#1e3a8a] text-white shadow-sm'
                                                 : 'text-[#6b7280] hover:bg-[#faf8f6] hover:text-[#1a1a1a]'
                                     )}
                                 >
@@ -316,7 +316,7 @@ export default function YeniIlanPage() {
                     <div className="flex items-center gap-3">
                         <Link
                             href="/market/hesabim?tab=ilanlarim"
-                            className="flex items-center justify-center w-9 h-9 rounded-xl border border-[#e5e1de] hover:border-[#b8651a] hover:text-[#b8651a] text-[#6b7280] transition-all"
+                            className="flex items-center justify-center w-9 h-9 rounded-xl border border-[#e5e1de] hover:border-[#ea580c] hover:text-[#ea580c] text-[#6b7280] transition-all"
                         >
                             <ArrowLeft className="w-4 h-4" />
                         </Link>
@@ -328,7 +328,7 @@ export default function YeniIlanPage() {
                     <Button
                         onClick={handleSubmit}
                         disabled={!isFormValid || isSubmitting}
-                        className="bg-[#b8651a] hover:bg-[#934f12] text-white rounded-xl font-bold px-5 h-10 disabled:opacity-50"
+                        className="bg-[#1e3a8a] hover:bg-[#1e40af] text-white rounded-xl font-bold px-5 h-10 disabled:opacity-50"
                     >
                         {isSubmitting ? (
                             <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Yayınlanıyor...</>
@@ -349,8 +349,8 @@ export default function YeniIlanPage() {
                             {/* Step 1: Product */}
                             <div className="bg-white rounded-2xl border border-[#e5e1de] overflow-hidden">
                                 <div className="px-5 py-4 border-b border-[#f0eceb] flex items-center gap-2.5">
-                                    <div className="w-7 h-7 rounded-lg bg-[#fbeede] flex items-center justify-center">
-                                        <Package className="w-3.5 h-3.5 text-[#b8651a]" />
+                                    <div className="w-7 h-7 rounded-lg bg-[#ffedd5] flex items-center justify-center">
+                                        <Package className="w-3.5 h-3.5 text-[#ea580c]" />
                                     </div>
                                     <div>
                                         <h2 className="text-sm font-bold text-[#1a1a1a]">Ürün Seçimi</h2>
@@ -377,7 +377,7 @@ export default function YeniIlanPage() {
                                                     className={cn(
                                                         "flex items-center gap-1.5 px-3.5 h-8 rounded-lg text-xs font-semibold transition-all",
                                                         searchMode === 'name'
-                                                            ? 'bg-white text-[#b8651a] shadow-sm'
+                                                            ? 'bg-white text-[#ea580c] shadow-sm'
                                                             : 'text-[#6b7280] hover:text-[#1a1a1a]'
                                                     )}
                                                 >
@@ -390,7 +390,7 @@ export default function YeniIlanPage() {
                                                     className={cn(
                                                         "flex items-center gap-1.5 px-3.5 h-8 rounded-lg text-xs font-semibold transition-all",
                                                         searchMode === 'barcode'
-                                                            ? 'bg-white text-[#b8651a] shadow-sm'
+                                                            ? 'bg-white text-[#ea580c] shadow-sm'
                                                             : 'text-[#6b7280] hover:text-[#1a1a1a]'
                                                     )}
                                                 >
@@ -420,8 +420,8 @@ export default function YeniIlanPage() {
                                                         handleSearch(v);
                                                     }}
                                                     className={cn(
-                                                        "w-full h-11 pl-10 rounded-xl border bg-[#faf8f6] text-sm placeholder:text-[#9ca3af] focus:outline-none focus:border-[#b8651a] focus:ring-2 focus:ring-[#b8651a]/20 focus:bg-white transition-all",
-                                                        searchMode === 'barcode' ? 'border-[#b8651a]/30 font-mono tracking-wider pr-20' : 'border-[#e5e1de] pr-10'
+                                                        "w-full h-11 pl-10 rounded-xl border bg-[#faf8f6] text-sm placeholder:text-[#9ca3af] focus:outline-none focus:border-[#ea580c] focus:ring-2 focus:ring-[#ea580c]/20 focus:bg-white transition-all",
+                                                        searchMode === 'barcode' ? 'border-[#ea580c]/30 font-mono tracking-wider pr-20' : 'border-[#e5e1de] pr-10'
                                                     )}
                                                     autoFocus
                                                     key={searchMode}
@@ -431,13 +431,13 @@ export default function YeniIlanPage() {
                                                         type="button"
                                                         aria-label="Kamera ile barkod tara"
                                                         onClick={() => setShowScanner(true)}
-                                                        className="absolute top-1/2 -translate-y-1/2 right-10 h-8 w-8 rounded-lg bg-white border border-[#b8651a]/30 text-[#b8651a] hover:bg-[#fbeede] transition-colors flex items-center justify-center"
+                                                        className="absolute top-1/2 -translate-y-1/2 right-10 h-8 w-8 rounded-lg bg-white border border-[#ea580c]/30 text-[#ea580c] hover:bg-[#ffedd5] transition-colors flex items-center justify-center"
                                                     >
                                                         <ScanLine className="w-4 h-4" />
                                                     </button>
                                                 )}
                                                 {isSearching && (
-                                                    <Loader2 className="w-4 h-4 absolute right-3.5 top-1/2 -translate-y-1/2 animate-spin text-[#b8651a]" />
+                                                    <Loader2 className="w-4 h-4 absolute right-3.5 top-1/2 -translate-y-1/2 animate-spin text-[#ea580c]" />
                                                 )}
                                             </div>
 
@@ -458,7 +458,7 @@ export default function YeniIlanPage() {
                                                             onClick={() => handleSelectProduct(product)}
                                                             className="w-full p-3.5 text-left hover:bg-[#faf8f6] flex items-center gap-3.5 transition-colors group"
                                                         >
-                                                            <div className="w-11 h-11 rounded-xl bg-[#faf8f6] border border-[#f0eceb] overflow-hidden flex items-center justify-center flex-shrink-0 group-hover:border-[#b8651a]/30 transition-colors">
+                                                            <div className="w-11 h-11 rounded-xl bg-[#faf8f6] border border-[#f0eceb] overflow-hidden flex items-center justify-center flex-shrink-0 group-hover:border-[#ea580c]/30 transition-colors">
                                                                 {(product.image_url || product.image) ? (
                                                                     <Image
                                                                         src={(product.image_url || product.image) as string}
@@ -472,7 +472,7 @@ export default function YeniIlanPage() {
                                                                 )}
                                                             </div>
                                                             <div className="flex-1 min-w-0">
-                                                                <p className="text-sm font-semibold text-[#1a1a1a] truncate group-hover:text-[#b8651a] transition-colors">
+                                                                <p className="text-sm font-semibold text-[#1a1a1a] truncate group-hover:text-[#ea580c] transition-colors">
                                                                     {product.name}
                                                                 </p>
                                                                 <div className="flex items-center gap-2 mt-0.5 flex-wrap">
@@ -482,7 +482,7 @@ export default function YeniIlanPage() {
                                                                         </span>
                                                                     )}
                                                                     {product.brand && (
-                                                                        <span className="text-[11px] text-[#b8651a] font-bold uppercase">
+                                                                        <span className="text-[11px] text-[#ea580c] font-bold uppercase">
                                                                             {product.brand}
                                                                         </span>
                                                                     )}
@@ -491,7 +491,7 @@ export default function YeniIlanPage() {
                                                             <div className="flex-shrink-0 text-right">
                                                                 {product.lowest_price != null && product.lowest_price > 0 ? (
                                                                     <div>
-                                                                        <p className="text-sm font-bold text-[#b8651a]">
+                                                                        <p className="text-sm font-bold text-[#ea580c]">
                                                                             {formatPrice(product.lowest_price)}
                                                                         </p>
                                                                         <p className="text-[10px] text-[#9ca3af]">
@@ -526,11 +526,11 @@ export default function YeniIlanPage() {
 
                                             {searchQuery.length < (searchMode === 'barcode' ? 1 : 2) && (
                                                 <div className="text-center py-10">
-                                                    <div className="w-14 h-14 rounded-2xl bg-[#fbeede] border border-[#b2e8f3] flex items-center justify-center mx-auto mb-3">
+                                                    <div className="w-14 h-14 rounded-2xl bg-[#ffedd5] border border-[#b2e8f3] flex items-center justify-center mx-auto mb-3">
                                                         {searchMode === 'barcode' ? (
-                                                            <ScanBarcode className="w-6 h-6 text-[#b8651a]" />
+                                                            <ScanBarcode className="w-6 h-6 text-[#ea580c]" />
                                                         ) : (
-                                                            <Search className="w-6 h-6 text-[#b8651a]" />
+                                                            <Search className="w-6 h-6 text-[#ea580c]" />
                                                         )}
                                                     </div>
                                                     <p className="text-sm font-semibold text-[#6b7280]">
@@ -547,7 +547,7 @@ export default function YeniIlanPage() {
                                     ) : (
                                         /* Selected Product Card */
                                         <div className="space-y-3">
-                                            <div className="rounded-xl border-2 border-[#b8651a]/20 bg-gradient-to-br from-[#fbeede] to-white p-4 flex items-start gap-4">
+                                            <div className="rounded-xl border-2 border-[#ea580c]/20 bg-gradient-to-br from-[#ffedd5] to-white p-4 flex items-start gap-4">
                                                 <div className="w-16 h-16 rounded-xl bg-white border border-[#e5e1de] overflow-hidden flex items-center justify-center flex-shrink-0 shadow-sm">
                                                     {(selectedProduct.image_url || selectedProduct.image) ? (
                                                         <Image
@@ -558,7 +558,7 @@ export default function YeniIlanPage() {
                                                             className="w-full h-full object-contain"
                                                         />
                                                     ) : (
-                                                        <Package className="w-7 h-7 text-[#b8651a]" />
+                                                        <Package className="w-7 h-7 text-[#ea580c]" />
                                                     )}
                                                 </div>
                                                 <div className="flex-1 min-w-0">
@@ -572,17 +572,17 @@ export default function YeniIlanPage() {
                                                             </span>
                                                         )}
                                                         {selectedProduct.brand && (
-                                                            <span className="text-[11px] text-[#b8651a] font-bold uppercase">
+                                                            <span className="text-[11px] text-[#ea580c] font-bold uppercase">
                                                                 {selectedProduct.brand}
                                                             </span>
                                                         )}
                                                     </div>
                                                     {selectedProduct.lowest_price != null && selectedProduct.lowest_price > 0 && (
                                                         <div className="flex items-center gap-1.5 mt-2">
-                                                            <BarChart3 className="w-3.5 h-3.5 text-[#b8651a]" />
+                                                            <BarChart3 className="w-3.5 h-3.5 text-[#ea580c]" />
                                                             <p className="text-xs text-[#6b7280]">
                                                                 En düşük fiyat:{' '}
-                                                                <span className="font-bold text-[#b8651a]">
+                                                                <span className="font-bold text-[#ea580c]">
                                                                     {formatPrice(selectedProduct.lowest_price)}
                                                                 </span>
                                                                 <span className="text-[#9ca3af] ml-1">
@@ -604,7 +604,7 @@ export default function YeniIlanPage() {
                                             <button
                                                 type="button"
                                                 onClick={() => setSelectedProduct(null)}
-                                                className="text-xs text-[#b8651a] hover:underline flex items-center gap-1"
+                                                className="text-xs text-[#ea580c] hover:underline flex items-center gap-1"
                                             >
                                                 <Search className="w-3 h-3" />
                                                 Farklı ürün seç
@@ -643,7 +643,7 @@ export default function YeniIlanPage() {
                                                         placeholder="0.00"
                                                         value={price}
                                                         onChange={(e) => setPrice(e.target.value)}
-                                                        className="w-full h-11 pl-4 pr-10 rounded-xl border border-[#e5e1de] bg-white text-sm font-semibold text-[#1a1a1a] placeholder:text-[#9ca3af] placeholder:font-normal focus:outline-none focus:border-[#b8651a] focus:ring-2 focus:ring-[#b8651a]/20 transition-all"
+                                                        className="w-full h-11 pl-4 pr-10 rounded-xl border border-[#e5e1de] bg-white text-sm font-semibold text-[#1a1a1a] placeholder:text-[#9ca3af] placeholder:font-normal focus:outline-none focus:border-[#ea580c] focus:ring-2 focus:ring-[#ea580c]/20 transition-all"
                                                     />
                                                     <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-xs font-bold text-[#9ca3af]">
                                                         ₺
@@ -664,7 +664,7 @@ export default function YeniIlanPage() {
                                                         placeholder="0"
                                                         value={stock}
                                                         onChange={(e) => setStock(e.target.value)}
-                                                        className="w-full h-11 pl-4 pr-14 rounded-xl border border-[#e5e1de] bg-white text-sm font-semibold text-[#1a1a1a] placeholder:text-[#9ca3af] placeholder:font-normal focus:outline-none focus:border-[#b8651a] focus:ring-2 focus:ring-[#b8651a]/20 transition-all"
+                                                        className="w-full h-11 pl-4 pr-14 rounded-xl border border-[#e5e1de] bg-white text-sm font-semibold text-[#1a1a1a] placeholder:text-[#9ca3af] placeholder:font-normal focus:outline-none focus:border-[#ea580c] focus:ring-2 focus:ring-[#ea580c]/20 transition-all"
                                                     />
                                                     <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-xs font-bold text-[#9ca3af]">
                                                         adet
@@ -728,7 +728,7 @@ export default function YeniIlanPage() {
                                             placeholder="Opsiyonel"
                                             value={batchNumber}
                                             onChange={(e) => setBatchNumber(e.target.value)}
-                                            className="w-full h-11 px-4 rounded-xl border border-[#e5e1de] bg-white text-sm text-[#1a1a1a] placeholder:text-[#9ca3af] focus:outline-none focus:border-[#b8651a] focus:ring-2 focus:ring-[#b8651a]/20 transition-all"
+                                            className="w-full h-11 px-4 rounded-xl border border-[#e5e1de] bg-white text-sm text-[#1a1a1a] placeholder:text-[#9ca3af] focus:outline-none focus:border-[#ea580c] focus:ring-2 focus:ring-[#ea580c]/20 transition-all"
                                         />
                                     </div>
 
@@ -743,7 +743,7 @@ export default function YeniIlanPage() {
                                             value={notes}
                                             onChange={(e) => setNotes(e.target.value)}
                                             rows={3}
-                                            className="w-full px-4 py-3 rounded-xl border border-[#e5e1de] bg-white text-sm text-[#1a1a1a] placeholder:text-[#9ca3af] focus:outline-none focus:border-[#b8651a] focus:ring-2 focus:ring-[#b8651a]/20 transition-all resize-none"
+                                            className="w-full px-4 py-3 rounded-xl border border-[#e5e1de] bg-white text-sm text-[#1a1a1a] placeholder:text-[#9ca3af] focus:outline-none focus:border-[#ea580c] focus:ring-2 focus:ring-[#ea580c]/20 transition-all resize-none"
                                         />
                                     </div>
                                 </div>
@@ -752,8 +752,8 @@ export default function YeniIlanPage() {
                             {/* Summary Card */}
                             <div className="bg-white rounded-2xl border border-[#e5e1de] overflow-hidden">
                                 <div className="px-5 py-4 border-b border-[#f0eceb] flex items-center gap-2.5">
-                                    <div className="w-7 h-7 rounded-lg bg-[#fbeede] flex items-center justify-center">
-                                        <ShoppingCart className="w-3.5 h-3.5 text-[#b8651a]" />
+                                    <div className="w-7 h-7 rounded-lg bg-[#ffedd5] flex items-center justify-center">
+                                        <ShoppingCart className="w-3.5 h-3.5 text-[#ea580c]" />
                                     </div>
                                     <h2 className="text-sm font-bold text-[#1a1a1a]">Özet</h2>
                                 </div>
@@ -800,7 +800,7 @@ export default function YeniIlanPage() {
                                     <Button
                                         type="submit"
                                         disabled={!isFormValid || isSubmitting}
-                                        className="w-full bg-[#b8651a] hover:bg-[#934f12] text-white rounded-xl font-bold h-11 disabled:opacity-50 mt-1"
+                                        className="w-full bg-[#1e3a8a] hover:bg-[#1e40af] text-white rounded-xl font-bold h-11 disabled:opacity-50 mt-1"
                                     >
                                         {isSubmitting ? (
                                             <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Yayınlanıyor...</>

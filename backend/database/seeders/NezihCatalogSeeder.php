@@ -24,6 +24,7 @@ class NezihCatalogSeeder extends Seeder
 
         if (! file_exists($jsonPath)) {
             $this->command->error("JSON not found: {$jsonPath}");
+
             return;
         }
 
@@ -146,11 +147,24 @@ class NezihCatalogSeeder extends Seeder
         $brandNames = array_keys($brands);
         $this->command->info('   Marka sayısı: '.count($brandNames));
 
+        // Mevcut DB'deki markaları çek (name ve slug bazında)
+        $existingNames = array_flip(
+            DB::table('brands')->pluck('name')->all()
+        );
+        $existingSlugs = array_flip(
+            DB::table('brands')->pluck('slug')->all()
+        );
+
         $now = now();
         $rows = [];
-        $usedSlugs = [];
+        $usedSlugs = $existingSlugs;
 
         foreach ($brandNames as $name) {
+            // Aynı isimli marka varsa atla
+            if (isset($existingNames[$name])) {
+                continue;
+            }
+
             $slug = Str::slug($name, '-', 'tr');
             if ($slug === '') {
                 $slug = 'marka-'.md5($name);
@@ -178,7 +192,7 @@ class NezihCatalogSeeder extends Seeder
         }
 
         foreach (array_chunk($rows, 200) as $chunk) {
-            DB::table('brands')->insert($chunk);
+            DB::table('brands')->insertOrIgnore($chunk);
         }
     }
 
@@ -195,11 +209,17 @@ class NezihCatalogSeeder extends Seeder
         $seenBarcodes = [];
         $autoBarcodeCounter = 1;
 
+        // Mevcut barkodları çek (collision varsa skip)
+        $existingBarcodes = array_flip(
+            DB::table('products')->pluck('barcode')->all()
+        );
+
         foreach ($products as $p) {
             $categoryKey = implode(' > ', $p['categories']);
             $categoryId = $categoryMap[$categoryKey] ?? null;
             if (! $categoryId) {
                 $skippedNoCategory++;
+
                 continue;
             }
 
@@ -207,6 +227,7 @@ class NezihCatalogSeeder extends Seeder
             // 14 karakterden uzunsa skip (DB column limit)
             if ($barcode !== '' && strlen($barcode) > 14) {
                 $skippedBadBarcode++;
+
                 continue;
             }
             // Boşsa product_id'den auto-generate
@@ -217,6 +238,13 @@ class NezihCatalogSeeder extends Seeder
             // Duplicate guard (JSON'da olmaması beklenir ama emniyet için)
             if (isset($seenBarcodes[$barcode])) {
                 $skippedDupeBarcode++;
+
+                continue;
+            }
+            // DB'de zaten varsa atla (idempotent re-run)
+            if (isset($existingBarcodes[$barcode])) {
+                $skippedDupeBarcode++;
+
                 continue;
             }
             $seenBarcodes[$barcode] = true;
@@ -247,13 +275,13 @@ class NezihCatalogSeeder extends Seeder
             ];
 
             if (count($rows) >= 500) {
-                DB::table('products')->insert($rows);
+                DB::table('products')->insertOrIgnore($rows);
                 $rows = [];
             }
         }
 
         if (! empty($rows)) {
-            DB::table('products')->insert($rows);
+            DB::table('products')->insertOrIgnore($rows);
         }
 
         $this->command->info('   Eklenen ürün: '.(count($seenBarcodes) - $skippedDupeBarcode));
@@ -274,6 +302,7 @@ class NezihCatalogSeeder extends Seeder
             return null;
         }
         $clean = trim(preg_replace('/\s+/', ' ', $raw));
+
         return $clean !== '' ? mb_substr($clean, 0, 5000) : null;
     }
 }

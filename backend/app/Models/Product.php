@@ -149,7 +149,7 @@ class Product extends Model
         }
 
         // Return storage URL
-        return asset('storage/' . $this->image);
+        return asset('storage/'.$this->image);
     }
 
     /**
@@ -158,6 +158,27 @@ class Product extends Model
     public function scopeActive($query)
     {
         return $query->where('is_active', true);
+    }
+
+    /**
+     * Scope for products that have at least one active, in-stock offer.
+     * Used by homepage and other listing surfaces where unlisted products
+     * must not appear.
+     */
+    public function scopeWithActiveOffer($query)
+    {
+        return $query->whereHas('activeOffers', function ($q) {
+            $q->where('stock', '>', 0);
+        });
+    }
+
+    /**
+     * Scope combining "active product + has active in-stock offer".
+     * Convenience for homepage / browse listings.
+     */
+    public function scopeListable($query)
+    {
+        return $query->active()->withActiveOffer();
     }
 
     /**
@@ -172,4 +193,3 @@ class Product extends Model
         });
     }
 }
-

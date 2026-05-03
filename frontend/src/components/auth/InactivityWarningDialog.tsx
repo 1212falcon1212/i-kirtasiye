@@ -53,7 +53,7 @@ export function InactivityWarningDialog({
           </Button>
           <Button
             onClick={onContinue}
-            className="bg-[#b8651a] hover:bg-[#934f12] text-white"
+            className="bg-[#1e3a8a] hover:bg-[#1e40af] text-white"
           >
             Devam Et
           </Button>

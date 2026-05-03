@@ -3,9 +3,7 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Package, Check, AlertCircle, ShoppingCart, Loader2, Minus, Plus } from 'lucide-react';
-import { useCartStore } from '@/stores/useCartStore';
-import { useAuth } from '@/contexts/AuthContext';
+import { Package, Check, AlertCircle, ArrowRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface GridProductCardProps {
@@ -29,13 +27,6 @@ export const GridProductCard = React.memo(function GridProductCard({
   className,
 }: GridProductCardProps) {
   const [imgError, setImgError] = useState(false);
-  const [isAddingToCart, setIsAddingToCart] = useState(false);
-  const [showAddedFeedback, setShowAddedFeedback] = useState(false);
-  const [quantity, setQuantity] = useState(1);
-  const { addItem } = useCartStore();
-  const { user } = useAuth();
-
-  const canBuy = !user || user.role !== 'seller';
 
   const offersCount =
     typeof product.offers_count === 'number'
@@ -68,35 +59,11 @@ export const GridProductCard = React.memo(function GridProductCard({
     return {
       status: 'in_stock' as const,
       label: `${offersCount} satıcıdan`,
-      badgeClass: 'bg-[#fbeede] text-[#b8651a] dark:bg-[#934f12]/30 dark:text-[#fbeede]',
+      badgeClass: 'bg-[#ffedd5] text-[#ea580c] dark:bg-[#1e40af]/30 dark:text-[#ffedd5]',
     };
   };
 
   const stockInfo = getStockInfo();
-
-  const handleAddToCart = async (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (!product.default_offer_id || stockInfo.status === 'out_of_stock' || !canBuy) return;
-
-    setIsAddingToCart(true);
-    try {
-      await addItem(product.default_offer_id, quantity);
-      setShowAddedFeedback(true);
-      setQuantity(1);
-      setTimeout(() => setShowAddedFeedback(false), 2000);
-    } catch (error) {
-      console.error('Failed to add to cart:', error);
-    } finally {
-      setIsAddingToCart(false);
-    }
-  };
-
-  const handleQuantityChange = (delta: number, e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setQuantity((prev) => Math.max(1, Math.min(99, prev + delta)));
-  };
 
   const hasImage = (product.image_url || product.image) && !imgError;
 
@@ -104,7 +71,7 @@ export const GridProductCard = React.memo(function GridProductCard({
     <div
       className={cn(
         'group relative bg-white dark:bg-slate-900 rounded-2xl border border-[#f0eceb] dark:border-slate-700',
-        'hover:border-[#fbeede] dark:hover:border-[#b8651a]/50',
+        'hover:border-[#ffedd5] dark:hover:border-[#ea580c]/50',
         'hover:shadow-[0_8px_32px_rgba(190,24,93,0.08)]',
         'transition-all duration-200 overflow-hidden flex flex-col',
         stockInfo.status === 'out_of_stock' && 'opacity-75',
@@ -116,7 +83,7 @@ export const GridProductCard = React.memo(function GridProductCard({
         className="flex flex-col h-full"
       >
         {/* Image Container */}
-        <div className="relative aspect-square bg-[#faf8f6] dark:bg-slate-800 overflow-hidden">
+        <div className="relative aspect-square bg-white dark:bg-slate-900 overflow-hidden">
           {hasImage ? (
             <Image
               src={product.image_url || product.image || ''}
@@ -154,13 +121,13 @@ export const GridProductCard = React.memo(function GridProductCard({
         <div className="flex flex-col flex-1 p-3.5">
           {/* Brand */}
           {product.brand && (
-            <p className="text-[10px] font-extrabold text-[#b8651a] dark:text-[#fbeede] uppercase tracking-[0.8px] mb-1">
+            <p className="text-[10px] font-extrabold text-[#ea580c] dark:text-[#ffedd5] uppercase tracking-[0.8px] mb-1">
               {product.brand}
             </p>
           )}
 
           {/* Product Name */}
-          <p className="text-[13px] font-semibold text-[#1a1a1a] dark:text-white line-clamp-2 leading-[1.4] mb-auto group-hover:text-[#b8651a] dark:group-hover:text-[#fbeede] transition-colors">
+          <p className="text-[13px] font-semibold text-[#1a1a1a] dark:text-white line-clamp-2 leading-[1.4] mb-auto group-hover:text-[#ea580c] dark:group-hover:text-[#ffedd5] transition-colors">
             {product.name}
           </p>
 
@@ -181,56 +148,17 @@ export const GridProductCard = React.memo(function GridProductCard({
               </div>
             </div>
 
-            {/* Quick Add to Cart */}
-            {product.default_offer_id &&
-              stockInfo.status !== 'out_of_stock' &&
-              canBuy && (
-                <div
-                  className="flex items-center gap-1.5 mt-2.5"
-                  onClick={(e) => e.preventDefault()}
-                >
-                  {showAddedFeedback ? (
-                    <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-accent text-white w-full justify-center">
-                      <Check className="w-3.5 h-3.5" />
-                      Sepete Eklendi
-                    </div>
-                  ) : (
-                    <>
-                      <div className="flex items-center bg-[#faf8f6] dark:bg-slate-800 rounded-lg overflow-hidden border border-[#f0eceb] dark:border-slate-700">
-                        <button
-                          onClick={(e) => handleQuantityChange(-1, e)}
-                          disabled={quantity <= 1}
-                          className="w-7 h-7 flex items-center justify-center text-[#6b7280] hover:bg-[#f0eceb] dark:hover:bg-slate-700 disabled:opacity-40 transition-colors"
-                        >
-                          <Minus className="w-3 h-3" />
-                        </button>
-                        <span className="w-6 text-center text-xs font-bold text-[#1a1a1a] dark:text-white">
-                          {quantity}
-                        </span>
-                        <button
-                          onClick={(e) => handleQuantityChange(1, e)}
-                          disabled={quantity >= 99}
-                          className="w-7 h-7 flex items-center justify-center text-[#6b7280] hover:bg-[#f0eceb] dark:hover:bg-slate-700 disabled:opacity-40 transition-colors"
-                        >
-                          <Plus className="w-3 h-3" />
-                        </button>
-                      </div>
-                      <button
-                        onClick={handleAddToCart}
-                        disabled={isAddingToCart}
-                        className="flex-1 flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-[#b8651a] text-white hover:bg-[#934f12] transition-colors disabled:opacity-60"
-                      >
-                        {isAddingToCart ? (
-                          <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                        ) : (
-                          <ShoppingCart className="w-3.5 h-3.5" />
-                        )}
-                        Sepete Ekle
-                      </button>
-                    </>
-                  )}
-                </div>
+            {/* Action: view listing */}
+            <div className="mt-2.5 flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-[#1e3a8a] text-white pointer-events-none">
+              {stockInfo.status === 'out_of_stock' ? (
+                'Stokta Yok'
+              ) : (
+                <>
+                  İlanı İncele
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </>
               )}
+            </div>
           </div>
         </div>
       </Link>

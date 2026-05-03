@@ -38,7 +38,7 @@ function FaqAccordion({
       >
         <span
           className={`font-semibold pr-4 transition-colors duration-200 ${
-            isOpen ? "text-[#b8651a]" : "text-slate-900"
+            isOpen ? "text-[#ea580c]" : "text-slate-900"
           }`}
         >
           {item.question}
@@ -46,7 +46,7 @@ function FaqAccordion({
         <div
           className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 ${
             isOpen
-              ? "bg-[#b8651a] text-white rotate-180"
+              ? "bg-[#1e3a8a] text-white rotate-180"
               : "bg-slate-100 text-slate-400"
           }`}
         >
@@ -95,14 +95,14 @@ export default function FaqSection({ title, items }: FaqSectionProps) {
           transition={{ duration: 0.5 }}
           className="text-center mb-14"
         >
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-accent-soft text-[#b8651a] text-sm font-semibold mb-5">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-accent-soft text-[#ea580c] text-sm font-semibold mb-5">
             <HelpCircle className="w-3.5 h-3.5" />
             SSS
           </div>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900">
             {title}
           </h2>
-          <div className="mx-auto mt-4 w-16 h-1 rounded-full bg-gradient-to-r from-[#b8651a] to-[#d99248]" />
+          <div className="mx-auto mt-4 w-16 h-1 rounded-full bg-gradient-to-r from-[#ea580c] to-[#d99248]" />
         </motion.div>
 
         <div className="space-y-3">

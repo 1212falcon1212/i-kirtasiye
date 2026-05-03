@@ -30,7 +30,7 @@ const BANK_GRADIENTS: Record<string, string> = {
   ing: 'from-orange-500 to-orange-800',
   hsbc: 'from-red-700 to-red-950',
   teb: 'from-blue-500 to-blue-800',
-  kuveytturk: 'from-[#fbeede] to-[#fbeede]',
+  kuveytturk: 'from-[#ffedd5] to-[#ffedd5]',
 };
 
 function getBankGradient(bank: string): string {

@@ -36,7 +36,7 @@ class RegisterRequest extends FormRequest
             'district' => ['nullable', 'string', 'max:100'],
         ];
 
-        // Vergi numarası is required for retailers (kırtasiyeci) and validated against the whitelist.
+        // Vergi numarası retailer için zorunlu, seller için opsiyonel; her durumda 10 hane ve unique.
         if ($role === 'retailer') {
             $rules['vergi_no'] = ['required', 'string', 'digits:10', 'unique:users,vergi_no'];
         } else {

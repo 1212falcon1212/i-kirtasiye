@@ -22,20 +22,14 @@ import { useCartStore } from '@/stores/useCartStore';
 import { useAuth } from '@/contexts/AuthContext';
 import { ProductJsonLd } from '@/components/seo/ProductJsonLd';
 import { BreadcrumbJsonLd } from '@/components/seo/BreadcrumbJsonLd';
-import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 import {
     Box,
-    ChevronRight,
     Heart,
     Loader2,
     Minus,
     Plus,
-    ShieldCheck,
     ShoppingCart,
-    Truck,
-    Wallet,
-    Zap,
 } from 'lucide-react';
 
 const formatTL = (n?: number | string | null) => {
@@ -316,14 +310,43 @@ export function ProductDetailClient() {
                 <span style={{ color: 'var(--fg)' }}>{product.name}</span>
             </div>
 
-            {/* Hero: gallery + summary */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-10">
-                {/* Gallery */}
-                <div>
+            {/* Main: image + PSF (left) | listings (right) */}
+            <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,420px)_1fr] gap-6 mb-10">
+                {/* Left: title, brand, gallery, PSF */}
+                <div
+                    className="rounded-[10px] p-5 flex flex-col gap-4"
+                    style={{
+                        background: 'var(--bg-elevated)',
+                        border: '1px solid var(--border)',
+                        alignSelf: 'start',
+                    }}
+                >
+                    <div className="flex flex-col gap-1.5">
+                        {product.brand && (
+                            <Link
+                                href={`/market/marka/${product.brand.toLowerCase().replace(/\s+/g, '-')}`}
+                                className="text-[11px] font-bold uppercase tracking-wider hover:underline"
+                                style={{ color: 'var(--accent)' }}
+                            >
+                                {product.brand}
+                            </Link>
+                        )}
+                        <h1 className="text-[20px] font-semibold leading-tight">{product.name}</h1>
+                        {product.barcode && (
+                            <div
+                                className="mono text-[11px]"
+                                style={{ color: 'var(--fg-soft)' }}
+                            >
+                                SKU {product.barcode}
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Gallery */}
                     <div
                         className="grid gap-2"
                         style={{
-                            gridTemplateColumns: showThumbnailColumn ? '64px 1fr' : '1fr',
+                            gridTemplateColumns: showThumbnailColumn ? '56px 1fr' : '1fr',
                         }}
                     >
                         {showThumbnailColumn && (
@@ -338,7 +361,7 @@ export function ProductDetailClient() {
                                             background: '#ffffff',
                                             border:
                                                 i === activeImageIdx
-                                                    ? '2px solid var(--accent)'
+                                                    ? '2px solid var(--primary)'
                                                     : '1px solid var(--border)',
                                             borderRadius: 6,
                                         }}
@@ -347,7 +370,7 @@ export function ProductDetailClient() {
                                             src={thumb}
                                             alt={`${product.name} ${i + 1}`}
                                             fill
-                                            sizes="64px"
+                                            sizes="56px"
                                             className="object-contain p-1"
                                         />
                                     </button>
@@ -362,7 +385,7 @@ export function ProductDetailClient() {
                             style={{
                                 borderRadius: 'var(--radius-lg)',
                                 background: mainImage ? '#ffffff' : undefined,
-                                border: mainImage ? '1px solid var(--border)' : undefined,
+                                border: '1px solid var(--border)',
                             }}
                         >
                             {mainImage ? (
@@ -370,7 +393,7 @@ export function ProductDetailClient() {
                                     src={thumbnails[activeImageIdx] || mainImage}
                                     alt={product.name}
                                     fill
-                                    sizes="(max-width: 1024px) 100vw, 600px"
+                                    sizes="(max-width: 1024px) 100vw, 420px"
                                     className="object-contain p-6"
                                     priority
                                 />
@@ -381,212 +404,50 @@ export function ProductDetailClient() {
                             )}
                         </div>
                     </div>
-                </div>
 
-                {/* Summary */}
-                <div className="flex flex-col gap-3.5">
-                    {/* Brand link */}
-                    {product.brand && (
-                        <Link
-                            href={`/market/marka/${product.brand.toLowerCase().replace(/\s+/g, '-')}`}
-                            className="text-[13px] hover:underline"
-                            style={{ color: 'var(--fg-muted)' }}
-                        >
-                            {product.brand}
-                        </Link>
-                    )}
-                    <h1 className="text-[26px] font-semibold leading-tight">{product.name}</h1>
+                    {/* PSF */}
                     <div
-                        className="flex items-center gap-3 text-[13px] flex-wrap"
-                        style={{ color: 'var(--fg-muted)' }}
+                        className="rounded-[8px] px-4 py-3 flex items-baseline justify-between"
+                        style={{ background: 'var(--bg-muted)' }}
                     >
-                        <Stars value={averageRating} size={14} />
-                        <span>
-                            <span style={{ color: 'var(--fg)', fontWeight: 500 }}>
-                                {averageRating.toFixed(1)}
-                            </span>{' '}
-                            ·{' '}
-                            <span className="mono">
-                                {reviews.length.toLocaleString('tr-TR')}
-                            </span>{' '}
-                            değerlendirme
-                        </span>
-                        {product.barcode && (
-                            <span className="mono text-[12px]" style={{ color: 'var(--fg-muted)' }}>
-                                SKU {product.barcode}
-                            </span>
-                        )}
-                    </div>
-
-                    {/* Price hero card */}
-                    <div
-                        className="rounded-[10px] p-5 flex flex-col gap-3"
-                        style={{
-                            background: 'var(--bg-elevated)',
-                            border: '1px solid var(--border)',
-                        }}
-                    >
-                        <div className="flex justify-between items-baseline gap-3">
-                            <div>
-                                <div
-                                    className="text-[11px] uppercase tracking-wide"
-                                    style={{ color: 'var(--fg-soft)' }}
-                                >
-                                    Önerilen liste fiyatı
-                                </div>
-                                <div
-                                    className="mono text-[16px] line-through"
-                                    style={{ color: 'var(--fg-muted)' }}
-                                >
-                                    {psf ? formatTL(psf) : '---'}
-                                </div>
-                                <div className="text-[10px]" style={{ color: 'var(--fg-soft)' }}>
-                                    KDV dahil
-                                </div>
+                        <div>
+                            <div
+                                className="text-[10px] font-semibold uppercase tracking-wider"
+                                style={{ color: 'var(--fg-soft)' }}
+                            >
+                                PSF
                             </div>
-                            <div className="text-right">
-                                <div
-                                    className="text-[11px] font-semibold uppercase tracking-wide"
-                                    style={{ color: 'var(--success)' }}
-                                >
-                                    En düşük
-                                </div>
-                                <div
-                                    className="mono text-[28px] sm:text-[32px] font-bold leading-none"
-                                    style={{ color: 'var(--accent)' }}
-                                >
-                                    {formatTL(lowestPrice)}
-                                </div>
-                                <div
-                                    className="text-[11px] mt-1"
-                                    style={{ color: 'var(--fg-soft)' }}
-                                >
-                                    KDV dahil · adet başı
-                                </div>
+                            <div className="text-[10px]" style={{ color: 'var(--fg-soft)' }}>
+                                Önerilen liste fiyatı
                             </div>
                         </div>
-
-                        {offers.length > 0 && (
-                            <div
-                                className="flex items-center gap-2 px-3 py-2.5 rounded-[6px] text-[12px]"
-                                style={{
-                                    background: 'var(--accent-soft)',
-                                    color: 'var(--accent)',
-                                }}
-                            >
-                                <Zap className="w-3.5 h-3.5" />
-                                <span>
-                                    <strong>{offers.length} satıcı</strong> bu ürünü listeliyor
-                                    {highestPrice != null && lowestPrice != null && (
-                                        <>
-                                            {' '}— fiyat aralığı{' '}
-                                            <span className="mono">{formatTL(lowestPrice)}</span> –{' '}
-                                            <span className="mono">{formatTL(highestPrice)}</span>
-                                        </>
-                                    )}
-                                </span>
-                            </div>
-                        )}
-
-                        {/* Quantity + cart */}
-                        <div className="flex items-stretch gap-2">
-                            <div
-                                className="flex items-center overflow-hidden"
-                                style={{
-                                    border: '1px solid var(--border)',
-                                    borderRadius: 'var(--radius)',
-                                }}
-                            >
-                                <button
-                                    type="button"
-                                    onClick={() => handleQuantityChange(-1)}
-                                    className="px-3 h-11"
-                                    aria-label="Adet azalt"
-                                >
-                                    <Minus className="w-3.5 h-3.5" />
-                                </button>
-                                <input
-                                    className="mono w-14 text-center text-[14px]"
-                                    value={quantity}
-                                    onChange={(e) => {
-                                        const v = parseInt(e.target.value);
-                                        if (Number.isFinite(v) && v > 0) setQuantity(v);
-                                    }}
-                                    style={{
-                                        height: 44,
-                                        background: 'transparent',
-                                        outline: 'none',
-                                        border: 'none',
-                                    }}
-                                />
-                                <button
-                                    type="button"
-                                    onClick={() => handleQuantityChange(1)}
-                                    className="px-3 h-11"
-                                    aria-label="Adet arttır"
-                                >
-                                    <Plus className="w-3.5 h-3.5" />
-                                </button>
-                            </div>
-                            <button
-                                type="button"
-                                onClick={handleAddCheapestToCart}
-                                disabled={
-                                    !cheapestOffer ||
-                                    adding ||
-                                    cheapestOffer.stock <= 0 ||
-                                    !canBuyFromSeller(cheapestOffer.seller?.id ?? 0)
-                                }
-                                className="btn btn-primary btn-lg flex-1"
-                            >
-                                {adding ? (
-                                    <Loader2 className="w-4 h-4 animate-spin" />
-                                ) : (
-                                    <>
-                                        <ShoppingCart className="w-4 h-4" /> En ucuzu sepete ekle
-                                    </>
-                                )}
-                            </button>
-                            <button
-                                type="button"
-                                onClick={handleToggleFavorite}
-                                disabled={isTogglingFavorite}
-                                className="btn btn-ghost btn-lg"
-                                title="Favorilere ekle"
-                                aria-label="Favorilere ekle"
-                            >
-                                <Heart
-                                    className="w-4 h-4"
-                                    fill={isFavorite ? 'currentColor' : 'none'}
-                                    style={{
-                                        color: isFavorite ? 'var(--danger)' : 'var(--fg)',
-                                    }}
-                                />
-                            </button>
-                        </div>
-
-                        {/* Mini info row */}
                         <div
-                            className="grid grid-cols-3 gap-2.5 mt-1 text-[12px]"
-                            style={{ color: 'var(--fg-muted)' }}
+                            className="mono text-[22px] font-bold"
+                            style={{ color: 'var(--fg)' }}
                         >
-                            <span className="inline-flex items-center gap-1.5">
-                                <Truck className="w-3.5 h-3.5" /> 1-2 günde teslim
-                            </span>
-                            <span className="inline-flex items-center gap-1.5">
-                                <ShieldCheck className="w-3.5 h-3.5" /> Onaylı satıcı
-                            </span>
-                            <span className="inline-flex items-center gap-1.5">
-                                <Wallet className="w-3.5 h-3.5" /> Vadeli ödeme
-                            </span>
+                            {psf ? formatTL(psf) : '---'}
                         </div>
                     </div>
-                </div>
-            </div>
 
-            {/* Specs + listings split */}
-            <div className="grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-6 mb-12">
-                {/* Specs */}
+                    {/* Favorite */}
+                    <button
+                        type="button"
+                        onClick={handleToggleFavorite}
+                        disabled={isTogglingFavorite}
+                        className="btn btn-ghost w-full"
+                    >
+                        <Heart
+                            className="w-4 h-4"
+                            fill={isFavorite ? 'currentColor' : 'none'}
+                            style={{
+                                color: isFavorite ? 'var(--danger)' : 'var(--fg)',
+                            }}
+                        />
+                        {isFavorite ? 'Favorilerde' : 'Favorilere ekle'}
+                    </button>
+                </div>
+
+                {/* Right: listings */}
                 <div
                     className="rounded-[10px] p-5"
                     style={{
@@ -595,55 +456,158 @@ export function ProductDetailClient() {
                         alignSelf: 'start',
                     }}
                 >
-                    <div className="eyebrow mb-3">Ürün özellikleri</div>
-                    <div
-                        className="flex flex-col gap-2 text-[13px]"
-                    >
-                        {[
-                            ['Marka', product.brand],
-                            ['Üretici', product.manufacturer],
-                            ['Kategori', product.category?.name],
-                            ['Barkod', product.barcode],
-                        ]
-                            .filter(([, v]) => !!v)
-                            .map(([k, v]) => (
+                    <div className="flex items-end justify-between gap-3 mb-4 pb-4" style={{ borderBottom: '1px solid var(--border)' }}>
+                        <div>
+                            <h2 className="text-[18px] sm:text-[20px] font-semibold leading-tight">
+                                Ürünün Tüm İlanları
+                            </h2>
+                            {offers.length > 0 && (
                                 <div
-                                    key={k as string}
-                                    className="flex justify-between gap-3 pb-1.5"
+                                    className="text-[12px] mt-1"
+                                    style={{ color: 'var(--fg-muted)' }}
+                                >
+                                    <span className="mono font-semibold" style={{ color: 'var(--fg)' }}>
+                                        {offers.length}
+                                    </span>{' '}
+                                    satıcı
+                                    {highestPrice != null && lowestPrice != null && highestPrice > lowestPrice && (
+                                        <>
+                                            {' '}· Fiyat aralığı{' '}
+                                            <span className="mono">{formatTL(lowestPrice)}</span> –{' '}
+                                            <span className="mono">{formatTL(highestPrice)}</span>
+                                        </>
+                                    )}
+                                </div>
+                            )}
+                        </div>
+                        {cheapestOffer && cheapestOffer.stock > 0 && canBuyFromSeller(cheapestOffer.seller?.id ?? 0) && (
+                            <div className="hidden sm:flex items-stretch gap-2">
+                                <div
+                                    className="flex items-center overflow-hidden"
                                     style={{
-                                        borderBottom: '1px dashed var(--border)',
+                                        border: '1px solid var(--border)',
+                                        borderRadius: 'var(--radius)',
                                     }}
                                 >
-                                    <span style={{ color: 'var(--fg-soft)' }}>{k}</span>
-                                    <span style={{ fontWeight: 500 }}>{v}</span>
+                                    <button
+                                        type="button"
+                                        onClick={() => handleQuantityChange(-1)}
+                                        className="px-2.5 h-9"
+                                        aria-label="Adet azalt"
+                                    >
+                                        <Minus className="w-3.5 h-3.5" />
+                                    </button>
+                                    <input
+                                        className="mono w-12 text-center text-[13px]"
+                                        value={quantity}
+                                        onChange={(e) => {
+                                            const v = parseInt(e.target.value);
+                                            if (Number.isFinite(v) && v > 0) setQuantity(v);
+                                        }}
+                                        style={{
+                                            height: 36,
+                                            background: 'transparent',
+                                            outline: 'none',
+                                            border: 'none',
+                                        }}
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={() => handleQuantityChange(1)}
+                                        className="px-2.5 h-9"
+                                        aria-label="Adet arttır"
+                                    >
+                                        <Plus className="w-3.5 h-3.5" />
+                                    </button>
                                 </div>
-                            ))}
+                                <button
+                                    type="button"
+                                    onClick={handleAddCheapestToCart}
+                                    disabled={adding}
+                                    className="btn btn-primary btn-sm whitespace-nowrap"
+                                >
+                                    {adding ? (
+                                        <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                                    ) : (
+                                        <>
+                                            <ShoppingCart className="w-3.5 h-3.5" /> En ucuzu sepete
+                                        </>
+                                    )}
+                                </button>
+                            </div>
+                        )}
                     </div>
-                    {product.description && (
-                        <>
-                            <div className="eyebrow mt-5 mb-2">Açıklama</div>
+                    <OfferTable offers={offers} canBuyFromSeller={canBuyFromSeller} />
+                </div>
+            </div>
+
+            {/* Specs + description */}
+            <div
+                className="rounded-[10px] p-5 mb-10"
+                style={{
+                    background: 'var(--bg-elevated)',
+                    border: '1px solid var(--border)',
+                }}
+            >
+                <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-6">
+                    <div>
+                        <div className="eyebrow mb-3">Ürün özellikleri</div>
+                        <div className="flex flex-col gap-2 text-[13px]">
+                            {[
+                                ['Marka', product.brand],
+                                ['Üretici', product.manufacturer],
+                                ['Kategori', product.category?.name],
+                                ['Barkod', product.barcode],
+                            ]
+                                .filter(([, v]) => !!v)
+                                .map(([k, v]) => (
+                                    <div
+                                        key={k as string}
+                                        className="flex justify-between gap-3 pb-1.5"
+                                        style={{
+                                            borderBottom: '1px dashed var(--border)',
+                                        }}
+                                    >
+                                        <span style={{ color: 'var(--fg-soft)' }}>{k}</span>
+                                        <span style={{ fontWeight: 500 }}>{v}</span>
+                                    </div>
+                                ))}
+                        </div>
+                    </div>
+                    {product.description ? (
+                        <div>
+                            <div className="eyebrow mb-3">Açıklama</div>
                             <p
                                 className="text-[13px] leading-relaxed"
                                 style={{ color: 'var(--fg-muted)' }}
                             >
                                 {product.description}
                             </p>
-                        </>
+                        </div>
+                    ) : (
+                        <div className="hidden lg:flex items-center justify-center text-[12px]" style={{ color: 'var(--fg-soft)' }}>
+                            Açıklama mevcut değil.
+                        </div>
                     )}
                 </div>
-
-                {/* Listings */}
-                <div>
-                    <div className="mb-4 flex items-end justify-between gap-3">
-                        <div>
-                            <div className="eyebrow">Tüm satıcı ilanları</div>
-                            <h2 className="text-[20px] sm:text-[22px] font-semibold mt-1 leading-tight">
-                                {offers.length} satıcının ilanı — en düşük fiyattan sıralı
-                            </h2>
-                        </div>
+                {(reviews.length > 0 || averageRating > 0) && (
+                    <div
+                        className="mt-5 pt-4 flex items-center gap-3 text-[13px]"
+                        style={{ borderTop: '1px solid var(--border)', color: 'var(--fg-muted)' }}
+                    >
+                        <Stars value={averageRating} size={14} />
+                        <span>
+                            <span style={{ color: 'var(--fg)', fontWeight: 600 }}>
+                                {averageRating.toFixed(1)}
+                            </span>{' '}
+                            ·{' '}
+                            <span className="mono">
+                                {reviews.length.toLocaleString('tr-TR')}
+                            </span>{' '}
+                            değerlendirme
+                        </span>
                     </div>
-                    <OfferTable offers={offers} canBuyFromSeller={canBuyFromSeller} />
-                </div>
+                )}
             </div>
 
             {/* Similar products */}

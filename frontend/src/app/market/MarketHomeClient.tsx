@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { HeroBanner } from '@/components/market/HeroBanner';
+import { HeroBanner, type HeroBannerSlide } from '@/components/market/HeroBanner';
 import { InfoChipRow } from '@/components/market/InfoChipRow';
 import { DailyDealCard, type DailyDealProduct } from '@/components/market/DailyDealCard';
 import { QuickOrderCard } from '@/components/market/QuickOrderCard';
@@ -11,7 +11,8 @@ import { CategoryGrid } from '@/components/market/CategoryGrid';
 import { FeaturedSectionTabs } from '@/components/market/FeaturedSectionTabs';
 import { BrandStrip } from '@/components/market/BrandStrip';
 import { PromoBannerRow } from '@/components/market/PromoBannerRow';
-import { productsApi, type Product } from '@/lib/api';
+import { AllProductsList } from '@/components/market/AllProductsList';
+import { cmsApi, productsApi, type Product } from '@/lib/api';
 
 interface MiniProduct {
     id: number | string;
@@ -46,9 +47,29 @@ export function MarketHomeClient() {
     const [dailyDeal, setDailyDeal] = useState<DailyDealProduct | null>(null);
     const [season, setSeason] = useState<MiniProduct[]>([]);
     const [weekly, setWeekly] = useState<MiniProduct[]>([]);
+    const [heroSlides, setHeroSlides] = useState<HeroBannerSlide[]>([]);
 
     useEffect(() => {
         let active = true;
+        cmsApi
+            .getHomepage()
+            .then((res) => {
+                if (!active) return;
+                const heroes = res.data?.banners?.hero ?? [];
+                setHeroSlides(
+                    heroes.map((b) => ({
+                        id: b.id,
+                        eyebrow: b.badge_text ?? null,
+                        headline: b.title ?? null,
+                        description: b.subtitle ?? null,
+                        ctaLabel: b.button_text ?? null,
+                        ctaHref: b.link_url ?? null,
+                        sideImage: b.image_url ?? null,
+                        sideImageAlt: b.title ?? '',
+                    })),
+                );
+            })
+            .catch(() => {});
         productsApi
             .getAll({ per_page: 40, sort_by: 'offers_count' })
             .then((res) => {
@@ -98,7 +119,7 @@ export function MarketHomeClient() {
 
     return (
         <div className="min-h-screen pb-20">
-            <HeroBanner />
+            <HeroBanner slides={heroSlides} />
             <InfoChipRow />
 
             <section className="max-w-[1440px] mx-auto px-4 sm:px-6 pt-6">
@@ -113,6 +134,7 @@ export function MarketHomeClient() {
             <CategoryGrid />
             <FeaturedSectionTabs />
             <BrandStrip />
+            <AllProductsList />
             <PromoBannerRow />
         </div>
     );

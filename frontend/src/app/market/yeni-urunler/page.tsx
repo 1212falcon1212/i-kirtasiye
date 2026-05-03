@@ -123,7 +123,7 @@ function NewProductCard({ product, index }: { product: NewProduct; index: number
                                 <div className="absolute top-2 right-2 z-10">
                                     <Badge className={`border-0 shadow-lg font-bold text-[10px] px-1.5 py-0.5 ${
                                         isVeryNew
-                                            ? 'bg-gradient-to-r from-teal-500 to-[#fbeede] text-white shadow-teal-500/30'
+                                            ? 'bg-gradient-to-r from-teal-500 to-[#ffedd5] text-white shadow-teal-500/30'
                                             : 'bg-gradient-to-r from-blue-500 to-indigo-500 text-white shadow-blue-500/30'
                                     }`}>
                                         <Sparkles className="w-2.5 h-2.5 mr-0.5" />

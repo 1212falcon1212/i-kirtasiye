@@ -4,19 +4,19 @@ import Link from 'next/link';
 import { Banner } from '@/lib/api';
 
 const SHOWCASE_COLORS = [
-    'from-[#b8651a] to-[#934f12]',
+    'from-[#ea580c] to-[#c2410c]',
     'from-blue-800 to-blue-950',
     'from-[#1a1a1a] to-[#2a2a2a]',
     'from-purple-600 to-indigo-700',
     'from-cyan-500 to-cyan-600',
-    'from-[#b8651a] to-cyan-700',
+    'from-[#ea580c] to-cyan-700',
     'from-cyan-600 to-blue-700',
     'from-red-600 to-cyan-700',
     'from-[#1a1a1a] to-[#333333]',
     'from-fuchsia-600 to-purple-700',
     'from-cyan-600 to-cyan-700',
     'from-sky-500 to-indigo-600',
-    'from-[#b8651a] to-cyan-700',
+    'from-[#ea580c] to-cyan-700',
     'from-teal-500 to-cyan-700',
     'from-violet-600 to-purple-800',
 ];

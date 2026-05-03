@@ -29,14 +29,14 @@ function SingleBanner({ banner }: { banner: Banner }) {
                 backgroundImage: banner.image_url ? `url(${banner.image_url})` : undefined,
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
-                backgroundColor: '#fbeede',
+                backgroundColor: '#ffedd5',
             }}
         >
             {/* Gradient overlay */}
             <div className="absolute inset-0 bg-gradient-to-r from-[#1a1a1a]/80 via-[#1a1a1a]/40 to-transparent" />
 
             {/* Decorative rose accent line */}
-            <div className="absolute top-0 left-0 w-1.5 h-full bg-[#b8651a]" />
+            <div className="absolute top-0 left-0 w-1.5 h-full bg-[#1e3a8a]" />
 
             {/* Content */}
             <div className="absolute inset-0 flex items-center">
@@ -58,7 +58,7 @@ function SingleBanner({ banner }: { banner: Banner }) {
                             </p>
                         )}
                         {banner.button_text && (
-                            <span className="inline-flex items-center gap-2 bg-[#b8651a] text-white text-sm font-bold px-7 py-3.5 rounded-xl group-hover:bg-[#934f12] group-hover:gap-3 transition-all shadow-lg shadow-[#b8651a]/25">
+                            <span className="inline-flex items-center gap-2 bg-[#1e3a8a] text-white text-sm font-bold px-7 py-3.5 rounded-xl group-hover:bg-[#1e40af] group-hover:gap-3 transition-all shadow-lg shadow-[#ea580c]/25">
                                 {banner.button_text}
                                 <ArrowRight className="w-4 h-4" />
                             </span>
@@ -92,7 +92,7 @@ function DualLayout({ banners }: { banners: Banner[] }) {
 
 function DualCard({ banner, variant }: { banner: Banner; variant: 'primary' | 'secondary' }) {
     const gradientClass = variant === 'primary'
-        ? 'bg-gradient-to-br from-[#934f12]/90 via-[#b8651a]/70 to-[#d99248]/50'
+        ? 'bg-gradient-to-br from-[#c2410c]/90 via-[#ea580c]/70 to-[#d99248]/50'
         : 'bg-gradient-to-br from-[#1a1a1a]/90 via-[#374151]/70 to-[#1a1a1a]/50';
 
     const content = (
@@ -102,7 +102,7 @@ function DualCard({ banner, variant }: { banner: Banner; variant: 'primary' | 's
                 backgroundImage: banner.image_url ? `url(${banner.image_url})` : undefined,
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
-                backgroundColor: variant === 'primary' ? '#b8651a' : '#1a1a1a',
+                backgroundColor: variant === 'primary' ? '#ea580c' : '#1a1a1a',
             }}
         >
             {/* Gradient overlay */}

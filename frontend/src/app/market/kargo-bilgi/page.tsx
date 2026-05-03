@@ -38,7 +38,7 @@ export default function KargoBilgiPage() {
     if (loading) {
         return (
             <div className="flex items-center justify-center min-h-[400px]">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#fbeede]" />
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#ffedd5]" />
             </div>
         );
     }
@@ -58,7 +58,7 @@ export default function KargoBilgiPage() {
             {/* Header */}
             <div className="mb-8">
                 <h1 className="text-2xl font-bold text-slate-900 dark:text-white flex items-center gap-3">
-                    <Truck className="h-7 w-7 text-[#b8651a]" />
+                    <Truck className="h-7 w-7 text-[#ea580c]" />
                     Kargo Bilgileri
                 </h1>
                 <p className="text-slate-500 dark:text-slate-400 mt-2">
@@ -68,16 +68,16 @@ export default function KargoBilgiPage() {
 
             <div className="space-y-6">
                 {/* Free Shipping Banner */}
-                <Card className="border-[#fbeede] dark:border-[#934f12] bg-gradient-to-r from-[#fbeede] to-[#fbeede] dark:from-[#934f12]/20 dark:to-[#934f12]/20">
+                <Card className="border-[#ffedd5] dark:border-[#c2410c] bg-gradient-to-r from-[#ffedd5] to-[#ffedd5] dark:from-[#c2410c]/20 dark:to-[#c2410c]/20">
                     <CardContent className="flex items-center gap-4 py-6">
-                        <div className="w-14 h-14 bg-[#fbeede] dark:bg-[#934f12] rounded-full flex items-center justify-center flex-shrink-0">
-                            <Gift className="h-7 w-7 text-[#b8651a] dark:text-[#fbeede]" />
+                        <div className="w-14 h-14 bg-[#ffedd5] dark:bg-[#1e40af] rounded-full flex items-center justify-center flex-shrink-0">
+                            <Gift className="h-7 w-7 text-[#ea580c] dark:text-[#ffedd5]" />
                         </div>
                         <div>
-                            <h2 className="text-lg font-bold text-[#b8651a] dark:text-[#fbeede]">
+                            <h2 className="text-lg font-bold text-[#ea580c] dark:text-[#ffedd5]">
                                 {config?.free_threshold ? formatPrice(config.free_threshold) : '2.500,00 TL'} Üzeri Ücretsiz Kargo!
                             </h2>
-                            <p className="text-sm text-[#b8651a] dark:text-[#fbeede] mt-1">
+                            <p className="text-sm text-[#ea580c] dark:text-[#ffedd5] mt-1">
                                 Satıcı bazında {config?.free_threshold ? formatPrice(config.free_threshold) : '2.500,00 TL'} ve üzeri siparişlerde kargo ücreti alınmaz.
                                 Ücretsiz kargo hesabı her satıcı için ayrı yapılır.
                             </p>
@@ -108,7 +108,7 @@ export default function KargoBilgiPage() {
 
                             <div className="p-4 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
                                 <h3 className="font-semibold text-slate-900 dark:text-white mb-2 flex items-center gap-2">
-                                    <Truck className="h-4 w-4 text-[#b8651a]" />
+                                    <Truck className="h-4 w-4 text-[#ea580c]" />
                                     Satıcı Bazlı Kargo
                                 </h3>
                                 <p className="text-sm text-slate-600 dark:text-slate-400">
@@ -118,12 +118,12 @@ export default function KargoBilgiPage() {
                             </div>
                         </div>
 
-                        <div className="p-4 rounded-lg bg-[#fbeede] dark:bg-[#934f12]/20 border border-[#fbeede] dark:border-[#934f12]">
-                            <h3 className="font-semibold text-[#b8651a] dark:text-[#fbeede] mb-2 flex items-center gap-2">
+                        <div className="p-4 rounded-lg bg-[#ffedd5] dark:bg-[#1e40af]/20 border border-[#ffedd5] dark:border-[#c2410c]">
+                            <h3 className="font-semibold text-[#ea580c] dark:text-[#ffedd5] mb-2 flex items-center gap-2">
                                 <Gift className="h-4 w-4" />
                                 Ücretsiz Kargo Koşulu
                             </h3>
-                            <p className="text-sm text-[#b8651a] dark:text-[#fbeede]">
+                            <p className="text-sm text-[#ea580c] dark:text-[#ffedd5]">
                                 Bir satıcıyla olan sipariş tutarınız {config?.free_threshold ? formatPrice(config.free_threshold) : '2.500,00 TL'} ve üzerinde ise,
                                 o satıcının kargo ücreti sıfırlanır. Bu kural her satıcı için ayrı değerlendirilir.
                             </p>
@@ -158,7 +158,7 @@ export default function KargoBilgiPage() {
                 <Card>
                     <CardHeader>
                         <CardTitle className="flex items-center gap-2 text-lg">
-                            <Box className="h-5 w-5 text-[#b8651a]" />
+                            <Box className="h-5 w-5 text-[#ea580c]" />
                             Teslimat Bilgileri
                         </CardTitle>
                     </CardHeader>
@@ -183,8 +183,8 @@ export default function KargoBilgiPage() {
                                 </div>
                             </div>
                             <div className="flex items-start gap-3 p-3 rounded-lg bg-slate-50 dark:bg-slate-800">
-                                <div className="w-8 h-8 bg-[#fbeede] dark:bg-[#934f12]/30 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                                    <span className="text-sm font-bold text-[#b8651a] dark:text-[#fbeede]">3</span>
+                                <div className="w-8 h-8 bg-[#ffedd5] dark:bg-[#1e40af]/30 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                                    <span className="text-sm font-bold text-[#ea580c] dark:text-[#ffedd5]">3</span>
                                 </div>
                                 <div>
                                     <p className="font-medium text-slate-900 dark:text-white">Teslimat</p>

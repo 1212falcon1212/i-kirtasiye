@@ -101,12 +101,12 @@ function VerifyEmailContent() {
         className="lg:hidden flex justify-center mb-8"
       >
         <Link href="/" className="flex items-center gap-3">
-          <div className="w-12 h-12 bg-[#fbeede] rounded-xl flex items-center justify-center shadow-lg">
+          <div className="w-12 h-12 bg-[#ffedd5] rounded-xl flex items-center justify-center shadow-lg">
             <Cross className="w-7 h-7 text-white" />
           </div>
           <div className="flex flex-col">
             <span className="text-2xl font-bold text-slate-900">i-kirtasiye</span>
-            <span className="text-[10px] font-medium text-[#b8651a] -mt-0.5 tracking-wider uppercase">B2B Kırtasiye</span>
+            <span className="text-[10px] font-medium text-[#ea580c] -mt-0.5 tracking-wider uppercase">B2B Kırtasiye</span>
           </div>
         </Link>
       </motion.div>
@@ -123,8 +123,8 @@ function VerifyEmailContent() {
           variants={itemVariants}
           className="flex flex-col items-center gap-4 p-8"
         >
-          <div className="w-16 h-16 bg-[#fbeede] rounded-full flex items-center justify-center">
-            <svg className="animate-spin h-8 w-8 text-[#b8651a]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <div className="w-16 h-16 bg-[#ffedd5] rounded-full flex items-center justify-center">
+            <svg className="animate-spin h-8 w-8 text-[#ea580c]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
               <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
               <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
             </svg>
@@ -158,7 +158,7 @@ function VerifyEmailContent() {
 
           <div className="text-center">
             <Link href="/login">
-              <Button className="h-12 px-8 bg-gradient-to-r from-[#fbeede] to-teal-600 hover:from-[#fbeede] hover:to-teal-700 text-white font-semibold rounded-xl shadow-sm transition-colors duration-150 hover:shadow-md">
+              <Button className="h-12 px-8 bg-gradient-to-r from-[#ffedd5] to-teal-600 hover:from-[#ffedd5] hover:to-teal-700 text-white font-semibold rounded-xl shadow-sm transition-colors duration-150 hover:shadow-md">
                 <span className="flex items-center gap-2">
                   <span>Giriş Yap</span>
                   <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -195,7 +195,7 @@ function VerifyEmailContent() {
             <Button
               onClick={handleResend}
               disabled={isResending}
-              className="h-12 px-8 bg-gradient-to-r from-[#fbeede] to-teal-600 hover:from-[#fbeede] hover:to-teal-700 text-white font-semibold rounded-xl shadow-sm transition-colors duration-150 hover:shadow-md"
+              className="h-12 px-8 bg-gradient-to-r from-[#ffedd5] to-teal-600 hover:from-[#ffedd5] hover:to-teal-700 text-white font-semibold rounded-xl shadow-sm transition-colors duration-150 hover:shadow-md"
             >
               <span className="flex items-center gap-2">
                 {isResending ? (

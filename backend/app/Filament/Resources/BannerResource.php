@@ -77,11 +77,11 @@ class BannerResource extends Resource
                             ->placeholder('Kampanyalar')
                             ->helperText('Hero bannerlar için tab etiketi. Aynı tab adına sahip bannerlar aynı grupta döner.')
                             ->maxLength(50)
-                            ->visible(fn(Forms\Get $get): bool => $get('location') === 'home_hero'),
+                            ->visible(fn (Forms\Get $get): bool => $get('location') === 'home_hero'),
                         Forms\Components\ColorPicker::make('bg_color')
                             ->label('Arka Plan Rengi')
                             ->helperText('Banner çerçevesinin arka plan rengi')
-                            ->visible(fn(Forms\Get $get): bool => $get('location') === 'home_hero'),
+                            ->visible(fn (Forms\Get $get): bool => $get('location') === 'home_hero'),
                         Forms\Components\TextInput::make('sort_order')
                             ->label('Sıra')
                             ->numeric()
@@ -109,11 +109,11 @@ class BannerResource extends Resource
                     ->label('Başlık')
                     ->searchable()
                     ->limit(30)
-                    ->tooltip(fn($record) => $record->title),
+                    ->tooltip(fn ($record) => $record->title),
                 Tables\Columns\TextColumn::make('location')
                     ->label('Konum')
                     ->badge()
-                    ->formatStateUsing(fn(string $state): string => match($state) {
+                    ->formatStateUsing(fn (string $state): string => match ($state) {
                         'home_hero' => 'Hero',
                         'home_promo' => 'Promosyon',
                         'home_middle' => 'Orta',

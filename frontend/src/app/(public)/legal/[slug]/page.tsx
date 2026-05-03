@@ -135,7 +135,7 @@ export default function LegalPage() {
                                 prose-h4:text-base prose-h4:mt-4 prose-h4:mb-2
                                 prose-p:text-slate-600 prose-p:leading-relaxed
                                 prose-li:text-slate-600
-                                prose-a:text-[#b8651a] prose-a:no-underline hover:prose-a:underline
+                                prose-a:text-[#ea580c] prose-a:no-underline hover:prose-a:underline
                                 prose-strong:text-slate-800
                                 prose-ul:space-y-1"
                             dangerouslySetInnerHTML={{ __html: sanitizedContent }}

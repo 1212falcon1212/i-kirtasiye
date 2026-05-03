@@ -73,7 +73,8 @@ export function DailyDealCard({ product, title = 'Günün Fırsatı' }: DailyDea
                     aspectRatio: '1 / 1',
                     width: 200,
                     borderRadius: 10,
-                    background: 'var(--bg-muted)',
+                    background: '#ffffff',
+                    border: '1px solid var(--border)',
                 }}
             >
                 {image ? (

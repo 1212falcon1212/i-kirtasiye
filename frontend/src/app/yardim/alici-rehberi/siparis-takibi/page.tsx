@@ -75,8 +75,8 @@ export default function SiparisTakibiPage() {
                     </div>
 
                     <div className="flex items-start gap-4">
-                        <div className="w-10 h-10 bg-[#fbeede] rounded-lg flex items-center justify-center flex-shrink-0">
-                            <CheckCircle className="w-5 h-5 text-[#b8651a]" />
+                        <div className="w-10 h-10 bg-[#ffedd5] rounded-lg flex items-center justify-center flex-shrink-0">
+                            <CheckCircle className="w-5 h-5 text-[#ea580c]" />
                         </div>
                         <div>
                             <p className="font-medium text-gray-900">Teslim Edildi</p>
@@ -103,15 +103,15 @@ export default function SiparisTakibiPage() {
                         </p>
                         <ul className="text-gray-600 text-sm space-y-2">
                             <li className="flex items-start gap-2">
-                                <CheckCircle className="w-4 h-4 mt-0.5 text-[#b8651a] flex-shrink-0" />
+                                <CheckCircle className="w-4 h-4 mt-0.5 text-[#ea580c] flex-shrink-0" />
                                 Sipariş detay sayfasında &quot;Kargo Takibi&quot; butonuna tıklayın
                             </li>
                             <li className="flex items-start gap-2">
-                                <CheckCircle className="w-4 h-4 mt-0.5 text-[#b8651a] flex-shrink-0" />
+                                <CheckCircle className="w-4 h-4 mt-0.5 text-[#ea580c] flex-shrink-0" />
                                 Anlık konum ve tahmini teslimat tarihi gösterilir
                             </li>
                             <li className="flex items-start gap-2">
-                                <CheckCircle className="w-4 h-4 mt-0.5 text-[#b8651a] flex-shrink-0" />
+                                <CheckCircle className="w-4 h-4 mt-0.5 text-[#ea580c] flex-shrink-0" />
                                 Tüm kargo hareketleri kronolojik olarak listelenir
                             </li>
                         </ul>
@@ -119,12 +119,12 @@ export default function SiparisTakibiPage() {
                 </div>
             </div>
 
-            <div className="bg-[#fbeede] border border-[#fbeede] rounded-xl p-6 my-6">
-                <h4 className="font-semibold text-[#b8651a] mb-3 flex items-center gap-2">
+            <div className="bg-[#ffedd5] border border-[#ffedd5] rounded-xl p-6 my-6">
+                <h4 className="font-semibold text-[#ea580c] mb-3 flex items-center gap-2">
                     <CheckCircle className="w-5 h-5" />
                     Bildirimler
                 </h4>
-                <ul className="text-[#b8651a] space-y-2 text-sm">
+                <ul className="text-[#ea580c] space-y-2 text-sm">
                     <li className="flex items-start gap-2">
                         <CheckCircle className="w-4 h-4 mt-0.5 flex-shrink-0" />
                         Sipariş durumu değiştiğinde e-posta alırsınız
@@ -149,15 +149,15 @@ export default function SiparisTakibiPage() {
             </p>
             <ul className="text-gray-600 space-y-2 mb-6">
                 <li className="flex items-start gap-2">
-                    <CheckCircle className="w-4 h-4 mt-1 text-[#b8651a] flex-shrink-0" />
+                    <CheckCircle className="w-4 h-4 mt-1 text-[#ea580c] flex-shrink-0" />
                     Teslimat onayı yapmanız istenir (7 gün otomatik onay)
                 </li>
                 <li className="flex items-start gap-2">
-                    <CheckCircle className="w-4 h-4 mt-1 text-[#b8651a] flex-shrink-0" />
+                    <CheckCircle className="w-4 h-4 mt-1 text-[#ea580c] flex-shrink-0" />
                     Satıcıyı puanlayabilirsiniz
                 </li>
                 <li className="flex items-start gap-2">
-                    <CheckCircle className="w-4 h-4 mt-1 text-[#b8651a] flex-shrink-0" />
+                    <CheckCircle className="w-4 h-4 mt-1 text-[#ea580c] flex-shrink-0" />
                     Sorun varsa destek talebi oluşturabilirsiniz
                 </li>
             </ul>
@@ -165,7 +165,7 @@ export default function SiparisTakibiPage() {
             <div className="flex items-center mt-10">
                 <Link
                     href="/yardim/alici-rehberi/sepet-odeme"
-                    className="text-gray-600 hover:text-[#b8651a] font-medium flex items-center gap-2"
+                    className="text-gray-600 hover:text-[#ea580c] font-medium flex items-center gap-2"
                 >
                     <ArrowLeft className="w-4 h-4" />
                     Önceki: Sepet ve Ödeme

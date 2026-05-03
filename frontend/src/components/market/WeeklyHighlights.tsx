@@ -58,7 +58,7 @@ export function WeeklyHighlights({ season = FALLBACK, weekly = FALLBACK }: Weekl
                             key={sec.title}
                             className="overflow-hidden"
                             style={{
-                                background: 'var(--bg-elevated)',
+                                background: '#ffffff',
                                 border: '1px solid var(--border)',
                                 borderRadius: 'var(--radius-lg)',
                             }}
@@ -66,15 +66,15 @@ export function WeeklyHighlights({ season = FALLBACK, weekly = FALLBACK }: Weekl
                             <div
                                 className="px-5 py-3.5 flex justify-between items-center"
                                 style={{
-                                    background: toneBg,
-                                    borderBottom: `1px solid ${toneBg}`,
+                                    background: '#ffffff',
+                                    borderBottom: '1px solid var(--border)',
                                 }}
                             >
                                 <div className="flex items-center gap-2.5">
                                     <div
                                         className="w-7 h-7 rounded-md flex items-center justify-center"
                                         style={{
-                                            background: 'var(--bg-elevated)',
+                                            background: toneBg,
                                             color: toneFg,
                                         }}
                                     >
@@ -111,7 +111,8 @@ export function WeeklyHighlights({ season = FALLBACK, weekly = FALLBACK }: Weekl
                                             className="relative overflow-hidden"
                                             style={{
                                                 aspectRatio: '1 / 1',
-                                                background: 'var(--bg-muted)',
+                                                background: '#ffffff',
+                                                border: '1px solid var(--border)',
                                                 borderRadius: 6,
                                             }}
                                         >

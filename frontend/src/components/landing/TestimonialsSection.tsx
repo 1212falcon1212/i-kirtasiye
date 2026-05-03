@@ -24,7 +24,7 @@ function getInitials(name: string): string {
 }
 
 const AVATAR_GRADIENTS = [
-  "from-[#b8651a] to-[#d99248]",
+  "from-[#ea580c] to-[#d99248]",
   "from-amber-500 to-orange-500",
   "from-cyan-500 to-teal-500",
   "from-blue-500 to-indigo-500",
@@ -75,7 +75,7 @@ export default function TestimonialsSection({
   return (
     <section
       id="referanslar"
-      className="py-24 lg:py-32 bg-gradient-to-b from-[#fbeede] via-[#fbeede]/30 to-white relative overflow-hidden"
+      className="py-24 lg:py-32 bg-gradient-to-b from-[#ffedd5] via-[#ffedd5]/30 to-white relative overflow-hidden"
     >
       {/* Background decorations */}
       <div className="absolute top-20 left-10 w-72 h-72 bg-accent-soft/20 rounded-full blur-3xl" />
@@ -90,14 +90,14 @@ export default function TestimonialsSection({
           transition={{ duration: 0.5 }}
           className="text-center mb-16"
         >
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white text-[#b8651a] text-sm font-semibold mb-5 shadow-sm">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white text-[#ea580c] text-sm font-semibold mb-5 shadow-sm">
             <Users className="w-3.5 h-3.5" />
             Referanslar
           </div>
           <h2 className="text-3xl sm:text-4xl lg:text-[2.75rem] font-extrabold text-slate-900 leading-tight">
             {title}
           </h2>
-          <div className="mx-auto mt-4 w-16 h-1 rounded-full bg-gradient-to-r from-[#b8651a] to-[#d99248]" />
+          <div className="mx-auto mt-4 w-16 h-1 rounded-full bg-gradient-to-r from-[#ea580c] to-[#d99248]" />
           <p className="mt-5 text-lg text-slate-500 max-w-2xl mx-auto leading-relaxed">
             {subtitle}
           </p>
@@ -118,7 +118,7 @@ export default function TestimonialsSection({
               >
                 {/* Quote icon */}
                 <div className="absolute top-6 right-6 opacity-[0.06] group-hover:opacity-[0.1] transition-opacity">
-                  <Quote className="w-12 h-12 text-[#b8651a]" />
+                  <Quote className="w-12 h-12 text-[#ea580c]" />
                 </div>
 
                 {/* Stars */}
@@ -217,7 +217,7 @@ export default function TestimonialsSection({
           <div className="flex items-center justify-center gap-4 mt-6">
             <button
               onClick={prev}
-              className="p-2 rounded-full bg-white border border-slate-200 text-slate-500 hover:text-[#b8651a] hover:border-accent-soft transition-colors shadow-sm"
+              className="p-2 rounded-full bg-white border border-slate-200 text-slate-500 hover:text-[#ea580c] hover:border-accent-soft transition-colors shadow-sm"
               aria-label="Onceki"
             >
               <ChevronLeft className="w-5 h-5" />
@@ -230,7 +230,7 @@ export default function TestimonialsSection({
                   onClick={() => goTo(i)}
                   className={`transition-all duration-300 rounded-full ${
                     i === activeIndex
-                      ? "w-8 h-2.5 bg-[#b8651a]"
+                      ? "w-8 h-2.5 bg-[#1e3a8a]"
                       : "w-2.5 h-2.5 bg-slate-300 hover:bg-slate-400"
                   }`}
                   aria-label={`Yorum ${i + 1}`}
@@ -240,7 +240,7 @@ export default function TestimonialsSection({
 
             <button
               onClick={next}
-              className="p-2 rounded-full bg-white border border-slate-200 text-slate-500 hover:text-[#b8651a] hover:border-accent-soft transition-colors shadow-sm"
+              className="p-2 rounded-full bg-white border border-slate-200 text-slate-500 hover:text-[#ea580c] hover:border-accent-soft transition-colors shadow-sm"
               aria-label="Sonraki"
             >
               <ChevronRight className="w-5 h-5" />

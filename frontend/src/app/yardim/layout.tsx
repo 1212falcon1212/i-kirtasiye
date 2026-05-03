@@ -57,7 +57,7 @@ export default function YardimLayout({
                     <div className="flex items-center justify-between h-16">
                         <div className="flex items-center gap-4">
                             <Link href="/" className="flex items-center gap-3">
-                                <div className="w-9 h-9 bg-[#fbeede] rounded-lg flex items-center justify-center">
+                                <div className="w-9 h-9 bg-[#ffedd5] rounded-lg flex items-center justify-center">
                                     <Cross className="w-5 h-5 text-white" />
                                 </div>
                                 <span className="font-bold text-lg text-gray-900">i-kirtasiye</span>
@@ -77,7 +77,7 @@ export default function YardimLayout({
                             </Link>
                             <Link
                                 href="/register"
-                                className="bg-[#fbeede] text-white px-4 py-2 rounded-lg font-medium hover:bg-[#934f12] transition-colors"
+                                className="bg-[#ffedd5] text-white px-4 py-2 rounded-lg font-medium hover:bg-[#1e40af] transition-colors"
                             >
                                 Kayıt Ol
                             </Link>
@@ -94,7 +94,7 @@ export default function YardimLayout({
                             <Link
                                 href="/yardim"
                                 className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors ${pathname === '/yardim'
-                                        ? 'bg-[#fbeede] text-[#b8651a]'
+                                        ? 'bg-[#ffedd5] text-[#ea580c]'
                                         : 'text-gray-600 hover:bg-gray-100'
                                     }`}
                             >
@@ -114,7 +114,7 @@ export default function YardimLayout({
                                                 <Link
                                                     href={item.href}
                                                     className={`block px-4 py-2 rounded-lg text-sm transition-colors ${pathname === item.href
-                                                            ? 'bg-[#fbeede] text-[#b8651a] font-medium'
+                                                            ? 'bg-[#ffedd5] text-[#ea580c] font-medium'
                                                             : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
                                                         }`}
                                                 >
@@ -132,11 +132,11 @@ export default function YardimLayout({
                     <main className="flex-1 min-w-0">
                         {/* Breadcrumb */}
                         <nav className="flex items-center gap-2 text-sm text-gray-500 mb-6">
-                            <Link href="/" className="hover:text-[#b8651a]">
+                            <Link href="/" className="hover:text-[#ea580c]">
                                 Ana Sayfa
                             </Link>
                             <ChevronRight className="w-4 h-4" />
-                            <Link href="/yardim" className="hover:text-[#b8651a]">
+                            <Link href="/yardim" className="hover:text-[#ea580c]">
                                 Yardım Merkezi
                             </Link>
                             {pathname !== '/yardim' && (
@@ -160,7 +160,7 @@ export default function YardimLayout({
                         <div className="mt-6">
                             <Link
                                 href="/yardim"
-                                className="inline-flex items-center gap-2 text-gray-500 hover:text-[#b8651a] transition-colors text-sm"
+                                className="inline-flex items-center gap-2 text-gray-500 hover:text-[#ea580c] transition-colors text-sm"
                             >
                                 <ArrowLeft className="w-4 h-4" />
                                 Tüm Yardım Konuları

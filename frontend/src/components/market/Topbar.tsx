@@ -14,10 +14,13 @@ export function Topbar({ show, phone, hours, shipping }: TopbarProps) {
     if (show === false) return null;
 
     return (
-        <div className="bg-[#934f12] h-9 hidden md:flex items-center">
+        <div
+            className="h-9 hidden md:flex items-center"
+            style={{ background: 'var(--accent-hover)', color: 'var(--accent-fg)' }}
+        >
             <div className="max-w-[1300px] mx-auto px-7 w-full flex items-center justify-between">
                 {/* Left */}
-                <div className="flex items-center gap-4 text-xs text-[#fbeede] font-semibold">
+                <div className="flex items-center gap-4 text-xs font-semibold">
                     {shipping && (
                         <span className="flex items-center gap-1.5">
                             <Truck className="w-3 h-3" />
@@ -33,26 +36,26 @@ export function Topbar({ show, phone, hours, shipping }: TopbarProps) {
                 </div>
 
                 {/* Right */}
-                <div className="flex items-center gap-3 text-xs text-[#fbeede] font-semibold">
+                <div className="flex items-center gap-3 text-xs font-semibold">
                     <Link
                         href="/register"
-                        className="hover:text-white transition-colors"
+                        className="opacity-90 hover:opacity-100 transition-opacity"
                     >
                         Nasıl Satıcı Olurum?
                     </Link>
-                    <span className="opacity-40">|</span>
+                    <span className="opacity-50">|</span>
                     <Link
                         href="/iletisim"
-                        className="hover:text-white transition-colors"
+                        className="opacity-90 hover:opacity-100 transition-opacity"
                     >
                         İletişim
                     </Link>
                     {phone && (
                         <>
-                            <span className="opacity-40">|</span>
+                            <span className="opacity-50">|</span>
                             <a
                                 href={`tel:${phone.replace(/\s/g, '')}`}
-                                className="flex items-center gap-1.5 hover:text-white transition-colors"
+                                className="flex items-center gap-1.5 opacity-90 hover:opacity-100 transition-opacity"
                             >
                                 <Phone className="w-3 h-3" />
                                 {phone}

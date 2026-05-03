@@ -42,7 +42,7 @@ export function StatCard({
     const getChangeColor = () => {
         switch (changeType) {
             case 'positive':
-                return 'text-[#b8651a] dark:text-accent bg-[#fbeede] dark:bg-cyan-900/20';
+                return 'text-[#ea580c] dark:text-accent bg-[#ffedd5] dark:bg-cyan-900/20';
             case 'negative':
                 return 'text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20';
             default:

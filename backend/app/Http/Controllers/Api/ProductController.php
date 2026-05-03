@@ -65,9 +65,11 @@ class ProductController extends Controller
         }
 
         // Category filter - includes subcategories
+        // Match by full_slug first (e.g. "kirtasiye/kagit-urunleri") then fall back to simple slug
         $category = null;
         if ($categorySlug) {
-            $category = Category::where('slug', $categorySlug)->first();
+            $category = Category::where('full_slug', $categorySlug)->first()
+                ?? Category::where('slug', $categorySlug)->first();
             if ($category) {
                 $categoryIds = $category->getDescendantIds();
                 $query->whereIn('category_id', $categoryIds);

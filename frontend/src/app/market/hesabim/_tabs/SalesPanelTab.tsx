@@ -35,7 +35,7 @@ import { toast } from 'sonner';
 // Campaign Status Colors - pill badges
 const CAMPAIGN_STATUS_COLORS: Record<string, string> = {
     'pending': 'bg-amber-50 text-amber-700',
-    'active': 'bg-[#fbeede] text-[#934f12]',
+    'active': 'bg-[#ffedd5] text-[#c2410c]',
     'inactive': 'bg-slate-100 text-slate-600',
     'rejected': 'bg-red-50 text-red-700',
     'expired': 'bg-gray-100 text-gray-600',
@@ -44,7 +44,7 @@ const CAMPAIGN_STATUS_COLORS: Record<string, string> = {
 // Campaign status border-left colors
 const CAMPAIGN_BORDER_COLORS: Record<string, string> = {
     'pending': 'border-l-amber-400',
-    'active': 'border-l-[#b8651a]',
+    'active': 'border-l-[#ea580c]',
     'inactive': 'border-l-slate-300',
     'rejected': 'border-l-red-400',
     'expired': 'border-l-gray-300',
@@ -247,32 +247,32 @@ export function SalesPanelContent({ subNav }: { subNav: string }) {
                                 disabled={!canCreateCampaign}
                                 onClick={() => { setSelectedCampaignType('product_discount'); setIsCampaignDialogOpen(true); }}
                             >
-                                <Percent className="w-4 h-4 mr-2 text-[#b8651a]" />
-                                <span className="text-sm text-[#1a1a1a]"><strong className="text-[#b8651a]">Ürüne</strong> % indirim yap</span>
+                                <Percent className="w-4 h-4 mr-2 text-[#ea580c]" />
+                                <span className="text-sm text-[#1a1a1a]"><strong className="text-[#ea580c]">Ürüne</strong> % indirim yap</span>
                             </button>
                             <button
                                 className="h-auto py-3 px-4 border border-[#f0eceb] rounded-xl hover:bg-[#faf8f6] transition-colors flex items-center disabled:opacity-40 disabled:cursor-not-allowed bg-white"
                                 disabled={!canCreateCampaign}
                                 onClick={() => { setSelectedCampaignType('store_discount'); setIsCampaignDialogOpen(true); }}
                             >
-                                <Store className="w-4 h-4 mr-2 text-[#b8651a]" />
-                                <span className="text-sm text-[#1a1a1a]"><strong className="text-[#b8651a]">Magazaya</strong> % indirim yap</span>
+                                <Store className="w-4 h-4 mr-2 text-[#ea580c]" />
+                                <span className="text-sm text-[#1a1a1a]"><strong className="text-[#ea580c]">Magazaya</strong> % indirim yap</span>
                             </button>
                             <button
                                 className="h-auto py-3 px-4 border border-[#f0eceb] rounded-xl hover:bg-[#faf8f6] transition-colors flex items-center disabled:opacity-40 disabled:cursor-not-allowed bg-white"
                                 disabled={!canCreateCampaign}
                                 onClick={() => { setSelectedCampaignType('brand_discount'); setIsCampaignDialogOpen(true); }}
                             >
-                                <Tag className="w-4 h-4 mr-2 text-[#b8651a]" />
-                                <span className="text-sm text-[#1a1a1a]"><strong className="text-[#b8651a]">Markaya</strong> % indirim yap</span>
+                                <Tag className="w-4 h-4 mr-2 text-[#ea580c]" />
+                                <span className="text-sm text-[#1a1a1a]"><strong className="text-[#ea580c]">Markaya</strong> % indirim yap</span>
                             </button>
                             <button
                                 className="h-auto py-3 px-4 border border-[#f0eceb] rounded-xl hover:bg-[#faf8f6] transition-colors flex items-center disabled:opacity-40 disabled:cursor-not-allowed bg-white"
                                 disabled={!canCreateCampaign}
                                 onClick={() => { setSelectedCampaignType('gift_product'); setIsCampaignDialogOpen(true); }}
                             >
-                                <Box className="w-4 h-4 mr-2 text-[#b8651a]" />
-                                <span className="text-sm text-[#1a1a1a]"><strong className="text-[#b8651a]">Hediye ürün</strong> kampanyası yap</span>
+                                <Box className="w-4 h-4 mr-2 text-[#ea580c]" />
+                                <span className="text-sm text-[#1a1a1a]"><strong className="text-[#ea580c]">Hediye ürün</strong> kampanyası yap</span>
                             </button>
                         </div>
                     </div>
@@ -293,7 +293,7 @@ export function SalesPanelContent({ subNav }: { subNav: string }) {
                                         value={campaignForm.name}
                                         onChange={(e) => setCampaignForm({ ...campaignForm, name: e.target.value })}
                                         placeholder="Orn: Kis Indirimi"
-                                        className="border-[#f0eceb] rounded-xl focus:border-[#b8651a] focus:ring-[#b8651a]"
+                                        className="border-[#f0eceb] rounded-xl focus:border-[#ea580c] focus:ring-[#ea580c]"
                                     />
                                 </div>
                                 <div className="space-y-2">
@@ -303,7 +303,7 @@ export function SalesPanelContent({ subNav }: { subNav: string }) {
                                         onChange={(e) => setCampaignForm({ ...campaignForm, description: e.target.value })}
                                         placeholder="Kampanya detaylari..."
                                         rows={2}
-                                        className="border-[#f0eceb] rounded-xl focus:border-[#b8651a] focus:ring-[#b8651a]"
+                                        className="border-[#f0eceb] rounded-xl focus:border-[#ea580c] focus:ring-[#ea580c]"
                                     />
                                 </div>
                                 {selectedCampaignType !== 'gift_product' && (
@@ -316,7 +316,7 @@ export function SalesPanelContent({ subNav }: { subNav: string }) {
                                             value={campaignForm.discount_rate}
                                             onChange={(e) => setCampaignForm({ ...campaignForm, discount_rate: e.target.value })}
                                             placeholder="Orn: 20"
-                                            className="border-[#f0eceb] rounded-xl focus:border-[#b8651a] focus:ring-[#b8651a]"
+                                            className="border-[#f0eceb] rounded-xl focus:border-[#ea580c] focus:ring-[#ea580c]"
                                         />
                                     </div>
                                 )}
@@ -327,7 +327,7 @@ export function SalesPanelContent({ subNav }: { subNav: string }) {
                                             value={campaignForm.brand}
                                             onChange={(e) => setCampaignForm({ ...campaignForm, brand: e.target.value })}
                                             placeholder="Marka adi"
-                                            className="border-[#f0eceb] rounded-xl focus:border-[#b8651a] focus:ring-[#b8651a]"
+                                            className="border-[#f0eceb] rounded-xl focus:border-[#ea580c] focus:ring-[#ea580c]"
                                         />
                                     </div>
                                 )}
@@ -340,7 +340,7 @@ export function SalesPanelContent({ subNav }: { subNav: string }) {
                                             value={campaignForm.min_purchase_amount}
                                             onChange={(e) => setCampaignForm({ ...campaignForm, min_purchase_amount: e.target.value })}
                                             placeholder="0"
-                                            className="border-[#f0eceb] rounded-xl focus:border-[#b8651a] focus:ring-[#b8651a]"
+                                            className="border-[#f0eceb] rounded-xl focus:border-[#ea580c] focus:ring-[#ea580c]"
                                         />
                                     </div>
                                     <div className="space-y-2">
@@ -351,7 +351,7 @@ export function SalesPanelContent({ subNav }: { subNav: string }) {
                                             value={campaignForm.min_quantity}
                                             onChange={(e) => setCampaignForm({ ...campaignForm, min_quantity: e.target.value })}
                                             placeholder="1"
-                                            className="border-[#f0eceb] rounded-xl focus:border-[#b8651a] focus:ring-[#b8651a]"
+                                            className="border-[#f0eceb] rounded-xl focus:border-[#ea580c] focus:ring-[#ea580c]"
                                         />
                                     </div>
                                 </div>
@@ -362,7 +362,7 @@ export function SalesPanelContent({ subNav }: { subNav: string }) {
                                             type="datetime-local"
                                             value={campaignForm.starts_at}
                                             onChange={(e) => setCampaignForm({ ...campaignForm, starts_at: e.target.value })}
-                                            className="border-[#f0eceb] rounded-xl focus:border-[#b8651a] focus:ring-[#b8651a]"
+                                            className="border-[#f0eceb] rounded-xl focus:border-[#ea580c] focus:ring-[#ea580c]"
                                         />
                                     </div>
                                     <div className="space-y-2">
@@ -371,7 +371,7 @@ export function SalesPanelContent({ subNav }: { subNav: string }) {
                                             type="datetime-local"
                                             value={campaignForm.ends_at}
                                             onChange={(e) => setCampaignForm({ ...campaignForm, ends_at: e.target.value })}
-                                            className="border-[#f0eceb] rounded-xl focus:border-[#b8651a] focus:ring-[#b8651a]"
+                                            className="border-[#f0eceb] rounded-xl focus:border-[#ea580c] focus:ring-[#ea580c]"
                                         />
                                     </div>
                                 </div>
@@ -381,7 +381,7 @@ export function SalesPanelContent({ subNav }: { subNav: string }) {
                                 <Button
                                     onClick={handleCreateCampaign}
                                     disabled={isSubmitting || !campaignForm.name || !campaignForm.starts_at || !campaignForm.ends_at}
-                                    className="bg-[#b8651a] hover:bg-[#934f12] text-white rounded-xl font-semibold"
+                                    className="bg-[#1e3a8a] hover:bg-[#1e40af] text-white rounded-xl font-semibold"
                                 >
                                     {isSubmitting ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : null}
                                     Kampanya Oluştur
@@ -418,7 +418,7 @@ export function SalesPanelContent({ subNav }: { subNav: string }) {
                                             <div className="flex items-center gap-3 mt-1.5">
                                                 <span className="text-xs text-[#6b7280]">{CAMPAIGN_TYPE_LABELS[campaign.type]}</span>
                                                 {campaign.discount_rate && (
-                                                    <span className="text-xs font-semibold text-[#b8651a]">%{campaign.discount_rate} indirim</span>
+                                                    <span className="text-xs font-semibold text-[#ea580c]">%{campaign.discount_rate} indirim</span>
                                                 )}
                                             </div>
                                             <div className="mt-2 flex gap-4 text-xs text-[#6b7280]">
@@ -453,7 +453,7 @@ export function SalesPanelContent({ subNav }: { subNav: string }) {
                                 </p>
                                 <p className="text-xs text-[#6b7280] mt-1">Bu Ay Satış</p>
                                 {stats?.total_sales?.change && (
-                                    <p className={`text-xs mt-1.5 font-medium ${stats.total_sales.trend === 'up' ? 'text-[#b8651a]' : 'text-red-600'}`}>
+                                    <p className={`text-xs mt-1.5 font-medium ${stats.total_sales.trend === 'up' ? 'text-[#ea580c]' : 'text-red-600'}`}>
                                         {stats.total_sales.change}
                                     </p>
                                 )}
@@ -474,7 +474,7 @@ export function SalesPanelContent({ subNav }: { subNav: string }) {
                                 <p className="text-xs text-[#6b7280] mt-1">Bekleyen Sipariş</p>
                             </div>
                             <div className="bg-white border border-[#f0eceb] rounded-2xl p-4">
-                                <TrendingUp className="w-5 h-5 text-[#b8651a] mb-2" />
+                                <TrendingUp className="w-5 h-5 text-[#ea580c] mb-2" />
                                 <p className="text-2xl font-black text-[#1a1a1a]">
                                     {stats?.total_sales?.formatted ? '—' : '—'}
                                 </p>
@@ -499,8 +499,8 @@ export function SalesPanelContent({ subNav }: { subNav: string }) {
                         <>
                             <div className="text-center mb-8">
                                 <div className="inline-flex items-center gap-2 mb-2">
-                                    <Star className="w-8 h-8 text-[#b8651a] fill-[#b8651a]" />
-                                    <span className="text-5xl font-black text-[#b8651a]">{getScore(ratings.overall)}</span>
+                                    <Star className="w-8 h-8 text-[#ea580c] fill-[#ea580c]" />
+                                    <span className="text-5xl font-black text-[#ea580c]">{getScore(ratings.overall)}</span>
                                 </div>
                                 <p className="text-sm text-[#6b7280]">{ratings.count} degerlendirme</p>
                             </div>
@@ -511,7 +511,7 @@ export function SalesPanelContent({ subNav }: { subNav: string }) {
                                         <span className="text-sm font-bold text-[#1a1a1a]">{getScore(ratings.delivery)}</span>
                                     </div>
                                     <div className="w-full h-2 bg-[#f0eceb] rounded-full overflow-hidden">
-                                        <div className="h-full bg-[#b8651a] rounded-full transition-all" style={{ width: `${(ratings.delivery / 5) * 100}%` }} />
+                                        <div className="h-full bg-[#1e3a8a] rounded-full transition-all" style={{ width: `${(ratings.delivery / 5) * 100}%` }} />
                                     </div>
                                 </div>
                                 <div>
@@ -520,7 +520,7 @@ export function SalesPanelContent({ subNav }: { subNav: string }) {
                                         <span className="text-sm font-bold text-[#1a1a1a]">{getScore(ratings.quality)}</span>
                                     </div>
                                     <div className="w-full h-2 bg-[#f0eceb] rounded-full overflow-hidden">
-                                        <div className="h-full bg-[#b8651a] rounded-full transition-all" style={{ width: `${(ratings.quality / 5) * 100}%` }} />
+                                        <div className="h-full bg-[#1e3a8a] rounded-full transition-all" style={{ width: `${(ratings.quality / 5) * 100}%` }} />
                                     </div>
                                 </div>
                                 <div>
@@ -529,7 +529,7 @@ export function SalesPanelContent({ subNav }: { subNav: string }) {
                                         <span className="text-sm font-bold text-[#1a1a1a]">{getScore(ratings.communication)}</span>
                                     </div>
                                     <div className="w-full h-2 bg-[#f0eceb] rounded-full overflow-hidden">
-                                        <div className="h-full bg-[#b8651a] rounded-full transition-all" style={{ width: `${(ratings.communication / 5) * 100}%` }} />
+                                        <div className="h-full bg-[#1e3a8a] rounded-full transition-all" style={{ width: `${(ratings.communication / 5) * 100}%` }} />
                                     </div>
                                 </div>
                             </div>
@@ -574,7 +574,7 @@ export function SalesPanelContent({ subNav }: { subNav: string }) {
                                         {[1, 2, 3, 4, 5].map((star) => (
                                             <Star
                                                 key={star}
-                                                className={`w-3.5 h-3.5 ${star <= review.rating ? 'text-[#b8651a] fill-[#b8651a]' : 'text-[#f0eceb]'}`}
+                                                className={`w-3.5 h-3.5 ${star <= review.rating ? 'text-[#ea580c] fill-[#ea580c]' : 'text-[#f0eceb]'}`}
                                             />
                                         ))}
                                     </div>
@@ -601,14 +601,14 @@ export function SalesPanelContent({ subNav }: { subNav: string }) {
                                                     onChange={(e) => setReplyText(e.target.value)}
                                                     placeholder="Yanitinizi yazin..."
                                                     rows={2}
-                                                    className="border-[#f0eceb] rounded-xl focus:border-[#b8651a] focus:ring-[#b8651a]"
+                                                    className="border-[#f0eceb] rounded-xl focus:border-[#ea580c] focus:ring-[#ea580c]"
                                                 />
                                                 <div className="flex gap-2">
                                                     <Button
                                                         size="sm"
                                                         onClick={() => handleReplySubmit(review.id)}
                                                         disabled={!replyText.trim()}
-                                                        className="bg-[#b8651a] hover:bg-[#934f12] text-white rounded-xl font-semibold"
+                                                        className="bg-[#1e3a8a] hover:bg-[#1e40af] text-white rounded-xl font-semibold"
                                                     >
                                                         Gönder
                                                     </Button>

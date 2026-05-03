@@ -92,7 +92,7 @@ export function AddToCartButton({
 
             toast.success(
                 <div className="flex items-center gap-2">
-                    <Check className="h-4 w-4 text-[#b8651a]" />
+                    <Check className="h-4 w-4 text-[#ea580c]" />
                     <span>
                         {quantity > 1 ? `${quantity} adet ürün` : 'Ürün'} sepetinize eklendi!
                     </span>
@@ -141,7 +141,7 @@ export function AddToCartButton({
                     ref={buttonRef}
                     variant="outline"
                     className={cn(
-                        'gap-2 border-[#fbeede] bg-[#fbeede] text-[#934f12] hover:bg-[#fbeede] hover:text-[#934f12]',
+                        'gap-2 border-[#ffedd5] bg-[#ffedd5] text-[#c2410c] hover:bg-[#ffedd5] hover:text-[#c2410c]',
                         'transition-all duration-300',
                         showAnimation && 'scale-105',
                         className

@@ -65,11 +65,15 @@ class BannerManagerPage extends Page implements HasForms
 
     protected function getBannerSchema(): array
     {
+        $isHero = ($this->data['location'] ?? 'home_hero') === 'home_hero';
+
         return [
             Forms\Components\Hidden::make('id'),
             Forms\Components\FileUpload::make('image_path')
-                ->label('Görsel')
-                ->helperText('Hero banner için önerilen boyut: 1920x500px. Görsel tam ekran genişliğinde gösterilir.')
+                ->label('Sağ Panel Görseli')
+                ->helperText($isHero
+                    ? 'Hero banner tam genişlikte gösterilir. Önerilen boyut: 1600x400px (4:1 oran). Tüm metni ve butonu görsel içinde tasarlayabilirsiniz. Birden fazla banner eklerseniz otomatik döner.'
+                    : 'Görsel yükleyin.')
                 ->image()
                 ->directory('banners')
                 ->required()
@@ -77,50 +81,62 @@ class BannerManagerPage extends Page implements HasForms
                 ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp'])
                 ->maxSize(5120)
                 ->columnSpanFull(),
-            Forms\Components\Grid::make(2)
-                ->schema([
-                    Forms\Components\TextInput::make('link_url')
-                        ->label('Link (Tıklama Yönlendirmesi)')
-                        ->placeholder('/market/kampanyalar')
-                        ->helperText('Banner tıklandığında yönlendirilecek sayfa'),
-                    Forms\Components\TextInput::make('title')
-                        ->label('Başlık (Opsiyonel)')
-                        ->placeholder('Sadece yönetim paneli için - sitede görünmez'),
-                ]),
-            Forms\Components\Section::make('Gelişmiş Ayarlar')
+            Forms\Components\Section::make($isHero ? 'Sol Panel Metni (Opsiyonel)' : 'Metin Alanları (Opsiyonel)')
+                ->description($isHero
+                    ? 'Sol turuncu panelde gösterilecek metinler. Boş bırakırsanız sadece sağ görsel görünür.'
+                    : null)
                 ->schema([
                     Forms\Components\Grid::make(2)
                         ->schema([
-                            Forms\Components\TextInput::make('subtitle')
-                                ->label('Alt Başlık')
-                                ->placeholder('Opsiyonel'),
                             Forms\Components\TextInput::make('badge_text')
-                                ->label('Badge Metni')
-                                ->placeholder('Opsiyonel'),
-                        ]),
-                    Forms\Components\Grid::make(2)
-                        ->schema([
+                                ->label($isHero ? 'Üst Etiket (Eyebrow)' : 'Badge Metni')
+                                ->placeholder($isHero ? 'örn. Hafta sonuna özel' : 'Opsiyonel')
+                                ->helperText($isHero ? 'Başlığın üstünde küçük rozet' : null)
+                                ->maxLength(50),
                             Forms\Components\TextInput::make('button_text')
                                 ->label('Buton Metni')
-                                ->placeholder('Opsiyonel'),
+                                ->placeholder($isHero ? 'örn. Alışverişe başla' : 'Opsiyonel')
+                                ->maxLength(50),
+                        ]),
+                    Forms\Components\TextInput::make('title')
+                        ->label($isHero ? 'Ana Başlık' : 'Başlık')
+                        ->placeholder($isHero ? 'örn. OKULA DÖNÜŞ %25 İNDİRİM' : 'Opsiyonel')
+                        ->maxLength(255),
+                    Forms\Components\Textarea::make('subtitle')
+                        ->label($isHero ? 'Açıklama' : 'Alt Başlık')
+                        ->placeholder($isHero ? 'örn. Defter, kalem, çanta ve daha fazlası — bayilere özel toptan fiyatlarla.' : 'Opsiyonel')
+                        ->rows(2)
+                        ->maxLength(500),
+                    Forms\Components\TextInput::make('link_url')
+                        ->label('Link URL (Buton + Görsel Tıklaması)')
+                        ->placeholder('/market/kampanyalar')
+                        ->helperText('Buton ve görsele tıklandığında gidilecek sayfa')
+                        ->maxLength(255),
+                ])
+                ->collapsible()
+                ->collapsed(false),
+            Forms\Components\Section::make('Yayın Ayarları')
+                ->schema([
+                    Forms\Components\Grid::make(3)
+                        ->schema([
                             Forms\Components\TextInput::make('sort_order')
                                 ->label('Sıralama')
                                 ->numeric()
                                 ->default(0),
-                        ]),
-                    Forms\Components\Grid::make(3)
-                        ->schema([
                             Forms\Components\Toggle::make('is_active')
                                 ->label('Aktif')
                                 ->default(true),
+                        ]),
+                    Forms\Components\Grid::make(2)
+                        ->schema([
                             Forms\Components\DateTimePicker::make('starts_at')
                                 ->label('Başlangıç Tarihi'),
                             Forms\Components\DateTimePicker::make('ends_at')
                                 ->label('Bitiş Tarihi'),
                         ]),
                 ])
-                ->collapsed()
-                ->collapsible(),
+                ->collapsible()
+                ->collapsed(),
         ];
     }
 

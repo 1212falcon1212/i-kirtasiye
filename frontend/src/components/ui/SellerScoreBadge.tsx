@@ -6,8 +6,8 @@ interface SellerScoreBadgeProps {
 }
 
 function getScoreColor(score: number): string {
-  if (score >= 8) return 'bg-[#fbeede] text-white';
-  if (score >= 6) return 'bg-[#b8651a] text-white';
+  if (score >= 8) return 'bg-[#ffedd5] text-white';
+  if (score >= 6) return 'bg-[#1e3a8a] text-white';
   return 'bg-red-500 text-white';
 }
 

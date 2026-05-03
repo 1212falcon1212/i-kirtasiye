@@ -81,7 +81,7 @@ function SettlementCard({
   return (
     <div className={cn(
       'rounded-2xl bg-white overflow-hidden transition-colors border',
-      isOpen ? 'border-[#fbeede]' : 'border-[#f0eceb] hover:border-[#fbeede]'
+      isOpen ? 'border-[#ffedd5]' : 'border-[#f0eceb] hover:border-[#ffedd5]'
     )}>
       {/* Header */}
       <button
@@ -96,7 +96,7 @@ function SettlementCard({
                 Tahmini Hesaplanmistir
               </span>
             ) : (
-              <span className="inline-flex items-center text-[10px] font-semibold px-3 py-1 rounded-full bg-[#fbeede] text-[#b8651a]">
+              <span className="inline-flex items-center text-[10px] font-semibold px-3 py-1 rounded-full bg-[#ffedd5] text-[#ea580c]">
                 Ödeme Yapildi
               </span>
             )}
@@ -140,7 +140,7 @@ function SettlementCard({
                     className={cn(
                       'px-4 py-1.5 text-xs font-semibold rounded-lg transition-all',
                       viewMode === 'summary'
-                        ? 'bg-white text-[#b8651a] border border-[#f0eceb]'
+                        ? 'bg-white text-[#ea580c] border border-[#f0eceb]'
                         : 'text-[#6b7280] hover:text-[#1a1a1a]'
                     )}
                   >
@@ -151,7 +151,7 @@ function SettlementCard({
                     className={cn(
                       'px-4 py-1.5 text-xs font-semibold rounded-lg transition-all',
                       viewMode === 'detail'
-                        ? 'bg-white text-[#b8651a] border border-[#f0eceb]'
+                        ? 'bg-white text-[#ea580c] border border-[#f0eceb]'
                         : 'text-[#6b7280] hover:text-[#1a1a1a]'
                     )}
                   >
@@ -174,7 +174,7 @@ function SettlementCard({
                 )}
                 <button
                   onClick={() => { fetchedRef.current = false; setLoadError(null); loadDetails(); }}
-                  className="text-xs text-[#b8651a] hover:text-[#934f12] font-medium mt-2"
+                  className="text-xs text-[#ea580c] hover:text-[#c2410c] font-medium mt-2"
                 >
                   Tekrar Dene
                 </button>
@@ -206,7 +206,7 @@ function SummaryView({ rows }: { rows: SettlementDetailsResponse['summary'] }) {
                 key={i}
                 className={cn(
                   'border-b border-[#f0eceb] last:border-0',
-                  isTotal && 'bg-[#fbeede]'
+                  isTotal && 'bg-[#ffedd5]'
                 )}
               >
                 <td className={cn(
@@ -217,15 +217,15 @@ function SummaryView({ rows }: { rows: SettlementDetailsResponse['summary'] }) {
                 </td>
                 <td className={cn(
                   'py-3.5 px-4 text-[#6b7280]',
-                  isTotal && 'font-medium text-[#b8651a]'
+                  isTotal && 'font-medium text-[#ea580c]'
                 )}>
                   {row.description || (isTotal ? 'Tum kesintiler dusuldukten sonra net tutar' : '')}
                 </td>
                 <td className={cn(
                   'py-3.5 px-4 text-right font-bold whitespace-nowrap',
                   isTotal
-                    ? 'text-[#b8651a] text-base'
-                    : row.type === 'credit' ? 'text-[#b8651a]' : 'text-red-500'
+                    ? 'text-[#ea580c] text-base'
+                    : row.type === 'credit' ? 'text-[#ea580c]' : 'text-red-500'
                 )}>
                   {formatMoney(row.amount)}
                 </td>
@@ -328,7 +328,7 @@ function DetailView({ items }: { items: SettlementDetailsResponse['details'] }) 
       <div className="flex justify-end">
         <button
           onClick={() => exportToExcel(items)}
-          className="inline-flex items-center gap-2 px-4 py-2 text-xs font-semibold text-[#b8651a] bg-[#fbeede] hover:bg-[#fbeede] border border-[#f0eceb] rounded-xl transition-colors"
+          className="inline-flex items-center gap-2 px-4 py-2 text-xs font-semibold text-[#ea580c] bg-[#ffedd5] hover:bg-[#ffedd5] border border-[#f0eceb] rounded-xl transition-colors"
         >
           <Download className="w-3.5 h-3.5" />
           Excel Olarak İndir
@@ -379,7 +379,7 @@ function DetailView({ items }: { items: SettlementDetailsResponse['details'] }) 
                     <td className="py-3.5 px-4 text-right font-medium text-red-600 whitespace-nowrap">
                       {totalDeduction(order) > 0 ? `-${formatMoney(totalDeduction(order))}` : '-'}
                     </td>
-                    <td className="py-3.5 px-4 text-right font-bold text-[#b8651a] whitespace-nowrap">
+                    <td className="py-3.5 px-4 text-right font-bold text-[#ea580c] whitespace-nowrap">
                       {formatMoney(order.net_amount)}
                     </td>
                     <td className="py-3.5 px-2 text-center">
@@ -420,7 +420,7 @@ function DetailView({ items }: { items: SettlementDetailsResponse['details'] }) 
             {/* Total footer */}
             {items.length > 1 && (
               <tfoot>
-                <tr className="bg-[#fbeede] border-t border-[#f0eceb]">
+                <tr className="bg-[#ffedd5] border-t border-[#f0eceb]">
                   <td className="py-3.5 px-4 font-semibold text-slate-700">
                     Toplam ({items.length} sipariş)
                   </td>
@@ -439,7 +439,7 @@ function DetailView({ items }: { items: SettlementDetailsResponse['details'] }) 
                   <td className="py-3.5 px-4 text-right font-bold text-red-600 whitespace-nowrap">
                     -{formatMoney(items.reduce((s, o) => s + totalDeduction(o), 0))}
                   </td>
-                  <td className="py-3.5 px-4 text-right font-bold text-[#b8651a] whitespace-nowrap">
+                  <td className="py-3.5 px-4 text-right font-bold text-[#ea580c] whitespace-nowrap">
                     {formatMoney(items.reduce((s, o) => s + o.net_amount, 0))}
                   </td>
                   <td />
@@ -479,7 +479,7 @@ function DetailView({ items }: { items: SettlementDetailsResponse['details'] }) 
                     <td className="py-3 px-3 text-right text-red-500 whitespace-nowrap text-sm">
                       -{formatMoney(totalDeduction(order))}
                     </td>
-                    <td className="py-3 px-3 text-right font-bold text-[#b8651a] whitespace-nowrap text-sm">
+                    <td className="py-3 px-3 text-right font-bold text-[#ea580c] whitespace-nowrap text-sm">
                       {formatMoney(order.net_amount)}
                     </td>
                     <td className="py-3 px-2">
@@ -532,7 +532,7 @@ function DetailView({ items }: { items: SettlementDetailsResponse['details'] }) 
             </tbody>
             {items.length > 1 && (
               <tfoot>
-                <tr className="bg-[#fbeede] border-t border-[#f0eceb]">
+                <tr className="bg-[#ffedd5] border-t border-[#f0eceb]">
                   <td className="py-3 px-3 font-semibold text-slate-700 text-sm">Toplam</td>
                   <td className="py-3 px-3 text-right font-bold text-slate-700 whitespace-nowrap text-sm">
                     {formatMoney(items.reduce((s, o) => s + o.total_price, 0))}
@@ -540,7 +540,7 @@ function DetailView({ items }: { items: SettlementDetailsResponse['details'] }) 
                   <td className="py-3 px-3 text-right font-bold text-red-500 whitespace-nowrap text-sm">
                     -{formatMoney(items.reduce((s, o) => s + totalDeduction(o), 0))}
                   </td>
-                  <td className="py-3 px-3 text-right font-bold text-[#b8651a] whitespace-nowrap text-sm">
+                  <td className="py-3 px-3 text-right font-bold text-[#ea580c] whitespace-nowrap text-sm">
                     {formatMoney(items.reduce((s, o) => s + o.net_amount, 0))}
                   </td>
                   <td />
@@ -567,7 +567,7 @@ function DetailView({ items }: { items: SettlementDetailsResponse['details'] }) 
                 <div className="flex items-center gap-1.5">
                   <div className="text-right">
                     <p className="text-[10px] text-slate-400">Net</p>
-                    <p className="font-bold text-[#b8651a]">{formatMoney(order.net_amount)}</p>
+                    <p className="font-bold text-[#ea580c]">{formatMoney(order.net_amount)}</p>
                   </div>
                   <ChevronDown className={cn(
                     'w-4 h-4 text-slate-400 transition-transform duration-200',
@@ -630,9 +630,9 @@ function DetailView({ items }: { items: SettlementDetailsResponse['details'] }) 
 
         {/* Mobile Total */}
         {items.length > 1 && (
-          <div className="flex items-center justify-between px-4 py-3 bg-[#fbeede] rounded-xl border border-[#f0eceb]">
+          <div className="flex items-center justify-between px-4 py-3 bg-[#ffedd5] rounded-xl border border-[#f0eceb]">
             <span className="text-sm font-semibold text-slate-600">Toplam ({items.length} sipariş)</span>
-            <span className="font-bold text-[#b8651a]">{formatMoney(items.reduce((s, o) => s + o.net_amount, 0))}</span>
+            <span className="font-bold text-[#ea580c]">{formatMoney(items.reduce((s, o) => s + o.net_amount, 0))}</span>
           </div>
         )}
       </div>
@@ -684,7 +684,7 @@ export function SettlementsContent({ subNav }: { subNav: string }) {
         <p className="text-sm text-[#6b7280] mb-4">Lutfen internet baglantinizi kontrol edin</p>
         <button
           onClick={loadSettlements}
-          className="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-[#b8651a] hover:bg-[#934f12] rounded-xl transition-colors"
+          className="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-[#1e3a8a] hover:bg-[#1e40af] rounded-xl transition-colors"
         >
           Tekrar Dene
         </button>
@@ -703,8 +703,8 @@ export function SettlementsContent({ subNav }: { subNav: string }) {
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         <div className="border border-[#f0eceb] rounded-2xl p-4">
           <div className="flex items-center gap-2 mb-3">
-            <div className="w-7 h-7 rounded-lg bg-[#fbeede] flex items-center justify-center">
-              <TrendingUp className="w-3.5 h-3.5 text-[#b8651a]" />
+            <div className="w-7 h-7 rounded-lg bg-[#ffedd5] flex items-center justify-center">
+              <TrendingUp className="w-3.5 h-3.5 text-[#ea580c]" />
             </div>
             <span className="text-xs text-[#6b7280] font-medium">Toplam Satış</span>
           </div>
@@ -773,8 +773,8 @@ export function SettlementsContent({ subNav }: { subNav: string }) {
               </div>
             )}
             <div className="flex items-center justify-between pt-2 border-t border-white/10">
-              <span className="text-xs text-[#fbeede] font-semibold">Tahmini Net</span>
-              <span className="text-base font-black text-[#fbeede]">{formatMoney(upcomingSummary.net_estimated_total)}</span>
+              <span className="text-xs text-[#ffedd5] font-semibold">Tahmini Net</span>
+              <span className="text-base font-black text-[#ffedd5]">{formatMoney(upcomingSummary.net_estimated_total)}</span>
             </div>
           </div>
           {/* Desktop: grid */}
@@ -802,8 +802,8 @@ export function SettlementsContent({ subNav }: { subNav: string }) {
               </div>
             )}
             <div className="space-y-1 border-l border-white/10 pl-4">
-              <p className="text-[10px] text-[#fbeede] uppercase tracking-wider font-semibold">Tahmini Net</p>
-              <p className="text-base font-black text-[#fbeede]">{formatMoney(upcomingSummary.net_estimated_total)}</p>
+              <p className="text-[10px] text-[#ffedd5] uppercase tracking-wider font-semibold">Tahmini Net</p>
+              <p className="text-base font-black text-[#ffedd5]">{formatMoney(upcomingSummary.net_estimated_total)}</p>
             </div>
           </div>
         </div>

@@ -118,7 +118,7 @@ function DealCard({ product, index }: { product: DealProduct; index: number }) {
             transition={{ delay: index * 0.05, duration: 0.3 }}
         >
             <Link href={`/market/product/${product.id}`}>
-                <Card className="group relative border-slate-200 dark:border-slate-800 hover:shadow-md dark:hover:shadow-[#b8651a]/5 transition-all duration-300 cursor-pointer overflow-hidden h-full">
+                <Card className="group relative border-slate-200 dark:border-slate-800 hover:shadow-md dark:hover:shadow-[#ea580c]/5 transition-all duration-300 cursor-pointer overflow-hidden h-full">
                     {/* Discount Badge */}
                     <div className="absolute top-3 left-3 z-10">
                         <Badge className="bg-gradient-to-r from-red-500 to-cyan-600 text-white border-0 shadow-lg shadow-red-500/30 font-bold text-sm px-2.5 py-1">
@@ -130,7 +130,7 @@ function DealCard({ product, index }: { product: DealProduct; index: number }) {
                     {/* Hot Deal Indicator */}
                     {discountPercentage >= 25 && (
                         <div className="absolute top-3 right-3 z-10">
-                            <div className="bg-gradient-to-r from-[#b8651a] to-amber-500 text-white rounded-full p-1.5 shadow-lg shadow-[#b8651a]/30 ">
+                            <div className="bg-gradient-to-r from-[#ea580c] to-amber-500 text-white rounded-full p-1.5 shadow-lg shadow-[#ea580c]/30 ">
                                 <Flame className="w-4 h-4" />
                             </div>
                         </div>
@@ -150,7 +150,7 @@ function DealCard({ product, index }: { product: DealProduct; index: number }) {
                             )}
 
                             {/* Overlay on hover */}
-                            <div className="absolute inset-0 bg-gradient-to-t from-[#fbeede]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                            <div className="absolute inset-0 bg-gradient-to-t from-[#ffedd5]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                         </div>
 
                         {/* Content */}
@@ -167,27 +167,27 @@ function DealCard({ product, index }: { product: DealProduct; index: number }) {
 
                             {/* Brand */}
                             {product.brand && (
-                                <p className="text-xs font-semibold text-[#b8651a] dark:text-[#fbeede] uppercase tracking-wider">
+                                <p className="text-xs font-semibold text-[#ea580c] dark:text-[#ffedd5] uppercase tracking-wider">
                                     {product.brand}
                                 </p>
                             )}
 
                             {/* Name */}
-                            <h3 className="font-bold text-slate-900 dark:text-white group-hover:text-[#b8651a] dark:group-hover:text-[#b8651a] line-clamp-2 min-h-[2.5rem] transition-colors">
+                            <h3 className="font-bold text-slate-900 dark:text-white group-hover:text-[#ea580c] dark:group-hover:text-[#ea580c] line-clamp-2 min-h-[2.5rem] transition-colors">
                                 {product.name}
                             </h3>
 
                             {/* Price Section */}
                             <div className="pt-2 border-t border-slate-100 dark:border-slate-800">
                                 <div className="flex items-baseline gap-2">
-                                    <span className="text-xl font-bold text-[#b8651a] dark:text-[#fbeede]">
+                                    <span className="text-xl font-bold text-[#ea580c] dark:text-[#ffedd5]">
                                         {formatPrice(product.lowest_price || 0)}
                                     </span>
                                     <span className="text-sm text-slate-400 line-through">
                                         {formatPrice(originalPrice)}
                                     </span>
                                 </div>
-                                <p className="text-xs text-[#b8651a] dark:text-[#fbeede] font-medium mt-1">
+                                <p className="text-xs text-[#ea580c] dark:text-[#ffedd5] font-medium mt-1">
                                     {formatPrice(originalPrice - (product.lowest_price || 0))} tasarruf
                                 </p>
                             </div>
@@ -309,7 +309,7 @@ export default function KampanyalarPage() {
     return (
         <div className="min-h-screen">
             {/* Hero Banner */}
-            <div className="relative bg-gradient-to-br from-[#fbeede] via-[#b8651a] to-[#934f12] dark:from-[#934f12] dark:via-[#831843] dark:to-[#500724] overflow-hidden">
+            <div className="relative bg-gradient-to-br from-[#ffedd5] via-[#ea580c] to-[#c2410c] dark:from-[#c2410c] dark:via-[#831843] dark:to-[#500724] overflow-hidden">
                 {/* Background Pattern */}
                 <div className="absolute inset-0 opacity-10">
                     <div className="absolute inset-0" style={{
@@ -367,7 +367,7 @@ export default function KampanyalarPage() {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                 {/* Breadcrumb */}
                 <div className="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 mb-6">
-                    <Link href="/market" className="hover:text-[#b8651a] transition-colors">Pazaryeri</Link>
+                    <Link href="/market" className="hover:text-[#ea580c] transition-colors">Pazaryeri</Link>
                     <span>/</span>
                     <span className="text-slate-900 dark:text-white font-medium">Kampanyalar</span>
                 </div>
@@ -452,8 +452,8 @@ export default function KampanyalarPage() {
                         >
                             <Card className="border-slate-200 dark:border-slate-800">
                                 <CardContent className="flex flex-col items-center justify-center py-16">
-                                    <div className="w-20 h-20 rounded-full bg-[#fbeede] dark:bg-[#934f12]/30 flex items-center justify-center mb-4">
-                                        <Tag className="h-10 w-10 text-[#b8651a] dark:text-[#fbeede]" />
+                                    <div className="w-20 h-20 rounded-full bg-[#ffedd5] dark:bg-[#1e40af]/30 flex items-center justify-center mb-4">
+                                        <Tag className="h-10 w-10 text-[#ea580c] dark:text-[#ffedd5]" />
                                     </div>
                                     <h2 className="text-xl font-semibold mb-2 text-slate-900 dark:text-white">
                                         Aktif kampanya bulunamadı
@@ -470,7 +470,7 @@ export default function KampanyalarPage() {
                                             </Button>
                                         )}
                                         <Link href="/market">
-                                            <Button className="bg-[#b8651a] hover:bg-[#934f12] text-white">
+                                            <Button className="bg-[#1e3a8a] hover:bg-[#1e40af] text-white">
                                                 <ArrowLeft className="w-4 h-4 mr-2" />
                                                 Pazaryerine Dön
                                             </Button>

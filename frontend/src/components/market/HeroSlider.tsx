@@ -170,7 +170,7 @@ export function HeroSlider({ banners }: HeroSliderProps) {
                                 className={cn(
                                     "rounded-full transition-all duration-300",
                                     current === index
-                                        ? "w-8 h-2.5 bg-[#b8651a] shadow-md"
+                                        ? "w-8 h-2.5 bg-[#1e3a8a] shadow-md"
                                         : "w-2.5 h-2.5 bg-[#1a1a1a]/30 hover:bg-[#1a1a1a]/50"
                                 )}
                             />

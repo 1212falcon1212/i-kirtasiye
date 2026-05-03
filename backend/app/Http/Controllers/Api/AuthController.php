@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\LoginRequest;
 use App\Http\Requests\Api\RegisterRequest;
 use App\Models\User;
-use App\Services\VergiNo\WhitelistVergiNoService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -14,47 +13,17 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
-    public function __construct(
-        private WhitelistVergiNoService $whitelistService
-    ) {}
-
     /**
      * Register a new user.
-     * - Retailer (kırtasiyeci): vergi_no required and verified against whitelist
-     * - Seller (tedarikçi): vergi_no optional, no whitelist verification needed
+     * - Retailer (kırtasiyeci): vergi_no required (10 haneli, unique)
+     * - Seller (tedarikçi): vergi_no optional
      */
     public function register(RegisterRequest $request): JsonResponse
     {
         $validated = $request->validated();
         $role = $validated['role'] ?? 'retailer';
-        $whitelistInfo = null;
 
-        if ($role === 'retailer') {
-            $whitelistInfo = $this->whitelistService->verify($validated['vergi_no']);
-
-            if (! $whitelistInfo['valid']) {
-                return response()->json([
-                    'message' => 'Vergi numarası doğrulama başarısız.',
-                    'error' => $whitelistInfo['error'],
-                ], 422);
-            }
-
-            if (! $whitelistInfo['whitelisted']) {
-                return response()->json([
-                    'message' => 'Vergi numarası onaylı listede bulunamadı veya kullanılamaz.',
-                    'error' => $whitelistInfo['error'],
-                ], 422);
-            }
-
-            if (User::where('vergi_no', $validated['vergi_no'])->exists()) {
-                return response()->json([
-                    'message' => 'Bu vergi numarası zaten kayıtlı.',
-                    'error_code' => 'VERGI_NO_ALREADY_REGISTERED',
-                ], 422);
-            }
-        }
-
-        $user = DB::transaction(function () use ($validated, $role, $whitelistInfo) {
+        $user = DB::transaction(function () use ($validated, $role) {
             $userData = [
                 'email' => $validated['email'],
                 'password' => Hash::make($validated['password']),
@@ -64,28 +33,13 @@ class AuthController extends Controller
                 'address' => $validated['address'] ?? null,
                 'city' => $validated['city'] ?? null,
                 'district' => $validated['district'] ?? null,
+                'vergi_no' => $validated['vergi_no'] ?? null,
                 'role' => $role,
                 'is_verified' => true,
                 'verified_at' => now(),
             ];
 
-            if ($role === 'retailer' && $whitelistInfo) {
-                $userData['vergi_no'] = $validated['vergi_no'];
-                $userData['business_name'] = $whitelistInfo['company_name'] ?? $validated['business_name'];
-                $userData['address'] = $whitelistInfo['address'] ?? $validated['address'] ?? null;
-                $userData['city'] = $whitelistInfo['city'] ?? $validated['city'] ?? null;
-                $userData['district'] = $whitelistInfo['district'] ?? $validated['district'] ?? null;
-            } else {
-                $userData['vergi_no'] = $validated['vergi_no'] ?? null;
-            }
-
-            $user = User::create($userData);
-
-            if ($role === 'retailer') {
-                $this->whitelistService->markAsUsed($validated['vergi_no'], $user->id);
-            }
-
-            return $user;
+            return User::create($userData);
         });
 
         $token = $user->createToken('auth-token')->plainTextToken;
@@ -161,7 +115,7 @@ class AuthController extends Controller
     }
 
     /**
-     * Verify vergi numarası (public endpoint for the registration form).
+     * Vergi numarası format ve duplicate kontrolü (public endpoint).
      */
     public function verifyVergiNo(Request $request): JsonResponse
     {
@@ -169,20 +123,10 @@ class AuthController extends Controller
             'vergi_no' => 'required|string|digits:10',
         ]);
 
-        $result = $this->whitelistService->verify($request->vergi_no);
-
-        if (! $result['valid'] || ! $result['whitelisted']) {
+        if (User::where('vergi_no', $request->vergi_no)->exists()) {
             return response()->json([
                 'valid' => false,
-                'message' => $result['error'] ?? 'Vergi numarası doğrulanamadı.',
-            ], 422);
-        }
-
-        $alreadyRegistered = User::where('vergi_no', $request->vergi_no)->exists();
-
-        if ($alreadyRegistered) {
-            return response()->json([
-                'valid' => false,
+                'already_registered' => true,
                 'message' => 'Bu vergi numarası zaten kayıtlı.',
                 'error_code' => 'ALREADY_REGISTERED',
             ], 422);
@@ -192,10 +136,6 @@ class AuthController extends Controller
             'valid' => true,
             'already_registered' => false,
             'vergi_no' => $request->vergi_no,
-            'company_name' => $result['company_name'],
-            'city' => $result['city'],
-            'district' => $result['district'],
-            'address' => $result['address'],
         ]);
     }
 

@@ -30,7 +30,7 @@ interface FeaturesSectionProps {
 }
 
 const STEP_COLORS = [
-  { bg: "bg-[#b8651a]", ring: "ring-accent/200", text: "text-white" },
+  { bg: "bg-[#1e3a8a]", ring: "ring-accent/200", text: "text-white" },
   { bg: "bg-amber-500", ring: "ring-amber-200", text: "text-white" },
   { bg: "bg-accent-soft0", ring: "ring-accent/200", text: "text-white" },
 ];
@@ -69,14 +69,14 @@ export default function FeaturesSection({ content }: FeaturesSectionProps) {
             transition={{ duration: 0.5 }}
             className="text-center mb-16 lg:mb-20"
           >
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-accent-soft text-[#b8651a] text-sm font-semibold mb-5">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-accent-soft text-[#ea580c] text-sm font-semibold mb-5">
               <BadgeCheck className="w-3.5 h-3.5" />
               Nasıl Çalışır?
             </div>
             <h2 className="text-3xl sm:text-4xl lg:text-[2.75rem] font-extrabold text-slate-900 leading-tight">
               {content.section_title}
             </h2>
-            <div className="mx-auto mt-4 w-16 h-1 rounded-full bg-gradient-to-r from-[#b8651a] to-[#d99248]" />
+            <div className="mx-auto mt-4 w-16 h-1 rounded-full bg-gradient-to-r from-[#ea580c] to-[#d99248]" />
             <p className="mt-5 text-lg text-slate-500 max-w-2xl mx-auto leading-relaxed">
               {content.section_subtitle}
             </p>
@@ -135,7 +135,7 @@ export default function FeaturesSection({ content }: FeaturesSectionProps) {
               >
                 <Link
                   href="/register"
-                  className="inline-flex items-center gap-2 px-7 py-3.5 bg-[#b8651a] hover:bg-[#934f12] text-white rounded-xl font-bold text-sm shadow-lg shadow-cyan-200/50 transition-all duration-200 hover:shadow-xl"
+                  className="inline-flex items-center gap-2 px-7 py-3.5 bg-[#1e3a8a] hover:bg-[#1e40af] text-white rounded-xl font-bold text-sm shadow-lg shadow-cyan-200/50 transition-all duration-200 hover:shadow-xl"
                 >
                   Hemen Başla
                   <ArrowRight className="w-4 h-4" />
@@ -155,7 +155,7 @@ export default function FeaturesSection({ content }: FeaturesSectionProps) {
                 {/* Card header */}
                 <div className="p-6 bg-gradient-to-br from-slate-900 to-slate-800">
                   <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#b8651a] to-[#d99248] flex items-center justify-center shadow-lg">
+                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#ea580c] to-[#d99248] flex items-center justify-center shadow-lg">
                       <BadgeCheck className="w-6 h-6 text-white" />
                     </div>
                     <div>

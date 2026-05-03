@@ -90,7 +90,7 @@ export function CategoryShowcase({
                 </div>
                 <Link
                     href="/market/categories"
-                    className="group hidden sm:flex items-center gap-2 text-sm font-medium text-slate-500 hover:text-[#b8651a] transition-colors duration-150"
+                    className="group hidden sm:flex items-center gap-2 text-sm font-medium text-slate-500 hover:text-[#ea580c] transition-colors duration-150"
                 >
                     Tüm Kategoriler
                     <ArrowRight className="w-4 h-4" />

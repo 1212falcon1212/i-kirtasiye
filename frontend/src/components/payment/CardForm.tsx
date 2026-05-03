@@ -408,19 +408,19 @@ export function CardForm({ orderId, totalAmount, onSuccess, onError }: CardFormP
                 onClick={() => selectSavedCard(card.ctoken)}
                 className={`flex w-full items-center gap-3 rounded-lg border p-3 text-left transition-colors ${
                   selectedSavedCard === card.ctoken
-                    ? 'border-[#fbeede] bg-[#fbeede] dark:border-[#934f12] dark:bg-[#934f12]/30'
+                    ? 'border-[#ffedd5] bg-[#ffedd5] dark:border-[#c2410c] dark:bg-[#1e40af]/30'
                     : 'border-gray-200 bg-white hover:border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:hover:border-gray-600'
                 }`}
               >
                 <div
                   className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 ${
                     selectedSavedCard === card.ctoken
-                      ? 'border-[#fbeede]'
+                      ? 'border-[#ffedd5]'
                       : 'border-gray-300 dark:border-gray-600'
                   }`}
                 >
                   {selectedSavedCard === card.ctoken && (
-                    <div className="h-2.5 w-2.5 rounded-full bg-[#fbeede]" />
+                    <div className="h-2.5 w-2.5 rounded-full bg-[#ffedd5]" />
                   )}
                 </div>
                 <div className="min-w-0 flex-1">
@@ -464,7 +464,7 @@ export function CardForm({ orderId, totalAmount, onSuccess, onError }: CardFormP
               variant="ghost"
               size="sm"
               onClick={useNewCard}
-              className="text-[#b8651a] hover:text-[#b8651a] dark:text-[#fbeede]"
+              className="text-[#ea580c] hover:text-[#ea580c] dark:text-[#ffedd5]"
             >
               Yeni Kart ile Ode
             </Button>
@@ -601,7 +601,7 @@ export function CardForm({ orderId, totalAmount, onSuccess, onError }: CardFormP
             <label
               className={`flex cursor-pointer items-center justify-between rounded-lg border p-3 transition-colors ${
                 installmentCount === 0
-                  ? 'border-[#fbeede] bg-[#fbeede] dark:border-[#934f12] dark:bg-[#934f12]/30'
+                  ? 'border-[#ffedd5] bg-[#ffedd5] dark:border-[#c2410c] dark:bg-[#1e40af]/30'
                   : 'border-gray-200 hover:border-gray-300 dark:border-gray-700 dark:hover:border-gray-600'
               }`}
             >
@@ -612,7 +612,7 @@ export function CardForm({ orderId, totalAmount, onSuccess, onError }: CardFormP
                   value={0}
                   checked={installmentCount === 0}
                   onChange={() => setInstallmentCount(0)}
-                  className="h-4 w-4 accent-[#b8651a]"
+                  className="h-4 w-4 accent-[#ea580c]"
                 />
                 <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
                   Tek Cekim
@@ -631,7 +631,7 @@ export function CardForm({ orderId, totalAmount, onSuccess, onError }: CardFormP
                   key={rate.installment_count}
                   className={`flex cursor-pointer items-center justify-between rounded-lg border p-3 transition-colors ${
                     installmentCount === rate.installment_count
-                      ? 'border-[#fbeede] bg-[#fbeede] dark:border-[#934f12] dark:bg-[#934f12]/30'
+                      ? 'border-[#ffedd5] bg-[#ffedd5] dark:border-[#c2410c] dark:bg-[#1e40af]/30'
                       : 'border-gray-200 hover:border-gray-300 dark:border-gray-700 dark:hover:border-gray-600'
                   }`}
                 >
@@ -642,7 +642,7 @@ export function CardForm({ orderId, totalAmount, onSuccess, onError }: CardFormP
                       value={rate.installment_count}
                       checked={installmentCount === rate.installment_count}
                       onChange={() => setInstallmentCount(rate.installment_count)}
-                      className="h-4 w-4 accent-[#b8651a]"
+                      className="h-4 w-4 accent-[#ea580c]"
                     />
                     <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
                       {rate.installment_count} Taksit
@@ -665,7 +665,7 @@ export function CardForm({ orderId, totalAmount, onSuccess, onError }: CardFormP
         <span className="text-sm font-medium text-gray-600 dark:text-gray-400">
           Odenecek Tutar
         </span>
-        <span className="text-lg font-bold text-[#b8651a] dark:text-[#fbeede]">
+        <span className="text-lg font-bold text-[#ea580c] dark:text-[#ffedd5]">
           {installmentCount > 0 && ratePercent > 0
             ? calculateTotal(ratePercent)
             : formatPrice(totalAmount)}
@@ -676,7 +676,7 @@ export function CardForm({ orderId, totalAmount, onSuccess, onError }: CardFormP
       <Button
         type="submit"
         disabled={isSubmitting}
-        className="h-12 w-full bg-[#fbeede] text-base font-semibold text-white hover:bg-[#934f12] disabled:opacity-50 dark:bg-[#934f12] dark:hover:bg-[#934f12]"
+        className="h-12 w-full bg-[#ffedd5] text-base font-semibold text-white hover:bg-[#1e40af] disabled:opacity-50 dark:bg-[#1e40af] dark:hover:bg-[#1e40af]"
       >
         {isSubmitting ? (
           <span className="flex items-center gap-2">
@@ -869,7 +869,7 @@ export const EmbeddedCardForm = forwardRef<CardFormRef, EmbeddedCardFormProps>(
               onClick={() => { if (savedCards[0]) selectSavedCard(savedCards[0].ctoken); }}
               className={`flex-1 py-2.5 text-sm font-medium transition-colors ${
                 cardMode === 'saved'
-                  ? 'bg-[#fbeede] text-[#b8651a] dark:bg-[#934f12]/30 dark:text-[#fbeede]'
+                  ? 'bg-[#ffedd5] text-[#ea580c] dark:bg-[#1e40af]/30 dark:text-[#ffedd5]'
                   : 'bg-white text-slate-600 hover:bg-slate-50 dark:bg-slate-800 dark:text-slate-400'
               }`}
             >
@@ -880,7 +880,7 @@ export const EmbeddedCardForm = forwardRef<CardFormRef, EmbeddedCardFormProps>(
               onClick={switchToNewCard}
               className={`flex-1 py-2.5 text-sm font-medium transition-colors border-l border-slate-200 dark:border-slate-700 ${
                 cardMode === 'new'
-                  ? 'bg-[#fbeede] text-[#b8651a] dark:bg-[#934f12]/30 dark:text-[#fbeede]'
+                  ? 'bg-[#ffedd5] text-[#ea580c] dark:bg-[#1e40af]/30 dark:text-[#ffedd5]'
                   : 'bg-white text-slate-600 hover:bg-slate-50 dark:bg-slate-800 dark:text-slate-400'
               }`}
             >
@@ -910,14 +910,14 @@ export const EmbeddedCardForm = forwardRef<CardFormRef, EmbeddedCardFormProps>(
                 onClick={() => selectSavedCard(card.ctoken)}
                 className={`flex w-full items-center gap-3 rounded-xl border-2 p-3 text-left transition-all ${
                   selectedSavedCard === card.ctoken
-                    ? 'border-[#b8651a] bg-[#b8651a]/5 dark:border-[#934f12] dark:bg-[#934f12]/30'
+                    ? 'border-[#ea580c] bg-[#1e3a8a]/5 dark:border-[#c2410c] dark:bg-[#1e40af]/30'
                     : 'border-slate-200 bg-white hover:border-slate-300 dark:border-slate-700 dark:bg-slate-800'
                 }`}
               >
                 <div className={`flex h-4 w-4 shrink-0 items-center justify-center rounded-full border-2 ${
-                  selectedSavedCard === card.ctoken ? 'border-[#b8651a]' : 'border-slate-300 dark:border-slate-600'
+                  selectedSavedCard === card.ctoken ? 'border-[#ea580c]' : 'border-slate-300 dark:border-slate-600'
                 }`}>
-                  {selectedSavedCard === card.ctoken && <div className="h-2 w-2 rounded-full bg-[#b8651a]" />}
+                  {selectedSavedCard === card.ctoken && <div className="h-2 w-2 rounded-full bg-[#1e3a8a]" />}
                 </div>
                 <div className="min-w-0 flex-1">
                   <p className="text-sm font-medium text-slate-900 dark:text-slate-100">
@@ -1034,20 +1034,20 @@ export const EmbeddedCardForm = forwardRef<CardFormRef, EmbeddedCardFormProps>(
             <Label className="text-sm font-semibold text-slate-700 dark:text-slate-300">Taksit Secenekleri</Label>
             <div className="space-y-1.5">
               <label className={`flex cursor-pointer items-center justify-between rounded-xl border-2 p-3 transition-all ${
-                installmentCount === 0 ? 'border-[#b8651a] bg-[#b8651a]/5' : 'border-slate-200 hover:border-slate-300 dark:border-slate-700'
+                installmentCount === 0 ? 'border-[#ea580c] bg-[#1e3a8a]/5' : 'border-slate-200 hover:border-slate-300 dark:border-slate-700'
               }`}>
                 <div className="flex items-center gap-3">
-                  <input type="radio" name="emb-installment" value={0} checked={installmentCount === 0} onChange={() => setInstallmentCount(0)} className="h-4 w-4 accent-[#b8651a]" />
+                  <input type="radio" name="emb-installment" value={0} checked={installmentCount === 0} onChange={() => setInstallmentCount(0)} className="h-4 w-4 accent-[#ea580c]" />
                   <span className="text-sm font-medium text-slate-900 dark:text-slate-100">Tek Cekim</span>
                 </div>
                 <span className="text-sm font-semibold text-slate-900 dark:text-slate-100">{formatPrice(totalAmount)}</span>
               </label>
               {applicableRates.filter(r => r.installment_count > 1).map((rate) => (
                 <label key={rate.installment_count} className={`flex cursor-pointer items-center justify-between rounded-xl border-2 p-3 transition-all ${
-                  installmentCount === rate.installment_count ? 'border-[#b8651a] bg-[#b8651a]/5' : 'border-slate-200 hover:border-slate-300 dark:border-slate-700'
+                  installmentCount === rate.installment_count ? 'border-[#ea580c] bg-[#1e3a8a]/5' : 'border-slate-200 hover:border-slate-300 dark:border-slate-700'
                 }`}>
                   <div className="flex items-center gap-3">
-                    <input type="radio" name="emb-installment" value={rate.installment_count} checked={installmentCount === rate.installment_count} onChange={() => setInstallmentCount(rate.installment_count)} className="h-4 w-4 accent-[#b8651a]" />
+                    <input type="radio" name="emb-installment" value={rate.installment_count} checked={installmentCount === rate.installment_count} onChange={() => setInstallmentCount(rate.installment_count)} className="h-4 w-4 accent-[#ea580c]" />
                     <span className="text-sm font-medium text-slate-900 dark:text-slate-100">{rate.installment_count} Taksit</span>
                     <span className="text-xs text-slate-500">({formatPrice((totalAmount * (1 + rate.rate / 100)) / rate.installment_count)}/ay)</span>
                   </div>
@@ -1062,7 +1062,7 @@ export const EmbeddedCardForm = forwardRef<CardFormRef, EmbeddedCardFormProps>(
         {installmentCount > 0 && ratePercent > 0 && (
           <div className="flex items-center justify-between rounded-lg bg-slate-50 px-4 py-3 dark:bg-slate-800/50">
             <span className="text-sm font-medium text-slate-600 dark:text-slate-400">Odenecek Tutar</span>
-            <span className="text-lg font-bold text-[#b8651a] dark:text-[#fbeede]">
+            <span className="text-lg font-bold text-[#ea580c] dark:text-[#ffedd5]">
               {formatPrice(totalAmount * (1 + ratePercent / 100))}
             </span>
           </div>

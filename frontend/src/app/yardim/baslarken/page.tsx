@@ -29,12 +29,12 @@ export default function BaslarkenPage() {
                 <strong className="text-gray-900"> Tİ-TÜS (Türkiye İlaç ve Tıbbi Cihaz Ulusal Bilgi Bankası)</strong> tarafından verilmektedir.
             </p>
 
-            <div className="bg-[#fbeede] border border-[#fbeede] rounded-xl p-6 my-6">
-                <h4 className="font-semibold text-[#b8651a] mb-2 flex items-center gap-2">
+            <div className="bg-[#ffedd5] border border-[#ffedd5] rounded-xl p-6 my-6">
+                <h4 className="font-semibold text-[#ea580c] mb-2 flex items-center gap-2">
                     <BadgeCheck className="w-5 h-5" />
                     Vergi Numaranızı Nereden Bulabilirsiniz?
                 </h4>
-                <ul className="text-[#b8651a] space-y-2 text-sm">
+                <ul className="text-[#ea580c] space-y-2 text-sm">
                     <li className="flex items-start gap-2">
                         <CheckCircle className="w-4 h-4 mt-0.5 flex-shrink-0" />
                         Vergi dairesi kaydınızda
@@ -83,7 +83,7 @@ export default function BaslarkenPage() {
                     },
                 ].map((item) => (
                     <div key={item.step} className="flex gap-4">
-                        <div className="w-10 h-10 bg-gradient-to-br from-[#fbeede] to-teal-600 rounded-xl flex items-center justify-center text-white font-bold flex-shrink-0">
+                        <div className="w-10 h-10 bg-gradient-to-br from-[#ffedd5] to-teal-600 rounded-xl flex items-center justify-center text-white font-bold flex-shrink-0">
                             {item.step}
                         </div>
                         <div>
@@ -109,14 +109,14 @@ export default function BaslarkenPage() {
             <div className="flex items-center gap-4 mt-10">
                 <Link
                     href="/register"
-                    className="bg-gradient-to-r from-[#fbeede] to-teal-600 text-white px-6 py-3 rounded-xl font-semibold hover:from-[#fbeede] hover:to-teal-700 transition-all shadow-lg shadow-[#b8651a]/20 flex items-center gap-2"
+                    className="bg-gradient-to-r from-[#ffedd5] to-teal-600 text-white px-6 py-3 rounded-xl font-semibold hover:from-[#ffedd5] hover:to-teal-700 transition-all shadow-lg shadow-[#ea580c]/20 flex items-center gap-2"
                 >
                     Şimdi Kayıt Ol
                     <ArrowRight className="w-4 h-4" />
                 </Link>
                 <Link
                     href="/login"
-                    className="text-gray-600 hover:text-[#b8651a] font-medium"
+                    className="text-gray-600 hover:text-[#ea580c] font-medium"
                 >
                     Zaten hesabım var
                 </Link>

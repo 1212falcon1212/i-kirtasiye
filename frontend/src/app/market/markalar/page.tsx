@@ -41,8 +41,8 @@ function BrandLogo({ brand, size = 'md' }: { brand: Brand; size?: 'sm' | 'md' })
     }
 
     return (
-        <div className={`${wrapperClass} bg-gradient-to-br from-[#fbeede] to-teal-50 flex items-center justify-center`}>
-            <span className={`font-bold text-[#b8651a] ${isSm ? 'text-lg' : 'text-2xl'}`}>
+        <div className={`${wrapperClass} bg-gradient-to-br from-[#ffedd5] to-teal-50 flex items-center justify-center`}>
+            <span className={`font-bold text-[#ea580c] ${isSm ? 'text-lg' : 'text-2xl'}`}>
                 {brand.name.charAt(0)}
             </span>
         </div>
@@ -131,7 +131,7 @@ export default function BrandsPage() {
     return (
         <div className="min-h-screen">
             {/* Hero Section */}
-            <section className="relative py-12 overflow-hidden bg-gradient-to-br from-[#fbeede] via-teal-600 to-cyan-600">
+            <section className="relative py-12 overflow-hidden bg-gradient-to-br from-[#ffedd5] via-teal-600 to-cyan-600">
                 <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg%20width%3D%2260%22%20height%3D%2260%22%20viewBox%3D%220%200%2060%2060%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cg%20fill%3D%22none%22%20fill-rule%3D%22evenodd%22%3E%3Cg%20fill%3D%22%23ffffff%22%20fill-opacity%3D%220.05%22%3E%3Cpath%20d%3D%22M36%2034v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6%2034v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6%204V0H4v4H0v2h4v4h2V6h4V4H6z%22%2F%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E')] opacity-30" />
 
                 <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -142,7 +142,7 @@ export default function BrandsPage() {
                         <h1 className="text-3xl md:text-4xl font-bold text-white mb-4">
                             Tüm Markalar
                         </h1>
-                        <p className="text-[#b8651a] text-lg max-w-2xl mx-auto mb-8">
+                        <p className="text-[#ea580c] text-lg max-w-2xl mx-auto mb-8">
                             {brands.length}+ marka arasindan ihtiyaciniz olan urunleri bulun
                         </p>
 
@@ -171,7 +171,7 @@ export default function BrandsPage() {
                                 className={cn(
                                     "px-3 py-1.5 text-sm font-medium rounded-lg transition-colors flex-shrink-0",
                                     selectedLetter === null
-                                        ? "bg-[#fbeede] text-white"
+                                        ? "bg-[#ffedd5] text-white"
                                         : "text-slate-600 hover:bg-slate-100"
                                 )}
                             >
@@ -184,7 +184,7 @@ export default function BrandsPage() {
                                     className={cn(
                                         "w-8 h-8 text-sm font-medium rounded-lg transition-colors flex-shrink-0",
                                         selectedLetter === letter
-                                            ? "bg-[#fbeede] text-white"
+                                            ? "bg-[#ffedd5] text-white"
                                             : "text-slate-600 hover:bg-slate-100"
                                     )}
                                 >
@@ -246,7 +246,7 @@ export default function BrandsPage() {
                         {sortedLetters.map(letter => (
                             <div key={letter}>
                                 <div className="flex items-center gap-4 mb-4">
-                                    <span className="w-10 h-10 bg-[#fbeede] text-[#b8651a] rounded-xl flex items-center justify-center font-bold text-lg">
+                                    <span className="w-10 h-10 bg-[#ffedd5] text-[#ea580c] rounded-xl flex items-center justify-center font-bold text-lg">
                                         {letter}
                                     </span>
                                     <div className="h-px flex-1 bg-slate-200" />
@@ -257,11 +257,11 @@ export default function BrandsPage() {
                                         <Link
                                             key={brand.id}
                                             href={`/market/marka/${brand.slug}`}
-                                            className="group bg-white rounded-lg border border-slate-200 p-5 hover:border-[#fbeede] hover:shadow-lg hover:shadow-[#b8651a]/10 transition-all duration-300"
+                                            className="group bg-white rounded-lg border border-slate-200 p-5 hover:border-[#ffedd5] hover:shadow-lg hover:shadow-[#ea580c]/10 transition-all duration-300"
                                         >
                                             <div className="flex flex-col items-center text-center">
                                                 <BrandLogo brand={brand} />
-                                                <h3 className="font-semibold text-slate-900 group-hover:text-[#b8651a] transition-colors mb-1 line-clamp-1">
+                                                <h3 className="font-semibold text-slate-900 group-hover:text-[#ea580c] transition-colors mb-1 line-clamp-1">
                                                     {brand.name}
                                                 </h3>
                                                 {brand.products_count !== undefined && (
@@ -282,7 +282,7 @@ export default function BrandsPage() {
                         {sortedLetters.map(letter => (
                             <div key={letter}>
                                 <div className="flex items-center gap-4 mb-3">
-                                    <span className="w-10 h-10 bg-[#fbeede] text-[#b8651a] rounded-xl flex items-center justify-center font-bold text-lg">
+                                    <span className="w-10 h-10 bg-[#ffedd5] text-[#ea580c] rounded-xl flex items-center justify-center font-bold text-lg">
                                         {letter}
                                     </span>
                                     <div className="h-px flex-1 bg-slate-200" />
@@ -292,11 +292,11 @@ export default function BrandsPage() {
                                         <Link
                                             key={brand.id}
                                             href={`/market/marka/${brand.slug}`}
-                                            className="group flex items-center gap-4 bg-white rounded-xl border border-slate-200 p-4 hover:border-[#fbeede] hover:shadow-md transition-all"
+                                            className="group flex items-center gap-4 bg-white rounded-xl border border-slate-200 p-4 hover:border-[#ffedd5] hover:shadow-md transition-all"
                                         >
                                             <BrandLogo brand={brand} size="sm" />
                                             <div className="flex-1 min-w-0">
-                                                <h3 className="font-semibold text-slate-900 group-hover:text-[#b8651a] transition-colors">
+                                                <h3 className="font-semibold text-slate-900 group-hover:text-[#ea580c] transition-colors">
                                                     {brand.name}
                                                 </h3>
                                                 {brand.description && (
@@ -309,7 +309,7 @@ export default function BrandsPage() {
                                                     {brand.products_count} urun
                                                 </span>
                                             )}
-                                            <ArrowRight className="w-5 h-5 text-slate-400 group-hover:text-[#b8651a] group-hover:translate-x-1 transition-all flex-shrink-0" />
+                                            <ArrowRight className="w-5 h-5 text-slate-400 group-hover:text-[#ea580c] group-hover:translate-x-1 transition-all flex-shrink-0" />
                                         </Link>
                                     ))}
                                 </div>

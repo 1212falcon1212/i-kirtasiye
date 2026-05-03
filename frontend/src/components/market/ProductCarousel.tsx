@@ -30,7 +30,7 @@ export function ProductCarousel({
                 {linkUrl && (
                     <Link
                         href={linkUrl}
-                        className="group flex items-center gap-1.5 text-sm font-semibold border-[1.5px] border-[#fbeede] text-[#b8651a] hover:bg-[#b8651a] hover:text-white rounded-[10px] px-4 py-1.5 transition-colors"
+                        className="group flex items-center gap-1.5 text-sm font-semibold border-[1.5px] border-[#ffedd5] text-[#ea580c] hover:bg-[#1e3a8a] hover:text-white rounded-[10px] px-4 py-1.5 transition-colors"
                     >
                         Tümünü Gör
                         <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
@@ -111,7 +111,7 @@ export function ProductGrid({
                     {linkUrl && (
                         <Link
                             href={linkUrl}
-                            className="group flex items-center gap-1.5 text-sm font-semibold border-[1.5px] border-[#fbeede] text-[#b8651a] hover:bg-[#b8651a] hover:text-white rounded-[10px] px-4 py-1.5 transition-colors"
+                            className="group flex items-center gap-1.5 text-sm font-semibold border-[1.5px] border-[#ffedd5] text-[#ea580c] hover:bg-[#1e3a8a] hover:text-white rounded-[10px] px-4 py-1.5 transition-colors"
                         >
                             Tümünü Gör
                             <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
@@ -129,7 +129,7 @@ export function ProductGrid({
                             <Link
                                 key={`${product.id}-${index}`}
                                 href={`/market/product/${product.id}`}
-                                className="group relative flex flex-row rounded-3xl border border-[#f0eceb] dark:border-[#2a2a2a] overflow-hidden hover:border-[#fbeede] dark:hover:border-[#b8651a] transition-colors"
+                                className="group relative flex flex-row rounded-3xl border border-[#f0eceb] dark:border-[#2a2a2a] overflow-hidden hover:border-[#ffedd5] dark:hover:border-[#ea580c] transition-colors"
                             >
                                 {/* Left: Product Image */}
                                 <div className="w-[130px] sm:w-[210px] md:w-[240px] h-[150px] sm:h-[180px] md:h-[210px] flex-shrink-0 bg-white dark:bg-[#1f1f1f] relative flex items-center justify-center">
@@ -149,11 +149,11 @@ export function ProductGrid({
                                 {/* Right: Product Info */}
                                 <div className="flex-1 min-w-0 p-4 sm:p-6 flex flex-col justify-center">
                                     {product.brand && (
-                                        <p className="text-[12px] font-extrabold text-[#b8651a] dark:text-[#fbeede] uppercase tracking-wider mb-2 truncate">
+                                        <p className="text-[12px] font-extrabold text-[#ea580c] dark:text-[#ffedd5] uppercase tracking-wider mb-2 truncate">
                                             {product.brand}
                                         </p>
                                     )}
-                                    <h3 className="text-sm sm:text-base font-semibold text-[#1a1a1a] dark:text-slate-200 line-clamp-2 mb-3 group-hover:text-[#b8651a] dark:group-hover:text-[#fbeede] transition-colors">
+                                    <h3 className="text-sm sm:text-base font-semibold text-[#1a1a1a] dark:text-slate-200 line-clamp-2 mb-3 group-hover:text-[#ea580c] dark:group-hover:text-[#ffedd5] transition-colors">
                                         {product.name}
                                     </h3>
                                     <div className="mb-2">
@@ -166,7 +166,7 @@ export function ProductGrid({
                                     </div>
                                     {offersCount > 0 && (
                                         <p className="text-sm text-[#6b7280]">
-                                            <span className="font-semibold text-[#b8651a]">{offersCount} ilan</span>
+                                            <span className="font-semibold text-[#ea580c]">{offersCount} ilan</span>
                                         </p>
                                     )}
                                 </div>
@@ -214,7 +214,7 @@ export function ProductScrollList({
             <div className="flex items-center justify-between mb-4 px-1">
                 <h3 className="text-lg font-bold text-[#1a1a1a]">{title}</h3>
                 {linkUrl && (
-                    <Link href={linkUrl} className="text-sm text-[#b8651a] font-medium">
+                    <Link href={linkUrl} className="text-sm text-[#ea580c] font-medium">
                         Tümünü Gör
                     </Link>
                 )}
@@ -230,7 +230,7 @@ export function ProductScrollList({
                         >
                             <div
                                 className={cn(
-                                    "relative rounded-lg overflow-hidden bg-[#fbeede] mb-2",
+                                    "relative rounded-lg overflow-hidden bg-white border border-[#f0eceb] mb-2",
                                     styles.image
                                 )}
                             >
@@ -250,13 +250,13 @@ export function ProductScrollList({
                             </div>
                             <p
                                 className={cn(
-                                    "font-medium text-[#1a1a1a] line-clamp-2 group-hover:text-[#b8651a] transition-colors",
+                                    "font-medium text-[#1a1a1a] line-clamp-2 group-hover:text-[#ea580c] transition-colors",
                                     styles.text
                                 )}
                             >
                                 {product.name}
                             </p>
-                            <p className="text-sm font-bold text-[#b8651a] mt-1">
+                            <p className="text-sm font-bold text-[#ea580c] mt-1">
                                 {formatPrice(product.lowest_price)}
                             </p>
                         </Link>
@@ -300,7 +300,7 @@ export function FeaturedProducts({
                 {linkUrl && (
                     <Link
                         href={linkUrl}
-                        className="group flex items-center gap-1.5 text-sm font-semibold border-[1.5px] border-[#fbeede] text-[#b8651a] hover:bg-[#b8651a] hover:text-white rounded-[10px] px-4 py-1.5 transition-colors"
+                        className="group flex items-center gap-1.5 text-sm font-semibold border-[1.5px] border-[#ffedd5] text-[#ea580c] hover:bg-[#1e3a8a] hover:text-white rounded-[10px] px-4 py-1.5 transition-colors"
                     >
                         Tümünü Gör
                         <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
@@ -312,7 +312,7 @@ export function FeaturedProducts({
                 {/* Featured Product (Large) */}
                 <Link
                     href={`/market/product/${featured.id}`}
-                    className="group relative bg-[#fbeede] rounded-2xl p-6 overflow-hidden border border-[#f0eceb] hover:border-[#fbeede] hover:shadow-md transition-all"
+                    className="group relative bg-[#ffedd5] rounded-2xl p-6 overflow-hidden border border-[#f0eceb] hover:border-[#ffedd5] hover:shadow-md transition-all"
                 >
                     <div className="relative flex flex-col md:flex-row items-center gap-6">
                         {/* Image */}
@@ -334,7 +334,7 @@ export function FeaturedProducts({
 
                         {/* Info */}
                         <div className="flex-1 text-center md:text-left">
-                            <span className="inline-block px-3 py-1 bg-accent-soft text-[#b8651a] text-xs font-bold rounded-sm mb-3">
+                            <span className="inline-block px-3 py-1 bg-accent-soft text-[#ea580c] text-xs font-bold rounded-sm mb-3">
                                 ÖNE ÇIKAN
                             </span>
                             {featured.brand && (
@@ -342,11 +342,11 @@ export function FeaturedProducts({
                                     {featured.brand}
                                 </p>
                             )}
-                            <h3 className="text-xl font-bold text-[#1a1a1a] mb-2 group-hover:text-[#b8651a] transition-colors">
+                            <h3 className="text-xl font-bold text-[#1a1a1a] mb-2 group-hover:text-[#ea580c] transition-colors">
                                 {featured.name}
                             </h3>
                             <div className="flex items-baseline gap-2 justify-center md:justify-start mb-4">
-                                <span className="text-3xl font-bold text-[#b8651a]">
+                                <span className="text-3xl font-bold text-[#ea580c]">
                                     {formatPrice(featured.lowest_price)}
                                 </span>
                                 {featured.offers_count && Number(featured.offers_count) > 0 && (
@@ -355,7 +355,7 @@ export function FeaturedProducts({
                                     </span>
                                 )}
                             </div>
-                            <span className="inline-flex items-center gap-2 text-sm font-medium text-[#b8651a] group-hover:gap-3 transition-all">
+                            <span className="inline-flex items-center gap-2 text-sm font-medium text-[#ea580c] group-hover:gap-3 transition-all">
                                 Detayları Gör
                                 <ArrowRight className="w-4 h-4" />
                             </span>
