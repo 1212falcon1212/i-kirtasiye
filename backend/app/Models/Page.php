@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
 
 class Page extends Model
@@ -13,14 +13,30 @@ class Page extends Model
     protected static function booted(): void
     {
         static::saved(function (Page $page) {
-            Cache::forget("cms.page.{$page->slug}");
-            Cache::forget("legal.page.{$page->slug}");
+            self::invalidatePageCaches($page);
         });
 
         static::deleted(function (Page $page) {
-            Cache::forget("cms.page.{$page->slug}");
-            Cache::forget("legal.page.{$page->slug}");
+            self::invalidatePageCaches($page);
         });
+    }
+
+    /**
+     * Bir Page kaydı değiştiğinde ilgili tüm cache anahtarlarını temizler.
+     * Tek sayfa cache'i + slug prefix bazlı grup cache'leri.
+     */
+    private static function invalidatePageCaches(Page $page): void
+    {
+        Cache::forget("cms.page.{$page->slug}");
+        Cache::forget("legal.page.{$page->slug}");
+
+        // Grup cache invalidation: slug "{group}-..." veya slug == group ise grup cache'i temizlenir.
+        // Ornek: "yardim", "yardim-baslarken" -> grup "yardim".
+        $group = $page->slug;
+        if (str_contains($page->slug, '-')) {
+            $group = explode('-', $page->slug, 2)[0];
+        }
+        Cache::forget("cms.pages.group.{$group}");
     }
 
     protected $fillable = [

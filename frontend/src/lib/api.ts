@@ -18,15 +18,18 @@ const inflight = new Map<string, Promise<ApiResponse<unknown>>>();
 
 const DEFAULT_CACHE_TTL = 60_000; // 1 minute
 const CACHE_TTL_MAP: Record<string, number> = {
-  '/categories': 300_000,      // 5 min - rarely changes
-  '/cms/layout': 300_000,      // 5 min
-  '/cms/homepage': 120_000,    // 2 min
-  '/cms/pages': 300_000,       // 5 min
-  '/brands': 300_000,          // 5 min
-  '/brands/featured': 300_000, // 5 min
-  '/landing-content': 300_000, // 5 min - landing page content
-  '/blog': 0,                  // no cache - admin changes reflect instantly
-  '/locations': 86_400_000,    // 24h - city/district list rarely changes
+  '/categories': 300_000,            // 5 min - rarely changes
+  '/cms/layout': 300_000,            // 5 min
+  '/cms/homepage': 120_000,          // 2 min
+  '/cms/featured-sections': 120_000, // 2 min - market home recently sold + featured
+  '/cms/random-products': 60_000,    // 1 min - market home all products grid
+  '/cms/pages': 0,                   // CMS pages: no client cache; admin edits reflect on refresh
+  '/cms/pages-by-group': 0,          // Group sidebar lists also fetch fresh
+  '/brands': 300_000,                // 5 min
+  '/brands/featured': 300_000,       // 5 min
+  '/landing-content': 300_000,       // 5 min - landing page content
+  '/blog': 0,                        // no cache - admin changes reflect instantly
+  '/locations': 86_400_000,          // 24h - city/district list rarely changes
 };
 
 function getCacheTTL(endpoint: string): number {
@@ -207,6 +210,13 @@ class ApiClient {
   async put<T>(endpoint: string, body?: object): Promise<ApiResponse<T>> {
     return this.request<T>(endpoint, {
       method: 'PUT',
+      body: body ? JSON.stringify(body) : undefined,
+    });
+  }
+
+  async patch<T>(endpoint: string, body?: object): Promise<ApiResponse<T>> {
+    return this.request<T>(endpoint, {
+      method: 'PATCH',
       body: body ? JSON.stringify(body) : undefined,
     });
   }
@@ -1315,6 +1325,29 @@ export const shippingApi = {
     ),
 };
 
+// Seller Shipping Settings (satıcı bazlı kargo override)
+export interface SellerShippingSettings {
+  default_shipping_fee: number | null;
+  free_shipping_threshold: number | null;
+  effective_shipping_fee: number;
+  effective_threshold: number;
+  global: {
+    shipping_fee: number;
+    free_threshold: number;
+  };
+  uses_override: boolean;
+}
+
+export const sellerShippingApi = {
+  get: () => api.get<SellerShippingSettings>('/seller/shipping-settings'),
+
+  update: (payload: { default_shipping_fee: number | null; free_shipping_threshold: number | null }) =>
+    api.patch<SellerShippingSettings & { message: string }>(
+      '/seller/shipping-settings',
+      payload
+    ),
+};
+
 // Integrations Types
 export interface IntegrationCredentials {
   api_key: string | null;
@@ -1563,6 +1596,14 @@ export interface CmsPage {
   template: string;
 }
 
+export interface CmsPageSummary {
+  id: number;
+  slug: string;
+  title: string;
+  excerpt: string | null;
+  sort_order: number;
+}
+
 // CMS API
 export const cmsApi = {
   getLayout: () => api.get<CmsLayoutResponse>('/cms/layout'),
@@ -1571,6 +1612,8 @@ export const cmsApi = {
   getFeaturedSections: () => api.get<FeaturedSectionsResponse>('/cms/featured-sections'),
   getRandomProducts: () => api.get<{ products: Product[] }>('/cms/random-products'),
   getPage: (slug: string) => api.get<CmsPage>(`/cms/pages/${slug}`),
+  getPagesByGroup: (group: string) =>
+    api.get<CmsPageSummary[]>(`/cms/pages-by-group/${group}`),
 };
 
 // Seller Dashboard Types

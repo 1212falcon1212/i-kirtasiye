@@ -20,13 +20,19 @@
   --fg-muted: #5a5a52;
   --fg-soft: #8a8a80;
 
-  /* Brand: VIVID ORANGE (header/footer/navbar surfaces) */
+  /* Brand: VIVID ORANGE (header/navbar surfaces) */
   --accent: #ea580c;
   --accent-hover: #c2410c;
   --accent-soft: #ffedd5;
   --accent-fg: #ffffff;
   --accent-on: #ffffff;
   --accent-on-muted: rgba(255, 255, 255, 0.78);
+
+  /* Footer: muted neutral gray (better contrast for dense link grid) */
+  --footer-bg: #404040;
+  --footer-fg: #ffffff;
+  --footer-fg-muted: rgba(255, 255, 255, 0.72);
+  --footer-border: rgba(255, 255, 255, 0.14);
 
   /* Primary: NAVY BLUE (all buttons & focus rings) */
   --primary: #1e3a8a;
@@ -123,6 +129,11 @@
   --accent-fg: #1a1a17;
   --accent-on: #1a1a17;
   --accent-on-muted: rgba(26, 26, 23, 0.78);
+
+  --footer-bg: #1f1f1d;
+  --footer-fg: #f1f1ec;
+  --footer-fg-muted: rgba(241, 241, 236, 0.72);
+  --footer-border: rgba(255, 255, 255, 0.10);
 
   --primary: #3b82f6;
   --primary-hover: #2563eb;

@@ -34,8 +34,8 @@ class DocumentPolicy
             return false;
         }
 
-        // Pharmacists can upload documents
-        return $user->isRetailer();
+        // Retailers and sellers both upload verification documents
+        return $user->isRetailer() || $user->isSeller();
     }
 
     /**

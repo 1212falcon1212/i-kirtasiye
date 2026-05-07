@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Pages;
 
 use App\Models\Setting;
@@ -8,6 +10,13 @@ use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 
+/**
+ * Hizmet Bedeli Ayarları sayfası.
+ *
+ * Komisyon ve sabit hizmet bedeli oranlarını, stopaj kesintisini ve
+ * fallback KDV oranını yöneticinin değiştirmesini sağlar. Kayıtlı
+ * değerler `Setting` tablosunda `commission.*` anahtarları altında tutulur.
+ */
 class CommissionSettingsPage extends Page
 {
     protected static ?string $navigationIcon = 'heroicon-o-calculator';
@@ -26,14 +35,18 @@ class CommissionSettingsPage extends Page
 
     public function mount(): void
     {
+        // config('commission.default_vat_rate') decimal (0-1) tutar; UI yüzde gösterir.
+        $defaultVatPercent = (float) config('commission.default_vat_rate', 0.20) * 100;
+
         $this->form->fill([
             'commission_enabled' => Setting::getValue('commission.enabled', true),
-            'fee_mode' => Setting::getValue('commission.fee_mode', 'flat'),
+            'fee_mode' => Setting::getValue('commission.fee_mode', 'combined'),
             'flat_service_fee' => Setting::getValue('commission.flat_service_fee', 50),
             'commission_percentage' => Setting::getValue('commission.commission_percentage', 10),
             'marketplace_fee_enabled' => Setting::getValue('commission.marketplace_fee_enabled', false),
             'marketplace_fee_rate' => Setting::getValue('commission.marketplace_fee_rate', 0.89),
             'withholding_tax_rate' => Setting::getValue('commission.withholding_tax_rate', 1.00),
+            'default_vat_rate' => Setting::getValue('commission.default_vat_rate', $defaultVatPercent),
             'min_order_amount' => Setting::getValue('commission.min_order_amount', 2000),
         ]);
     }
@@ -43,50 +56,51 @@ class CommissionSettingsPage extends Page
         return $form
             ->schema([
                 Forms\Components\Section::make('Hizmet Bedeli Ayarları')
-                    ->description('Satıcılardan alınan komisyon/hizmet bedeli ayarları')
+                    ->description('Satıcılardan alınan komisyon, sabit hizmet bedeli ve stopaj ayarları')
                     ->schema([
                         Forms\Components\Toggle::make('commission_enabled')
                             ->label('Hizmet Bedeli Sistemi Aktif')
                             ->default(true)
-                            ->helperText('Devre dışı bırakılırsa hiç hizmet bedeli kesilmez'),
+                            ->helperText('Pasif bırakılırsa komisyon ve sabit hizmet bedeli kesilmez. Stopaj her durumda uygulanır.'),
 
                         Forms\Components\Select::make('fee_mode')
-                            ->label('Komisyon Modu')
+                            ->label('Hesaplama Modu')
                             ->options([
-                                'flat' => 'Sabit Hizmet Bedeli (sipariş başına sabit ₺)',
-                                'percentage' => 'Komisyon Oranı (satış tutarının %\'si)',
-                                'category' => 'Kategori Bazlı Komisyon (her kategorinin kendi oranı)',
+                                'combined' => 'Komisyon + Sabit Hizmet Bedeli (önerilen)',
+                                'flat' => 'Sadece Sabit Hizmet Bedeli',
+                                'percentage' => 'Sadece Yüzdelik Komisyon',
+                                'category' => 'Kategori Bazlı Komisyon',
                             ])
-                            ->default('flat')
+                            ->default('combined')
                             ->live()
-                            ->helperText('Satıcılardan alınacak komisyon hesaplama yöntemi'),
-
-                        Forms\Components\TextInput::make('flat_service_fee')
-                            ->label('Sabit Hizmet Bedeli')
-                            ->numeric()
-                            ->suffix('₺')
-                            ->step(1)
-                            ->minValue(0)
-                            ->maxValue(500)
-                            ->default(50)
-                            ->helperText('Sipariş başına her satıcıdan alınan sabit hizmet bedeli')
-                            ->visible(fn (Forms\Get $get): bool => ($get('fee_mode') ?? 'flat') === 'flat'),
+                            ->helperText('Her siparişte hangi kesintilerin uygulanacağını belirler. "Komisyon + Sabit Hizmet Bedeli" modunda her ikisi de alınır.'),
 
                         Forms\Components\TextInput::make('commission_percentage')
-                            ->label('Komisyon Oranı')
+                            ->label('Komisyon Oranı (%)')
                             ->numeric()
                             ->suffix('%')
                             ->step(0.1)
                             ->minValue(0)
                             ->maxValue(50)
                             ->default(10)
-                            ->helperText('Satış tutarı üzerinden alınacak komisyon yüzdesi')
-                            ->visible(fn (Forms\Get $get): bool => ($get('fee_mode') ?? 'flat') === 'percentage'),
+                            ->helperText('Her siparişte uygulanacak komisyon yüzdesi. Varsayılan %10. KDV dahil satış tutarı üzerinden hesaplanır.')
+                            ->visible(fn (Forms\Get $get): bool => in_array($get('fee_mode') ?? 'combined', ['percentage', 'combined'], true)),
+
+                        Forms\Components\TextInput::make('flat_service_fee')
+                            ->label('Sabit Hizmet Bedeli (₺)')
+                            ->numeric()
+                            ->suffix('₺')
+                            ->step(1)
+                            ->minValue(0)
+                            ->maxValue(500)
+                            ->default(50)
+                            ->helperText('Her siparişte alınan sabit hizmet bedeli. Varsayılan ₺50. Çoklu satıcılı siparişlerde her satıcı bağımsız ₺50 alır ve satıcıdaki kalem sayısına bölünerek dağıtılır.')
+                            ->visible(fn (Forms\Get $get): bool => in_array($get('fee_mode') ?? 'combined', ['flat', 'combined'], true)),
 
                         Forms\Components\Placeholder::make('category_info')
                             ->label('Kategori Bazlı Komisyon')
                             ->content('Her kategorinin kendi komisyon oranı kullanılır. Kategori komisyon oranlarını Kategori yönetimi sayfasından düzenleyebilirsiniz.')
-                            ->visible(fn (Forms\Get $get): bool => ($get('fee_mode') ?? 'flat') === 'category'),
+                            ->visible(fn (Forms\Get $get): bool => ($get('fee_mode') ?? 'combined') === 'category'),
 
                         Forms\Components\Toggle::make('marketplace_fee_enabled')
                             ->label('Pazaryeri Hizmet Bedeli Aktif')
@@ -106,14 +120,24 @@ class CommissionSettingsPage extends Page
                             ->visible(fn (Forms\Get $get): bool => (bool) $get('marketplace_fee_enabled')),
 
                         Forms\Components\TextInput::make('withholding_tax_rate')
-                            ->label('Stopaj Oranı')
+                            ->label('Stopaj Oranı (%)')
                             ->numeric()
                             ->suffix('%')
                             ->step(0.01)
                             ->minValue(0)
                             ->maxValue(10)
                             ->default(1.00)
-                            ->helperText('Vergi stopajı kesintisi'),
+                            ->helperText('Ürünün KDV\'siz fiyatı üzerinden hesaplanır. Varsayılan %1.'),
+
+                        Forms\Components\TextInput::make('default_vat_rate')
+                            ->label('Varsayılan KDV Oranı (%)')
+                            ->numeric()
+                            ->suffix('%')
+                            ->step(0.1)
+                            ->minValue(0)
+                            ->maxValue(50)
+                            ->default(20)
+                            ->helperText('Ürünün veya kategorisinin KDV oranı tanımlı değilse stopaj hesabında bu oran kullanılır. Türkiye standart KDV oranı %20.'),
 
                         Forms\Components\TextInput::make('min_order_amount')
                             ->label('Minimum Sipariş Tutarı')
@@ -128,46 +152,72 @@ class CommissionSettingsPage extends Page
                     ->columns(2),
 
                 Forms\Components\Section::make('Hesaplama Örneği')
-                    ->description('₺2.500\'lik bir satış için kesinti hesabı')
+                    ->description('₺2.500\'lik bir satış için kesinti hesabı (KDV dahil tutar)')
                     ->schema([
                         Forms\Components\Placeholder::make('example')
                             ->label('')
                             ->content(function (Forms\Get $get) {
-                                $feeMode = $get('fee_mode') ?? 'flat';
+                                $feeMode = $get('fee_mode') ?? 'combined';
                                 $flatFee = (float) ($get('flat_service_fee') ?? 50);
                                 $commissionPercentage = (float) ($get('commission_percentage') ?? 10);
                                 $marketplaceEnabled = (bool) $get('marketplace_fee_enabled');
                                 $marketplaceRate = (float) ($get('marketplace_fee_rate') ?? 0.89);
                                 $withholdingRate = (float) ($get('withholding_tax_rate') ?? 1);
+                                $vatRate = (float) ($get('default_vat_rate') ?? 20);
 
-                                $saleAmount = 2500;
+                                $saleAmount = 2500.0;
+                                $netPrice = $saleAmount / (1 + $vatRate / 100);
 
-                                if ($feeMode === 'flat') {
-                                    $feeAmount = $flatFee;
-                                    $feeLabel = "Hizmet Bedeli (sabit)";
-                                } elseif ($feeMode === 'percentage') {
-                                    $feeAmount = $saleAmount * ($commissionPercentage / 100);
-                                    $feeLabel = "Komisyon (%{$commissionPercentage})";
-                                } else {
-                                    $feeAmount = $saleAmount * 0.08;
-                                    $feeLabel = "Kategori Komisyonu (örn. %8)";
+                                $commissionAmount = 0.0;
+                                $flatFeeAmount = 0.0;
+                                $feeLabels = [];
+
+                                switch ($feeMode) {
+                                    case 'flat':
+                                        $flatFeeAmount = $flatFee;
+                                        $feeLabels[] = 'Sabit Hizmet Bedeli';
+                                        break;
+                                    case 'percentage':
+                                        $commissionAmount = $saleAmount * ($commissionPercentage / 100);
+                                        $feeLabels[] = "Komisyon (%{$commissionPercentage})";
+                                        break;
+                                    case 'category':
+                                        $commissionAmount = $saleAmount * 0.08;
+                                        $feeLabels[] = 'Kategori Komisyonu (örn. %8)';
+                                        break;
+                                    case 'combined':
+                                    default:
+                                        $commissionAmount = $saleAmount * ($commissionPercentage / 100);
+                                        $flatFeeAmount = $flatFee;
+                                        $feeLabels[] = "Komisyon (%{$commissionPercentage})";
+                                        $feeLabels[] = 'Sabit Hizmet Bedeli';
+                                        break;
                                 }
 
                                 $marketplaceFee = $marketplaceEnabled ? $saleAmount * ($marketplaceRate / 100) : 0;
-                                $withholding = $saleAmount * ($withholdingRate / 100);
-                                $total = $feeAmount + $marketplaceFee + $withholding;
-                                $net = $saleAmount - $total;
+                                // Stopaj KDV hariç tutar üzerinden
+                                $withholding = $netPrice * ($withholdingRate / 100);
+                                $totalDeduction = $commissionAmount + $flatFeeAmount + $marketplaceFee + $withholding;
+                                $net = $saleAmount - $totalDeduction;
 
-                                $lines = "Satış Tutarı: ₺" . number_format($saleAmount, 2) . "\n"
-                                    . "{$feeLabel}: -₺" . number_format($feeAmount, 2) . "\n";
+                                $lines = 'Satış Tutarı (KDV dahil): ₺'.number_format($saleAmount, 2).PHP_EOL
+                                    ."KDV'siz Tutar (%{$vatRate} KDV): ₺".number_format($netPrice, 2).PHP_EOL;
 
-                                if ($marketplaceEnabled) {
-                                    $lines .= "Pazaryeri Hizmet Bedeli (%{$marketplaceRate}): -₺" . number_format($marketplaceFee, 2) . "\n";
+                                if ($commissionAmount > 0) {
+                                    $lines .= "Komisyon (%{$commissionPercentage}): -₺".number_format($commissionAmount, 2).PHP_EOL;
                                 }
 
-                                $lines .= "Stopaj (%{$withholdingRate}): -₺" . number_format($withholding, 2) . "\n"
-                                    . "Toplam Kesinti: -₺" . number_format($total, 2) . "\n"
-                                    . "Net Satıcı Tutarı: ₺" . number_format($net, 2);
+                                if ($flatFeeAmount > 0) {
+                                    $lines .= 'Sabit Hizmet Bedeli: -₺'.number_format($flatFeeAmount, 2).PHP_EOL;
+                                }
+
+                                if ($marketplaceEnabled) {
+                                    $lines .= "Pazaryeri Hizmet Bedeli (%{$marketplaceRate}): -₺".number_format($marketplaceFee, 2).PHP_EOL;
+                                }
+
+                                $lines .= "Stopaj (%{$withholdingRate}, KDV hariç tutardan): -₺".number_format($withholding, 2).PHP_EOL
+                                    .'Toplam Kesinti: -₺'.number_format($totalDeduction, 2).PHP_EOL
+                                    .'Net Satıcı Tutarı: ₺'.number_format($net, 2);
 
                                 return $lines;
                             }),
@@ -181,12 +231,13 @@ class CommissionSettingsPage extends Page
         $data = $this->form->getState();
 
         Setting::setValue('commission.enabled', $data['commission_enabled'] ?? true);
-        Setting::setValue('commission.fee_mode', $data['fee_mode'] ?? 'flat');
+        Setting::setValue('commission.fee_mode', $data['fee_mode'] ?? 'combined');
         Setting::setValue('commission.flat_service_fee', $data['flat_service_fee'] ?? 50);
         Setting::setValue('commission.commission_percentage', $data['commission_percentage'] ?? 10);
         Setting::setValue('commission.marketplace_fee_enabled', $data['marketplace_fee_enabled'] ?? false);
         Setting::setValue('commission.marketplace_fee_rate', $data['marketplace_fee_rate'] ?? 0.89);
         Setting::setValue('commission.withholding_tax_rate', $data['withholding_tax_rate'] ?? 1.00);
+        Setting::setValue('commission.default_vat_rate', $data['default_vat_rate'] ?? 20);
         Setting::setValue('commission.min_order_amount', $data['min_order_amount'] ?? 2000);
 
         Setting::clearCache();

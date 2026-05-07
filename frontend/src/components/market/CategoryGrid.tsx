@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { ChevronLeft, ChevronRight, Box } from 'lucide-react';
-import { categoriesApi, Category, api } from '@/lib/api';
+import { categoriesApi, Category } from '@/lib/api';
 
 interface UICategory {
     id: number | string;
@@ -32,7 +32,7 @@ function CategoryImage({ src, alt }: { src: string; alt: string }) {
             sizes="110px"
             className="object-contain p-3 transition-transform group-hover:scale-105"
             onError={() => setErrored(true)}
-            unoptimized
+            loading="lazy"
         />
     );
 }
@@ -46,7 +46,9 @@ export function CategoryGrid() {
 
     useEffect(() => {
         let active = true;
-        api.invalidateCache('/categories');
+        // NOTE: Do not invalidate /categories cache here — that endpoint has a 5-minute TTL
+        // (see CACHE_TTL_MAP in lib/api.ts). The market header also uses /categories, so
+        // letting the cache work means category nav + grid share a single network request.
         categoriesApi
             .getAll()
             .then((res) => {

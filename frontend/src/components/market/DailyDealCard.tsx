@@ -84,6 +84,10 @@ export function DailyDealCard({ product, title = 'Günün Fırsatı' }: DailyDea
                         fill
                         sizes="200px"
                         className="object-contain p-3"
+                        // Daily deal sits above the fold on desktop; mark its image
+                        // as a high-priority fetch so it competes with the hero LCP
+                        // candidate instead of waiting in the lazy queue.
+                        fetchPriority="high"
                     />
                 ) : (
                     <div

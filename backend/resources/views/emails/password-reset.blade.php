@@ -30,7 +30,7 @@
                     <tr>
                         <td align="center" style="background:linear-gradient(135deg,#0390b1,#027a96);padding:40px 40px 32px;border-radius:16px 16px 0 0;">
                             <h1 style="margin:0 0 6px;font-size:32px;font-weight:800;color:#ffffff;letter-spacing:0.5px;">i-kirtasiye</h1>
-                            <p style="margin:0;font-size:14px;color:rgba(255,255,255,0.85);font-weight:400;">B2B Dermokozmetik Pazaryeri</p>
+                            <p style="margin:0;font-size:14px;color:rgba(255,255,255,0.85);font-weight:400;">B2B Kırtasiye Pazaryeri</p>
                         </td>
                     </tr>
 
@@ -117,7 +117,7 @@
                                 <a href="https://i-kirtasiye.com" style="color:#0390b1;text-decoration:none;">i-kirtasiye.com</a>
                             </p>
                             <p style="margin:0 0 12px;font-size:12px;color:#9ca3af;">
-                                Türkiye'nin İlk Komisyonsuz B2B Dermokozmetik Pazaryeri
+                                Türkiye'nin İlk Komisyonsuz B2B Kırtasiye Pazaryeri
                             </p>
                             <p style="margin:0;font-size:11px;color:#d1d5db;">
                                 Bu e-posta otomatik olarak gönderilmiştir. Yanıtlamayınız.

@@ -4,6 +4,8 @@ namespace Tests\Feature\Api;
 
 use App\Models\Category;
 use App\Models\Offer;
+use App\Models\Order;
+use App\Models\OrderItem;
 use App\Models\Product;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -14,6 +16,7 @@ class ProductControllerTest extends TestCase
     use RefreshDatabase;
 
     protected User $user;
+
     protected string $token;
 
     protected function setUp(): void
@@ -28,7 +31,7 @@ class ProductControllerTest extends TestCase
      */
     protected function authHeaders(): array
     {
-        return ['Authorization' => 'Bearer ' . $this->token];
+        return ['Authorization' => 'Bearer '.$this->token];
     }
 
     /**
@@ -188,8 +191,8 @@ class ProductControllerTest extends TestCase
     {
         $category = Category::factory()->create();
         $product = Product::factory()->forCategory($category)->create();
-        $seller1 = User::factory()->seller()->create(['pharmacy_name' => 'Eczane A']);
-        $seller2 = User::factory()->seller()->create(['pharmacy_name' => 'Eczane B']);
+        $seller1 = User::factory()->seller()->create(['business_name' => 'Tedarikçi A']);
+        $seller2 = User::factory()->seller()->create(['business_name' => 'Tedarikçi B']);
 
         Offer::factory()
             ->forProduct($product)
@@ -403,7 +406,7 @@ class ProductControllerTest extends TestCase
                     'pagination',
                 ]);
         } catch (\Exception $e) {
-            $this->markTestSkipped('Meilisearch is not available: ' . $e->getMessage());
+            $this->markTestSkipped('Meilisearch is not available: '.$e->getMessage());
         }
     }
 
@@ -479,7 +482,7 @@ class ProductControllerTest extends TestCase
         $category = Category::factory()->create();
         $product = Product::factory()->forCategory($category)->create();
         $seller = User::factory()->seller()->create([
-            'pharmacy_name' => 'Test Eczanesi',
+            'business_name' => 'Test Tedarikçi',
             'city' => 'Istanbul',
         ]);
 
@@ -495,7 +498,126 @@ class ProductControllerTest extends TestCase
             ->getJson("/api/products/{$product->id}/offers");
 
         $response->assertStatus(200)
-            ->assertJsonPath('offers.0.seller.pharmacy_name', 'Test Eczanesi')
+            ->assertJsonPath('offers.0.seller.business_name', 'Test Tedarikçi')
             ->assertJsonPath('offers.0.seller.city', 'Istanbul');
+    }
+
+    /**
+     * Test sort_by=sales_desc orders products by total quantity sold first.
+     */
+    public function test_index_sort_by_sales_desc_orders_by_total_sold(): void
+    {
+        $category = Category::factory()->create();
+        $seller = User::factory()->seller()->create();
+        $buyer = User::factory()->create(['is_verified' => true]);
+
+        $bestSeller = Product::factory()->forCategory($category)->create(['name' => 'Best Seller']);
+        $midSeller = Product::factory()->forCategory($category)->create(['name' => 'Mid Seller']);
+        $newProduct = Product::factory()->forCategory($category)->create(['name' => 'No Sales']);
+
+        foreach ([$bestSeller, $midSeller, $newProduct] as $p) {
+            Offer::factory()->forProduct($p)->forSeller($seller)
+                ->withPrice(50.00)->withStock(10)->available()->create();
+        }
+
+        $order = Order::factory()->forUser($buyer)->paid()->create();
+        OrderItem::factory()->forOrder($order)->forProduct($bestSeller)->forSeller($seller)
+            ->withQuantityAndPrice(20, 50.00)->create();
+        OrderItem::factory()->forOrder($order)->forProduct($midSeller)->forSeller($seller)
+            ->withQuantityAndPrice(5, 50.00)->create();
+
+        $response = $this->withHeaders($this->authHeaders())
+            ->getJson('/api/products?sort_by=sales_desc');
+
+        $response->assertStatus(200);
+        $names = array_column($response->json('products'), 'name');
+        $this->assertSame('Best Seller', $names[0]);
+        $this->assertSame('Mid Seller', $names[1]);
+        $this->assertSame('No Sales', $names[2]);
+    }
+
+    /**
+     * Test sort_by=price_drop ranks products with the largest discount vs PSF first.
+     */
+    public function test_index_sort_by_price_drop_orders_by_discount_ratio(): void
+    {
+        $category = Category::factory()->create();
+        $seller = User::factory()->seller()->create();
+
+        $bigDrop = Product::factory()->forCategory($category)->create([
+            'name' => 'Big Drop',
+            'psf' => 100.00,
+        ]);
+        $smallDrop = Product::factory()->forCategory($category)->create([
+            'name' => 'Small Drop',
+            'psf' => 100.00,
+        ]);
+        $noDrop = Product::factory()->forCategory($category)->create([
+            'name' => 'No Drop',
+            'psf' => 100.00,
+        ]);
+
+        Offer::factory()->forProduct($bigDrop)->forSeller($seller)
+            ->withPrice(40.00)->withStock(10)->available()->create();
+        Offer::factory()->forProduct($smallDrop)->forSeller($seller)
+            ->withPrice(90.00)->withStock(10)->available()->create();
+        Offer::factory()->forProduct($noDrop)->forSeller($seller)
+            ->withPrice(100.00)->withStock(10)->available()->create();
+
+        $response = $this->withHeaders($this->authHeaders())
+            ->getJson('/api/products?sort_by=price_drop');
+
+        $response->assertStatus(200);
+        $names = array_column($response->json('products'), 'name');
+        $this->assertSame('Big Drop', $names[0]);
+        $this->assertSame('Small Drop', $names[1]);
+        $this->assertSame('No Drop', $names[2]);
+    }
+
+    /**
+     * Test sort_by=fast_ship ranks products whose seller has the lowest default_shipping_fee.
+     */
+    public function test_index_sort_by_fast_ship_orders_by_min_shipping_fee(): void
+    {
+        $category = Category::factory()->create();
+
+        $fastSeller = User::factory()->seller()->create(['default_shipping_fee' => 9.90]);
+        $slowSeller = User::factory()->seller()->create(['default_shipping_fee' => 49.90]);
+        $unknownSeller = User::factory()->seller()->create(['default_shipping_fee' => null]);
+
+        $fastProduct = Product::factory()->forCategory($category)->create(['name' => 'Fast']);
+        $slowProduct = Product::factory()->forCategory($category)->create(['name' => 'Slow']);
+        $unknownProduct = Product::factory()->forCategory($category)->create(['name' => 'Unknown']);
+
+        Offer::factory()->forProduct($fastProduct)->forSeller($fastSeller)
+            ->withPrice(50.00)->withStock(10)->available()->create();
+        Offer::factory()->forProduct($slowProduct)->forSeller($slowSeller)
+            ->withPrice(50.00)->withStock(10)->available()->create();
+        Offer::factory()->forProduct($unknownProduct)->forSeller($unknownSeller)
+            ->withPrice(50.00)->withStock(10)->available()->create();
+
+        $response = $this->withHeaders($this->authHeaders())
+            ->getJson('/api/products?sort_by=fast_ship');
+
+        $response->assertStatus(200);
+        $names = array_column($response->json('products'), 'name');
+        $this->assertSame('Fast', $names[0]);
+        $this->assertSame('Slow', $names[1]);
+        $this->assertSame('Unknown', $names[2]);
+    }
+
+    /**
+     * Test invalid sort_by values fall back to the default ordering instead of erroring.
+     */
+    public function test_index_unknown_sort_by_falls_back_to_default(): void
+    {
+        $category = Category::factory()->create();
+        Product::factory()->forCategory($category)->count(3)->create();
+
+        $response = $this->withHeaders($this->authHeaders())
+            ->getJson('/api/products?sort_by=__bogus__');
+
+        $response->assertStatus(200)
+            ->assertJsonCount(3, 'products');
     }
 }

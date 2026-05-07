@@ -24,36 +24,69 @@ class CategoryController extends Controller
                 ->whereNull('parent_id')
                 ->orderBy('sort_order')
                 ->orderBy('name')
-                ->get()
-                ->map(function ($category) {
-                    $sampleProduct = Product::active()
-                        ->whereIn('category_id', $category->getDescendantIds())
-                        ->whereNotNull('image')
-                        ->where('image', '!=', '')
-                        ->first(['id', 'image']);
+                ->get();
 
-                    return [
-                        'id' => $category->id,
-                        'name' => $category->name,
-                        'slug' => $category->slug,
-                        'full_slug' => $category->full_slug ?? $category->slug,
-                        'description' => $category->description,
-                        'image_url' => $sampleProduct?->image_url,
-                        'products_count' => $category->total_products_count,
-                        'children' => $category->children->map(function ($child) {
-                            return [
-                                'id' => $child->id,
-                                'name' => $child->name,
-                                'slug' => $child->slug,
-                                'full_slug' => $child->full_slug ?? $child->slug,
-                                'products_count' => $child->products()->active()->count(),
-                            ];
-                        }),
-                    ];
-                });
+            // --- N+1 fix: collect ALL descendant IDs across all root categories, then
+            //     fetch one representative image-per-category_id in a single query.
+            //     Previously: 1 query per category × 11 categories = 11 DB round-trips.
+            //     Now: 1 aggregated query for all categories combined.
+            $allDescendantMap = [];
+            foreach ($categories as $category) {
+                foreach ($category->getDescendantIds() as $catId) {
+                    $allDescendantMap[$catId] = $category->id;
+                }
+            }
+
+            $allCategoryIds = array_keys($allDescendantMap);
+            $sampleImages = Product::active()
+                ->whereIn('category_id', $allCategoryIds)
+                ->whereNotNull('image')
+                ->where('image', '!=', '')
+                ->orderBy('category_id')
+                ->get(['id', 'image', 'category_id'])
+                ->groupBy('category_id')
+                ->map(fn ($group) => $group->first());
+
+            // Build rootCategory -> first image map
+            $rootCategoryImages = [];
+            foreach ($sampleImages as $catId => $product) {
+                $rootId = $allDescendantMap[$catId] ?? $catId;
+                if (! isset($rootCategoryImages[$rootId])) {
+                    $rootCategoryImages[$rootId] = $product->image_url;
+                }
+            }
+
+            // --- N+1 fix: batch products_count for children instead of 1 query per child.
+            $allChildIds = $categories->flatMap(fn ($c) => $c->children->pluck('id'))->all();
+            $childProductCounts = Product::active()
+                ->whereIn('category_id', $allChildIds)
+                ->selectRaw('category_id, COUNT(*) as cnt')
+                ->groupBy('category_id')
+                ->pluck('cnt', 'category_id');
+
+            $mapped = $categories->map(function ($category) use ($rootCategoryImages, $childProductCounts) {
+                return [
+                    'id' => $category->id,
+                    'name' => $category->name,
+                    'slug' => $category->slug,
+                    'full_slug' => $category->full_slug ?? $category->slug,
+                    'description' => $category->description,
+                    'image_url' => $rootCategoryImages[$category->id] ?? null,
+                    'products_count' => $category->total_products_count,
+                    'children' => $category->children->map(function ($child) use ($childProductCounts) {
+                        return [
+                            'id' => $child->id,
+                            'name' => $child->name,
+                            'slug' => $child->slug,
+                            'full_slug' => $child->full_slug ?? $child->slug,
+                            'products_count' => (int) ($childProductCounts[$child->id] ?? 0),
+                        ];
+                    }),
+                ];
+            });
 
             return response()->json([
-                'categories' => $categories,
+                'categories' => $mapped,
             ]);
         });
     }

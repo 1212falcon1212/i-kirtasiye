@@ -136,7 +136,7 @@ const DEFAULT_CONTENT: LandingContent = {
       {
         title: "Güvenle al / sat",
         description:
-          "Güvenli ödeme ve vadeli alışveriş seçenekleri ile siparişinizi tamamlayın. Hakedişler anında hesabınıza yansır.",
+          "Güvenli ödeme altyapısı ile siparişinizi tamamlayın. Hakedişler anında hesabınıza yansır.",
       },
     ],
     vergi_no_card_title: "Vergi No Doğrulama",
@@ -172,12 +172,6 @@ const DEFAULT_CONTENT: LandingContent = {
         title: "Stokları toptan eritin",
         description:
           "Fazla stoklarınızı kırtasiyecilere toptan satın, raf ömrü sorununu kâra dönüştürün.",
-      },
-      {
-        icon: "credit-card",
-        title: "Vadeli alışveriş",
-        description:
-          "30 / 60 / 90 gün vadeli ödeme. Hakediş garantisi ile satışlarınızı koruma altına alın.",
       },
       {
         icon: "file-check",
@@ -251,11 +245,6 @@ const DEFAULT_CONTENT: LandingContent = {
         question: "Üyelik ücreti var mı?",
         answer:
           "Kayıt ücretsizdir. Aktif satış yapan tedarikçiler için sabit aylık üyelik bedeli vardır. Yüzdesel komisyon alınmaz.",
-      },
-      {
-        question: "Vadeli alışveriş nasıl çalışıyor?",
-        answer:
-          "Onaylı kırtasiyeciler 30, 60 veya 90 gün vade ile sipariş oluşturabilir. Vade limiti hesap geçmişinize göre belirlenir.",
       },
       {
         question: "Kargo nasıl çalışıyor?",

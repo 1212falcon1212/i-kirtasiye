@@ -102,9 +102,12 @@ class SettlementService
             return [];
         }
 
-        // Get release transactions grouped by date
+        // Release tx'leri paired olarak yazılır (pending DEBIT + available CREDIT). Burada
+        // sadece available CREDIT olanı sayılır; aksi halde net_amount iki katına çıkar.
         $releases = WalletTransaction::where('wallet_id', $wallet->id)
             ->where('type', WalletTransaction::TYPE_RELEASE)
+            ->where('balance_type', WalletTransaction::BALANCE_AVAILABLE)
+            ->where('direction', WalletTransaction::DIRECTION_CREDIT)
             ->whereNotNull('order_id')
             ->orderByDesc('created_at')
             ->get();
@@ -293,6 +296,9 @@ class SettlementService
                     case 'category':
                         $totalServiceFee += $orderCommissionFromItems;
                         break;
+                    case 'combined':
+                        $totalServiceFee += $orderSales * ($commissionPercentage / 100) + $flatServiceFee;
+                        break;
                     default: // flat
                         $totalServiceFee += $flatServiceFee;
                         break;
@@ -376,6 +382,9 @@ class SettlementService
                         break;
                     case 'category':
                         $totalServiceFee += $soCommissionFromItems;
+                        break;
+                    case 'combined':
+                        $totalServiceFee += $soSales * ($commissionPercentage / 100) + $flatServiceFee;
                         break;
                     default:
                         $totalServiceFee += $flatServiceFee;

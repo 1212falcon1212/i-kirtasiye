@@ -73,6 +73,8 @@ class User extends Authenticatable implements FilamentUser, HasName
         'paytr_utoken',
         'fcm_token',
         'fcm_token_updated_at',
+        'default_shipping_fee',
+        'free_shipping_threshold',
     ];
 
     /**
@@ -98,6 +100,8 @@ class User extends Authenticatable implements FilamentUser, HasName
             'is_verified' => 'boolean',
             'documents' => 'array',
             'seller_score' => 'float',
+            'default_shipping_fee' => 'decimal:2',
+            'free_shipping_threshold' => 'decimal:2',
         ];
     }
 

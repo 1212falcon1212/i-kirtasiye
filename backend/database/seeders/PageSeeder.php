@@ -139,6 +139,483 @@ class PageSeeder extends Seeder
                 'content' => $this->getMembershipContent(),
             ]
         );
+
+        // Yardim Merkezi - Ana hub
+        Page::updateOrCreate(
+            ['slug' => 'yardim'],
+            [
+                'title' => 'Yardım Merkezi',
+                'template' => 'help',
+                'status' => 'published',
+                'sort_order' => 100,
+                'meta_title' => 'Yardım Merkezi - i-kirtasiye.com',
+                'meta_description' => 'i-kirtasiye kullanım kılavuzları, satıcı ve alıcı rehberleri.',
+                'excerpt' => 'i-kirtasiye platformunun nasıl kullanılacağına dair tüm rehberler ve sıkça sorulan sorular.',
+                'content' => $this->getYardimHubContent(),
+            ]
+        );
+
+        // Yardim - Baslarken
+        Page::updateOrCreate(
+            ['slug' => 'yardim-baslarken'],
+            [
+                'title' => 'Kayıt ve Vergi No Doğrulama',
+                'template' => 'help',
+                'status' => 'published',
+                'sort_order' => 101,
+                'meta_title' => 'Kayıt ve Vergi No Doğrulama - i-kirtasiye Yardım',
+                'meta_description' => 'i-kirtasiye\'na nasıl kayıt olunur ve vergi numarası doğrulaması nasıl yapılır?',
+                'excerpt' => 'Platforma kayıt adımları ve vergi numarası doğrulama süreci hakkında bilgilendirme.',
+                'content' => $this->getYardimBaslarkenContent(),
+            ]
+        );
+
+        // Yardim - Satici Rehberi
+        Page::updateOrCreate(
+            ['slug' => 'yardim-satici-urun-ekleme'],
+            [
+                'title' => 'Ürün Ekleme ve Teklif Oluşturma',
+                'template' => 'help',
+                'status' => 'published',
+                'sort_order' => 110,
+                'meta_title' => 'Ürün Ekleme - i-kirtasiye Yardım',
+                'meta_description' => 'i-kirtasiye\'nda nasıl ürün eklenir ve teklif oluşturulur?',
+                'excerpt' => 'Satıcı olarak ürün ekleme adımları, stok ve fiyat girişi, teklif yayınlama.',
+                'content' => $this->getYardimSaticiUrunEklemeContent(),
+            ]
+        );
+
+        Page::updateOrCreate(
+            ['slug' => 'yardim-satici-fiyat-stok'],
+            [
+                'title' => 'Fiyat ve Stok Güncelleme',
+                'template' => 'help',
+                'status' => 'published',
+                'sort_order' => 111,
+                'meta_title' => 'Fiyat ve Stok Güncelleme - i-kirtasiye Yardım',
+                'meta_description' => 'i-kirtasiye\'nda tekliflerinizin fiyat ve stok bilgilerini nasıl güncellersiniz?',
+                'excerpt' => 'Aktif tekliflerin fiyat ve stok bilgilerinin güncellenmesi.',
+                'content' => $this->getYardimSaticiFiyatStokContent(),
+            ]
+        );
+
+        Page::updateOrCreate(
+            ['slug' => 'yardim-satici-siparis-yonetimi'],
+            [
+                'title' => 'Sipariş Yönetimi ve Kargo',
+                'template' => 'help',
+                'status' => 'published',
+                'sort_order' => 112,
+                'meta_title' => 'Sipariş Yönetimi ve Kargo - i-kirtasiye Yardım',
+                'meta_description' => 'i-kirtasiye\'nda satıcı olarak siparişleri nasıl yönetir ve kargoya verirsiniz?',
+                'excerpt' => 'Sipariş bildirimleri, durum takibi ve kargolama süreci.',
+                'content' => $this->getYardimSaticiSiparisYonetimiContent(),
+            ]
+        );
+
+        Page::updateOrCreate(
+            ['slug' => 'yardim-satici-hakedisler'],
+            [
+                'title' => 'Ödeme Talebi ve Hakedişler',
+                'template' => 'help',
+                'status' => 'published',
+                'sort_order' => 113,
+                'meta_title' => 'Ödeme Talebi ve Hakedişler - i-kirtasiye Yardım',
+                'meta_description' => 'i-kirtasiye\'nda satış hakedişlerinizi nasıl çekersiniz?',
+                'excerpt' => 'Hakediş süreci, cüzdan yönetimi ve ödeme talebi oluşturma.',
+                'content' => $this->getYardimSaticiHakedislerContent(),
+            ]
+        );
+
+        // Yardim - Alici Rehberi
+        Page::updateOrCreate(
+            ['slug' => 'yardim-alici-fiyat-karsilastirma'],
+            [
+                'title' => 'En Uygun Fiyatı Bulma',
+                'template' => 'help',
+                'status' => 'published',
+                'sort_order' => 120,
+                'meta_title' => 'En Uygun Fiyatı Bulma - i-kirtasiye Yardım',
+                'meta_description' => 'i-kirtasiye\'nda en uygun fiyatı nasıl bulursunuz? Fiyat karşılaştırma rehberi.',
+                'excerpt' => 'Ürün arama, teklif görüntüleme, filtreleme ve sıralama yöntemleri.',
+                'content' => $this->getYardimAliciFiyatKarsilastirmaContent(),
+            ]
+        );
+
+        Page::updateOrCreate(
+            ['slug' => 'yardim-alici-sepet-odeme'],
+            [
+                'title' => 'Sepet ve Ödeme Adımları',
+                'template' => 'help',
+                'status' => 'published',
+                'sort_order' => 121,
+                'meta_title' => 'Sepet ve Ödeme - i-kirtasiye Yardım',
+                'meta_description' => 'i-kirtasiye\'nda sepet oluşturma ve ödeme işlemleri nasıl yapılır?',
+                'excerpt' => 'Sepete ürün ekleme, ödeme yöntemleri ve güvenli ödeme süreci.',
+                'content' => $this->getYardimAliciSepetOdemeContent(),
+            ]
+        );
+
+        Page::updateOrCreate(
+            ['slug' => 'yardim-alici-siparis-takibi'],
+            [
+                'title' => 'Sipariş Takibi',
+                'template' => 'help',
+                'status' => 'published',
+                'sort_order' => 122,
+                'meta_title' => 'Sipariş Takibi - i-kirtasiye Yardım',
+                'meta_description' => 'i-kirtasiye\'nda siparişlerinizi nasıl takip edersiniz?',
+                'excerpt' => 'Sipariş durumları, kargo takibi ve teslimat sonrası işlemler.',
+                'content' => $this->getYardimAliciSiparisTakibiContent(),
+            ]
+        );
+    }
+
+    private function getYardimHubContent(): string
+    {
+        return <<<'HTML'
+<h2>Size Nasıl Yardımcı Olabiliriz?</h2>
+<p>i-kirtasiye platformunun kullanımı hakkında aradığınız tüm bilgilere bu sayfadan ulaşabilirsiniz. Aşağıdaki konulardan size uygun olanı seçerek detaylı rehberlere göz atabilirsiniz.</p>
+
+<h3>Hızlı Erişim</h3>
+<ul>
+<li><strong>Başlarken:</strong> Kayıt, vergi numarası doğrulama ve ilk adımlar.</li>
+<li><strong>Satıcı Rehberi:</strong> Ürün listeleme, sipariş yönetimi, hakedişler.</li>
+<li><strong>Alıcı Rehberi:</strong> Ürün arama, fiyat karşılaştırma, sipariş takibi.</li>
+</ul>
+
+<h3>Sık Sorulan Sorular</h3>
+<ul>
+<li>Vergi numaramı nereden bulabilirim?</li>
+<li>Nasıl ürün eklerim?</li>
+<li>Hakedişimi nasıl çekerim?</li>
+<li>Sipariş nasıl veririm?</li>
+<li>Kargo takibi nasıl yapılır?</li>
+</ul>
+
+<h3>Aradığınızı Bulamadınız Mı?</h3>
+<p>Destek ekibimiz size yardımcı olmak için hazır. <a href="mailto:destek@i-kirtasiye.com">destek@i-kirtasiye.com</a> adresine yazarak veya hesabınızdan destek talebi oluşturarak bize ulaşabilirsiniz.</p>
+HTML;
+    }
+
+    private function getYardimBaslarkenContent(): string
+    {
+        return <<<'HTML'
+<h2>Kayıt ve Vergi No Doğrulama</h2>
+<p>i-kirtasiye, yalnızca onaylı işletmelerin erişebildiği kapalı devre bir B2B platformudur. Platforma kayıt olmak için geçerli bir <strong>vergi numarasına</strong> sahip olmanız gerekmektedir.</p>
+
+<h3>Vergi Numarası Nedir?</h3>
+<p>Vergi numarası, Türkiye'de işletmelerin mali işlemlerinde kullanılan benzersiz tanımlayıcıdır. Şahıs şirketlerinde T.C. kimlik numarası, sermaye şirketlerinde ise 10 haneli vergi kimlik numarası kullanılır.</p>
+
+<h4>Vergi Numaranızı Nereden Bulabilirsiniz?</h4>
+<ul>
+<li>Vergi dairesi kaydınızda</li>
+<li>Vergi levhanızda</li>
+<li>Resmi muhasebe belgelerinizde</li>
+</ul>
+
+<h3>Kayıt Adımları</h3>
+<ol>
+<li><strong>Vergi Numaranızı Girin:</strong> Kayıt sayfasına gidin ve 10 haneli vergi numaranızı girin. Sistem, numaranızın geçerliliğini ve daha önce kayıt olup olmadığını kontrol eder.</li>
+<li><strong>Firma Bilgilerinizi Onaylayın:</strong> Vergi numaranız doğrulandığında, sisteme kayıtlı firma adı, il ve adres bilgileriniz otomatik olarak görünecektir. Bu bilgileri kontrol edin.</li>
+<li><strong>Hesap Bilgilerinizi Oluşturun:</strong> E-posta adresinizi ve güvenli bir şifre belirleyin. Şifreniz en az 8 karakter olmalıdır.</li>
+<li><strong>Gerekli Evrakları Yükleyin:</strong> Vergi levhası ve diğer gerekli belgeleri yükleyin. Bu belgeler ekibimiz tarafından incelenecektir.</li>
+<li><strong>Onay Bekleyin:</strong> Belgeleriniz onaylandıktan sonra platforma tam erişim sağlayabilirsiniz. Onay süreci genellikle 1 iş günü içinde tamamlanır.</li>
+</ol>
+
+<h3>Önemli Not</h3>
+<p>Bir vergi numarası ile yalnızca bir hesap oluşturulabilir. Eğer firmanız için daha önce kayıt yapıldıysa, mevcut hesap yöneticisiyle iletişime geçmeniz veya destek ekibimize ulaşmanız gerekmektedir.</p>
+HTML;
+    }
+
+    private function getYardimSaticiUrunEklemeContent(): string
+    {
+        return <<<'HTML'
+<h2>Ürün Ekleme ve Teklif Oluşturma</h2>
+<p>i-kirtasiye'nda ürün satışı yapmak için önce teklif oluşturmanız gerekmektedir. Her teklif bir ürün, stok miktarı ve birim fiyat içerir.</p>
+
+<h3>Ürün Ekleme Adımları</h3>
+
+<h4>1. Ürün Seçimi</h4>
+<p><strong>Dashboard &gt; Tekliflerim &gt; Yeni Teklif Oluştur</strong> yolunu izleyin. Açılan formda ürün adı veya barkod ile arama yapın.</p>
+<p><strong>Ürün Arama Yöntemleri:</strong></p>
+<ul>
+<li>Ürün adının ilk 3+ harfini yazarak arama</li>
+<li>Barkod numarası ile doğrudan arama</li>
+<li>Kategori filtresi ile daraltma</li>
+</ul>
+
+<h4>2. Stok ve Fiyat Bilgisi</h4>
+<p>Ürünü seçtikten sonra stok miktarını ve birim satış fiyatını girin.</p>
+<ul>
+<li><strong>Stok Miktarı:</strong> Satışa sunmak istediğiniz adet sayısı.</li>
+<li><strong>Birim Fiyat:</strong> KDV dahil birim satış fiyatı (TL).</li>
+</ul>
+
+<h4>3. Son Kullanma Tarihi ve Parti No</h4>
+<p>Ürün güvenliği için varsa SKT ve parti numarası bilgilerini girin. Bu bilgiler alıcılara gösterilir. SKT'si 3 aydan kısa kalan ürünler "Kısa Vadeli" olarak işaretlenir.</p>
+
+<h3>Teklif Yayınlama</h3>
+<p>Tüm bilgileri girdikten sonra "Teklifi Yayınla" butonuna tıklayın. Teklifiniz anında diğer alıcılara görünür hale gelecektir.</p>
+
+<h3>Başarılı Satış İçin İpuçları</h3>
+<ul>
+<li>Rekabetçi fiyat belirleyin; sistem size piyasa ortalamalarını gösterir.</li>
+<li>Stok bilgisini güncel tutun; yanlış stok bilgisi olumsuz değerlendirmeye yol açar.</li>
+<li>Uzun SKT'li ürünler daha hızlı satılır.</li>
+<li>Açıklama alanını kullanarak ekstra bilgi verin.</li>
+</ul>
+HTML;
+    }
+
+    private function getYardimSaticiFiyatStokContent(): string
+    {
+        return <<<'HTML'
+<h2>Fiyat ve Stok Güncelleme</h2>
+<p>Aktif tekliflerinizin fiyat ve stok bilgilerini istediğiniz zaman güncelleyebilirsiniz. Rekabetçi kalmak için piyasa fiyatlarını takip etmenizi öneririz.</p>
+
+<h3>Tekliflerinize Erişim</h3>
+<p><strong>Dashboard &gt; Tekliflerim</strong> menüsünden tüm aktif ve pasif tekliflerinizi görebilirsiniz.</p>
+
+<h4>Teklif Durumları</h4>
+<ul>
+<li><strong>Aktif:</strong> Satışta, alıcılara görünür.</li>
+<li><strong>Stok Bitti:</strong> Stok eklenince aktifleşir.</li>
+<li><strong>Pasif:</strong> Elle durdurulmuş.</li>
+</ul>
+
+<h3>Fiyat Güncelleme</h3>
+<ol>
+<li>Tekliflerim sayfasından ilgili teklifi bulun.</li>
+<li>"Düzenle" butonuna tıklayın.</li>
+<li>Yeni fiyatı girin ve kaydedin.</li>
+</ol>
+<p>Fiyat değişikliği anında uygulanır ve alıcılara yeni fiyat gösterilir.</p>
+
+<h4>Piyasa Fiyatı Takibi</h4>
+<p>Ürün sayfalarında piyasa ortalaması ve en düşük fiyat bilgisi gösterilir. Bu bilgiyi kullanarak rekabetçi fiyatlandırma yapabilirsiniz.</p>
+
+<h3>Stok Güncelleme</h3>
+<p>Stok miktarını artırabilir veya azaltabilirsiniz. Stok 0'a düştüğünde teklif otomatik olarak "Stok Bitti" durumuna geçer. Sipariş alındığında stok otomatik olarak düşer; manuel güncelleme yapmanıza gerek yoktur.</p>
+
+<h3>Stok Yönetimi İpuçları</h3>
+<ul>
+<li>Günlük olarak stoklarınızı kontrol edin.</li>
+<li>Satamayacağınız ürünleri hemen pasife alın.</li>
+<li>Yanlış stok bilgisi olumsuz puanlamaya yol açar.</li>
+</ul>
+HTML;
+    }
+
+    private function getYardimSaticiSiparisYonetimiContent(): string
+    {
+        return <<<'HTML'
+<h2>Sipariş Yönetimi ve Kargo</h2>
+<p>Tekliflerinize sipariş geldiğinde bildirim alacaksınız. Siparişleri zamanında hazırlayıp kargoya vermek, başarılı satıcı puanı için kritik öneme sahiptir.</p>
+
+<h3>Sipariş Bildirimleri</h3>
+<p>Yeni sipariş aldığınızda:</p>
+<ul>
+<li>E-posta ile bildirim gönderilir.</li>
+<li>Dashboard'da "Yeni Siparişler" sayacı güncellenir.</li>
+<li>İzin verdiyseniz PWA bildirimi gönderilir.</li>
+</ul>
+
+<h3>Sipariş Durumları</h3>
+<ul>
+<li><strong>Beklemede:</strong> Yeni sipariş, hazırlanmayı bekliyor.</li>
+<li><strong>Hazırlanıyor:</strong> Sipariş hazırlık aşamasında.</li>
+<li><strong>Kargoda:</strong> Kargoya verildi, yolda.</li>
+<li><strong>Teslim Edildi:</strong> Alıcıya ulaştı.</li>
+<li><strong>İptal:</strong> Sipariş iptal edildi.</li>
+</ul>
+
+<h3>Kargoya Verme Süreci</h3>
+<ol>
+<li><strong>Siparişi Hazırlayın:</strong> Ürünleri dikkatlice paketleyin. Varsa SKT ve parti numaralarının siparişteki ile eşleştiğinden emin olun.</li>
+<li><strong>Kargo Etiketi Oluşturun:</strong> Sipariş detay sayfasında "Kargoya Ver" butonuna tıklayın. Sistem otomatik olarak kargo etiketi oluşturur. Entegre kargo firmaları: Aras, Yurtiçi, MNG, PTT, Sürat ve daha fazlası.</li>
+<li><strong>Takip Numarasını Girin:</strong> Kargo firmasından aldığınız takip numarasını sisteme girin. Alıcı otomatik olarak bilgilendirilir ve kargo takibi yapabilir.</li>
+</ol>
+
+<h3>Süre Limitleri</h3>
+<ul>
+<li>Siparişler <strong>48 saat</strong> içinde kargoya verilmelidir.</li>
+<li>Gecikmeler satıcı puanınızı olumsuz etkiler.</li>
+<li>Kargolanamayacak siparişleri hemen iptal edin.</li>
+</ul>
+HTML;
+    }
+
+    private function getYardimSaticiHakedislerContent(): string
+    {
+        return <<<'HTML'
+<h2>Ödeme Talebi ve Hakedişler</h2>
+<p>Satışlarınızdan elde ettiğiniz gelir, sabit hizmet bedeli düşüldükten sonra cüzdanınıza aktarılır. Cüzdan bakiyenizi istediğiniz zaman banka hesabınıza çekebilirsiniz.</p>
+
+<h3>Hakediş Süreci</h3>
+<ol>
+<li><strong>Sipariş Tamamlanır:</strong> Alıcı siparişi teslim alır veya 7 gün geçer.</li>
+<li><strong>Hizmet Bedeli Kesintisi:</strong> Sabit hizmet bedeli düşülür.</li>
+<li><strong>Cüzdana Aktarım:</strong> Net tutar cüzdan bakiyenize eklenir.</li>
+<li><strong>Ödeme Talebi:</strong> İstediğiniz zaman banka hesabınıza çekin.</li>
+</ol>
+
+<h3>Cüzdan Yönetimi</h3>
+<p><strong>Bakiye Görüntüleme:</strong> Dashboard &gt; Cüzdan menüsünden mevcut bakiyenizi, bekleyen hakedişlerinizi ve geçmiş işlemlerinizi görüntüleyebilirsiniz.</p>
+<p><strong>Banka Hesabı Ekleme:</strong> Ödeme almak için en az bir banka hesabı tanımlamanız gerekir. Birden fazla hesap ekleyebilir ve varsayılan hesap seçebilirsiniz.</p>
+
+<h3>Ödeme Talebi Oluşturma</h3>
+<ol>
+<li>Cüzdan sayfasında "Ödeme Talebi Oluştur" butonuna tıklayın.</li>
+<li>Çekmek istediğiniz tutarı girin.</li>
+<li>Banka hesabınızı seçin.</li>
+<li>Talebi onaylayın.</li>
+</ol>
+
+<h3>Ödeme Koşulları</h3>
+<ul>
+<li>Minimum çekim tutarı: <strong>100 TL</strong>.</li>
+<li>Ödemeler <strong>1-3 iş günü</strong> içinde hesabınıza geçer.</li>
+<li>Çekim işlemlerinden ek kesinti yapılmaz.</li>
+</ul>
+
+<h3>Hizmet Bedeli</h3>
+<ul>
+<li><strong>Hizmet Bedeli:</strong> Sabit ücret (sipariş başına).</li>
+<li><strong>Stopaj:</strong> %1.</li>
+<li><strong>Yüzdesel Komisyon:</strong> Yok.</li>
+</ul>
+<p>Güncel hizmet bedeli tutarı için lütfen platform üzerindeki bilgilendirme sayfalarını veya satıcı dashboardunuzu kontrol edin.</p>
+HTML;
+    }
+
+    private function getYardimAliciFiyatKarsilastirmaContent(): string
+    {
+        return <<<'HTML'
+<h2>En Uygun Fiyatı Bulma</h2>
+<p>i-kirtasiye, aynı ürün için birden fazla satıcının tekliflerini görmenizi sağlar. Karşılaştırma yaparak en uygun fiyatı kolayca bulabilirsiniz.</p>
+
+<h3>Ürün Arama</h3>
+<ul>
+<li><strong>Ürün adı:</strong> En az 3 karakter yazarak arama yapın.</li>
+<li><strong>Barkod:</strong> 13 haneli barkod numarası ile doğrudan arama.</li>
+<li><strong>Kategori:</strong> Kategorilerden göz atın.</li>
+</ul>
+
+<h3>Fiyat Karşılaştırma</h3>
+<p>Ürün sayfasına gittiğinizde, o ürün için mevcut tüm teklifleri görebilirsiniz. Her teklif şu bilgileri içerir:</p>
+<ul>
+<li><strong>Satıcı Bilgisi:</strong> Satıcı adı ve puanı.</li>
+<li><strong>Birim Fiyat:</strong> KDV dahil satış fiyatı.</li>
+<li><strong>Stok Durumu:</strong> Mevcut miktar.</li>
+<li><strong>SKT:</strong> Varsa son kullanma tarihi.</li>
+</ul>
+
+<h3>Filtreleme ve Sıralama</h3>
+<ul>
+<li><strong>Fiyata göre sıralama:</strong> En düşükten en yükseğe veya tam tersi.</li>
+<li><strong>SKT filtresi:</strong> Uzun vadeli ürünleri filtreleyin.</li>
+<li><strong>Minimum stok:</strong> Belirli miktarın üzerindeki teklifleri gösterin.</li>
+<li><strong>Satıcı puanı:</strong> Yüksek puanlı satıcıları tercih edin.</li>
+</ul>
+
+<h3>Alışveriş İpuçları</h3>
+<ul>
+<li>En düşük fiyat her zaman en iyi seçenek olmayabilir; satıcı puanını kontrol edin.</li>
+<li>Aynı satıcıdan birden fazla ürün alarak kargo tasarrufu yapabilirsiniz.</li>
+<li>SKT'si kısa ürünler genellikle daha ucuzdur.</li>
+</ul>
+HTML;
+    }
+
+    private function getYardimAliciSepetOdemeContent(): string
+    {
+        return <<<'HTML'
+<h2>Sepet ve Ödeme Adımları</h2>
+<p>Sepete eklediğiniz ürünleri güvenli bir şekilde satın alabilirsiniz. Birden fazla satıcıdan ürün ekleyebilir, tek seferde ödeme yapabilirsiniz.</p>
+
+<h3>Sepete Ürün Ekleme</h3>
+<ol>
+<li>Ürün sayfasından istediğiniz teklifi seçin.</li>
+<li>Almak istediğiniz miktarı girin.</li>
+<li>"Sepete Ekle" butonuna tıklayın.</li>
+</ol>
+<p><strong>İpucu:</strong> Farklı satıcılardan ürün ekleyebilirsiniz. Her satıcı için ayrı kargo ücreti uygulanabilir.</p>
+
+<h3>Sepet Görüntüleme</h3>
+<p>Sağ üstteki sepet ikonuna tıklayarak sepetinizi görüntüleyebilirsiniz. Sepet sayfasında:</p>
+<ul>
+<li>Ürünlerin miktarını değiştirebilirsiniz.</li>
+<li>Ürün çıkarabilirsiniz.</li>
+<li>Kargo ve toplam tutarı görebilirsiniz.</li>
+</ul>
+
+<h3>Ödeme Adımları</h3>
+<ol>
+<li><strong>Teslimat Adresi:</strong> Kayıtlı işletme adresiniz varsayılan teslimat adresi olarak gelir. Farklı bir adres ekleyebilir veya düzenleyebilirsiniz.</li>
+<li><strong>Ödeme Yöntemi:</strong> Tercih ettiğiniz ödeme yöntemini seçin.
+    <ul>
+    <li><strong>Kredi/Banka Kartı:</strong> Anında ödeme, 3D Secure güvenliği.</li>
+    <li><strong>Havale/EFT:</strong> Banka transferi, doğrulama sonrası gönderim.</li>
+    </ul>
+</li>
+</ol>
+
+<h3>Güvenli Ödeme</h3>
+<ul>
+<li>Tüm ödemeler 256-bit SSL ile şifrelenir.</li>
+<li>Kart bilgileriniz saklanmaz.</li>
+<li>3D Secure doğrulama ile ek güvenlik.</li>
+</ul>
+
+<h3>Önemli Bilgiler</h3>
+<ul>
+<li>Sipariş onaylandıktan sonra iptal için satıcıyla iletişime geçin.</li>
+<li>Havale/EFT ödemelerinde 24 saat içinde ödeme yapılmalıdır.</li>
+</ul>
+HTML;
+    }
+
+    private function getYardimAliciSiparisTakibiContent(): string
+    {
+        return <<<'HTML'
+<h2>Sipariş Takibi</h2>
+<p>Siparişlerinizi "Siparişlerim" sayfasından anlık olarak takip edebilirsiniz. Kargo durumu değişikliklerinde bildirim alırsınız.</p>
+
+<h3>Siparişlerinize Erişim</h3>
+<p><strong>Dashboard &gt; Siparişlerim</strong> yolunu izleyerek tüm siparişlerinizi görüntüleyebilirsiniz.</p>
+
+<h3>Sipariş Durumları</h3>
+<ul>
+<li><strong>Ödeme Bekleniyor:</strong> Havale/EFT ödemesi bekleniyor.</li>
+<li><strong>Hazırlanıyor:</strong> Satıcı siparişi hazırlıyor.</li>
+<li><strong>Kargoda:</strong> Kargo firması tarafından taşınıyor.</li>
+<li><strong>Dağıtımda:</strong> Teslimat için yola çıktı.</li>
+<li><strong>Teslim Edildi:</strong> Sipariş başarıyla teslim alındı.</li>
+</ul>
+
+<h3>Kargo Takibi</h3>
+<p>Sipariş kargoya verildiğinde takip numarası siparişinize eklenir. Bu numara ile kargo firmasının sitesinden de takip yapabilirsiniz.</p>
+<ul>
+<li>Sipariş detay sayfasında "Kargo Takibi" butonuna tıklayın.</li>
+<li>Anlık konum ve tahmini teslimat tarihi gösterilir.</li>
+<li>Tüm kargo hareketleri kronolojik olarak listelenir.</li>
+</ul>
+
+<h3>Bildirimler</h3>
+<ul>
+<li>Sipariş durumu değiştiğinde e-posta alırsınız.</li>
+<li>Kargo yola çıktığında SMS bildirimi (opsiyonel).</li>
+<li>İzin verdiyseniz PWA push bildirimleri.</li>
+</ul>
+
+<h3>Teslimat Sonrası</h3>
+<ul>
+<li>Teslimat onayı yapmanız istenir (7 gün otomatik onay).</li>
+<li>Satıcıyı puanlayabilirsiniz.</li>
+<li>Sorun varsa destek talebi oluşturabilirsiniz.</li>
+</ul>
+HTML;
     }
 
     private function getAboutContent(): string

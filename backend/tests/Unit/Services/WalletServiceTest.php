@@ -19,7 +19,7 @@ class WalletServiceTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->walletService = new WalletService();
+        $this->walletService = new WalletService;
     }
 
     /**
@@ -146,6 +146,93 @@ class WalletServiceTest extends TestCase
 
         // Net amount = 500 - 50 = 450
         $this->assertEquals(450.00, $wallet->pending_balance);
+    }
+
+    /**
+     * Stopaj parametresi pending bakiyeden düşülmeli ve TYPE_WITHHOLDING transaction yazılmalı.
+     */
+    public function test_add_order_earnings_deducts_withholding_tax(): void
+    {
+        $seller = User::factory()->seller()->create();
+        $buyer = User::factory()->create();
+        $order = Order::factory()->forUser($buyer)->create([
+            'order_number' => 'IKR2605070000ABCD',
+        ]);
+
+        $this->walletService->addOrderEarnings(
+            seller: $seller,
+            order: $order,
+            saleAmount: 1000.00,
+            commission: 100.00,
+            shippingCost: 30.00,
+            withholdingTax: 8.33,
+        );
+
+        $wallet = $this->walletService->getWallet($seller);
+
+        // Net = 1000 - 100 - 30 - 8.33 = 861.67
+        $this->assertEquals(861.67, (float) $wallet->pending_balance);
+
+        $withholdingTx = WalletTransaction::where('wallet_id', $wallet->id)
+            ->where('type', WalletTransaction::TYPE_WITHHOLDING)
+            ->first();
+        $this->assertNotNull($withholdingTx);
+        $this->assertEquals(8.33, (float) $withholdingTx->amount);
+        $this->assertEquals(WalletTransaction::DIRECTION_DEBIT, $withholdingTx->direction);
+        $this->assertEquals(WalletTransaction::BALANCE_PENDING, $withholdingTx->balance_type);
+    }
+
+    /**
+     * releasePendingBalance hem available'a credit hem pending'den debit transaction yazmalı,
+     * böylece transaction tablosundan recompute edildiğinde pending sum tutarlı kalır.
+     */
+    public function test_release_pending_writes_paired_transactions(): void
+    {
+        $seller = User::factory()->seller()->create();
+        $buyer = User::factory()->create();
+        $order = Order::factory()->forUser($buyer)->create([
+            'order_number' => 'IKR2605070000RLSE',
+        ]);
+
+        $this->walletService->addOrderEarnings(
+            seller: $seller,
+            order: $order,
+            saleAmount: 1000.00,
+            commission: 100.00,
+            shippingCost: 50.00,
+            withholdingTax: 10.00,
+        );
+
+        $released = $this->walletService->releasePendingBalance($seller, $order);
+
+        $this->assertTrue($released);
+
+        $wallet = $this->walletService->getWallet($seller)->fresh();
+
+        // Net = 1000 - 100 - 50 - 10 = 840
+        $this->assertEquals(840.00, (float) $wallet->balance);
+        $this->assertEquals(0.00, (float) $wallet->pending_balance);
+
+        // İki release transaction olmalı: pending debit + available credit.
+        $releases = WalletTransaction::where('wallet_id', $wallet->id)
+            ->where('type', WalletTransaction::TYPE_RELEASE)
+            ->get();
+        $this->assertCount(2, $releases);
+        $this->assertTrue($releases->contains(
+            fn ($t) => $t->direction === WalletTransaction::DIRECTION_DEBIT
+                && $t->balance_type === WalletTransaction::BALANCE_PENDING,
+        ));
+        $this->assertTrue($releases->contains(
+            fn ($t) => $t->direction === WalletTransaction::DIRECTION_CREDIT
+                && $t->balance_type === WalletTransaction::BALANCE_AVAILABLE,
+        ));
+
+        // Transaction tablosundan recompute edilen pending = 0 olmalı.
+        $pendingNet = WalletTransaction::where('wallet_id', $wallet->id)
+            ->where('balance_type', WalletTransaction::BALANCE_PENDING)
+            ->get()
+            ->sum(fn ($t) => $t->signed_amount);
+        $this->assertEquals(0.00, round((float) $pendingNet, 2));
     }
 
     /**
@@ -488,7 +575,7 @@ class WalletServiceTest extends TestCase
     public function test_wallet_belongs_to_seller(): void
     {
         $seller = User::factory()->seller()->create([
-            'pharmacy_name' => 'Test Eczanesi',
+            'business_name' => 'Test Kırtasiye',
         ]);
 
         $wallet = SellerWallet::create([
@@ -501,7 +588,7 @@ class WalletServiceTest extends TestCase
         ]);
 
         $this->assertInstanceOf(User::class, $wallet->seller);
-        $this->assertEquals('Test Eczanesi', $wallet->seller->pharmacy_name);
+        $this->assertEquals('Test Kırtasiye', $wallet->seller->business_name);
     }
 
     /**

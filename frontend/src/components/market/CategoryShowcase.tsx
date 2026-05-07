@@ -22,44 +22,44 @@ interface CategoryShowcaseProps {
 const FALLBACK_CATEGORIES: CategoryItem[] = [
     {
         id: 1,
-        name: "Vitaminler",
-        slug: "vitaminler",
-        image: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=600&h=400&fit=crop",
+        name: "Defter",
+        slug: "defter",
+        image: "https://images.unsplash.com/photo-1531346878377-a5be20888e57?w=600&h=400&fit=crop",
         products_count: 248,
     },
     {
         id: 2,
-        name: "Takviyeler",
-        slug: "takviyeler",
-        image: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=600&h=400&fit=crop",
-        products_count: 186,
-    },
-    {
-        id: 3,
-        name: "Bebek Ürünleri",
-        slug: "bebek-urunleri",
-        image: "https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4?w=600&h=400&fit=crop",
-        products_count: 124,
-    },
-    {
-        id: 4,
-        name: "Kozmetik",
-        slug: "kozmetik",
-        image: "https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=600&h=400&fit=crop",
+        name: "Kalem",
+        slug: "kalem",
+        image: "https://images.unsplash.com/photo-1455390582262-044cdead277a?w=600&h=400&fit=crop",
         products_count: 312,
     },
     {
+        id: 3,
+        name: "Ofis Malzemeleri",
+        slug: "ofis-malzemeleri",
+        image: "https://images.unsplash.com/photo-1497032628192-86f99bcd76bc?w=600&h=400&fit=crop",
+        products_count: 186,
+    },
+    {
+        id: 4,
+        name: "Sanat & Hobi",
+        slug: "sanat-hobi",
+        image: "https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=600&h=400&fit=crop",
+        products_count: 124,
+    },
+    {
         id: 5,
-        name: "Ağrı Kesiciler",
-        slug: "agri-kesiciler",
-        image: "https://images.unsplash.com/photo-1550572017-edd951aa8f72?w=600&h=400&fit=crop",
+        name: "Okul Çantaları",
+        slug: "okul-cantalari",
+        image: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=600&h=400&fit=crop",
         products_count: 89,
     },
     {
         id: 6,
-        name: "Antibiyotikler",
-        slug: "antibiyotikler",
-        image: "https://images.unsplash.com/photo-1471864190281-a93a3070b6de?w=600&h=400&fit=crop",
+        name: "Kitap & Yayın",
+        slug: "kitap-yayin",
+        image: "https://images.unsplash.com/photo-1495446815901-a7297e633e8d?w=600&h=400&fit=crop",
         products_count: 156,
     },
 ];
@@ -187,7 +187,7 @@ export function CategoryStrip({
                             />
                             <div className="absolute inset-0 bg-slate-900/50 group-hover:bg-slate-900/60 transition-colors duration-150" />
                             <div className="absolute inset-0 flex items-center justify-center">
-                                <span className="text-3xl">{category.icon || "💊"}</span>
+                                <span className="text-3xl">{category.icon || "✏️"}</span>
                             </div>
                         </div>
                         <p className="text-xs font-medium text-slate-700 text-center truncate w-24">

@@ -5,19 +5,34 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Campaign;
 use App\Models\Category;
+use App\Models\Offer;
+use App\Models\OrderItem;
 use App\Models\Product;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
     /**
      * Get all active products with pagination
      * Supports filtering by category (including subcategories), brand, price range
-     * Supports sorting by offers_count, price, name, newest
+     * Supports sorting by offers_count, price_asc/desc, name, newest, sales_desc, price_drop, fast_ship, random
      */
     private const CACHE_TTL = 300; // 5 minutes
+
+    private const ALLOWED_SORTS = [
+        'offers_count',
+        'price_asc',
+        'price_desc',
+        'name',
+        'newest',
+        'random',
+        'sales_desc',
+        'price_drop',
+        'fast_ship',
+    ];
 
     public function index(Request $request): JsonResponse
     {
@@ -27,6 +42,9 @@ class ProductController extends Controller
         $minPrice = $request->input('min_price');
         $maxPrice = $request->input('max_price');
         $sortBy = $request->input('sort_by', 'offers_count');
+        if (! in_array($sortBy, self::ALLOWED_SORTS, true)) {
+            $sortBy = 'offers_count';
+        }
         $search = $request->input('search');
         $page = $request->input('page', 1);
 
@@ -114,6 +132,44 @@ class ProductController extends Controller
             case 'random':
                 $query->orderByRaw('CASE WHEN offers_count > 0 THEN 0 ELSE 1 END')
                     ->inRandomOrder();
+                break;
+            case 'sales_desc':
+                // Most-sold products first — sum of order_items.quantity across paid/shipped/delivered/completed orders.
+                // Falls back to offers_count then created_at when no sales history exists.
+                $query->addSelect([
+                    'total_sold' => OrderItem::query()
+                        ->select(DB::raw('COALESCE(SUM(order_items.quantity), 0)'))
+                        ->join('orders', 'orders.id', '=', 'order_items.order_id')
+                        ->whereColumn('order_items.product_id', 'products.id')
+                        ->whereIn('orders.status', ['paid', 'shipped', 'delivered', 'completed']),
+                ])
+                    ->orderByRaw('CASE WHEN offers_count > 0 THEN 0 ELSE 1 END')
+                    ->orderByDesc('total_sold')
+                    ->orderByDesc('offers_count')
+                    ->orderByDesc('created_at');
+                break;
+            case 'price_drop':
+                // Largest discount vs. PSF (list price) first. Only products with both PSF and a
+                // lowest_price below PSF rank highly; others fall back to newest.
+                $query->orderByRaw('CASE WHEN offers_count > 0 THEN 0 ELSE 1 END')
+                    ->orderByRaw('CASE WHEN psf IS NOT NULL AND psf > 0 AND lowest_price IS NOT NULL AND lowest_price < psf
+                            THEN ((psf - lowest_price) / psf) ELSE 0 END DESC')
+                    ->orderByDesc('created_at');
+                break;
+            case 'fast_ship':
+                // Cheapest shipping first. Joins via active offers to seller's default_shipping_fee;
+                // sellers without override (NULL) sort last. Products without offers sink to bottom.
+                $query->addSelect([
+                    'min_shipping_fee' => Offer::query()
+                        ->select(DB::raw('MIN(users.default_shipping_fee)'))
+                        ->join('users', 'users.id', '=', 'offers.seller_id')
+                        ->whereColumn('offers.product_id', 'products.id')
+                        ->where('offers.status', 'active'),
+                ])
+                    ->orderByRaw('CASE WHEN offers_count > 0 THEN 0 ELSE 1 END')
+                    ->orderByRaw('CASE WHEN min_shipping_fee IS NULL THEN 1 ELSE 0 END')
+                    ->orderBy('min_shipping_fee', 'asc')
+                    ->orderByDesc('offers_count');
                 break;
             default: // offers_count
                 $query->orderByDesc('offers_count')

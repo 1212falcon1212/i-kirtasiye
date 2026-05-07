@@ -1,11 +1,11 @@
 {
-  "name": "i-depo - B2B Eczane Pazaryeri",
-  "short_name": "i-depo",
-  "description": "Eczacılara özel kapalı B2B pazaryeri. GLN doğrulaması ile güvenli alışveriş.",
+  "name": "i-kirtasiye - B2B Kırtasiye Pazaryeri",
+  "short_name": "i-kirtasiye",
+  "description": "Kırtasiyecilere özel kapalı B2B pazaryeri. Vergi no doğrulaması ile güvenli alışveriş.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
-  "theme_color": "#10b981",
+  "theme_color": "#ea580c",
   "orientation": "portrait-primary",
   "scope": "/",
   "lang": "tr",
@@ -59,20 +59,27 @@
       "purpose": "maskable any"
     }
   ],
-  "categories": ["business", "medical", "shopping"],
+  "categories": ["productivity", "business", "shopping"],
   "shortcuts": [
     {
       "name": "Ürünler",
       "short_name": "Ürünler",
       "description": "Ürünleri görüntüle",
-      "url": "/products",
+      "url": "/market/products",
       "icons": [{ "src": "/icons/icon-96x96.png", "sizes": "96x96" }]
     },
     {
-      "name": "Tekliflerim",
-      "short_name": "Teklifler",
-      "description": "Tekliflerimi görüntüle",
-      "url": "/my-offers",
+      "name": "İlanlarım",
+      "short_name": "İlanlarım",
+      "description": "İlanlarımı yönet",
+      "url": "/market/hesabim/ilanlarim",
+      "icons": [{ "src": "/icons/icon-96x96.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "Sepet",
+      "short_name": "Sepet",
+      "description": "Sepetimi görüntüle",
+      "url": "/market/sepet",
       "icons": [{ "src": "/icons/icon-96x96.png", "sizes": "96x96" }]
     }
   ]

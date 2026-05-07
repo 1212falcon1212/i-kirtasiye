@@ -21,7 +21,10 @@ class WalletService
     }
 
     /**
-     * Add earnings from a completed order item
+     * Add earnings from a completed order item.
+     *
+     * Net hakediş = saleAmount − commission − shippingCost − withholdingTax. Stopaj
+     * satıcının vergi yükümlülüğüdür ve marketplace tarafından kesilip kaydedilir.
      */
     public function addOrderEarnings(
         User $seller,
@@ -30,18 +33,17 @@ class WalletService
         float $commission,
         ?float $shippingCost = null,
         ?int $orderItemId = null,
-        ?int $subOrderId = null
+        ?int $subOrderId = null,
+        ?float $withholdingTax = null,
     ): void {
         $wallet = $this->getWallet($seller);
 
-        DB::transaction(function () use ($wallet, $order, $saleAmount, $commission, $shippingCost, $orderItemId, $subOrderId) {
-            // Add sale amount to pending balance
-            $netAmount = $saleAmount - $commission - ($shippingCost ?? 0);
+        DB::transaction(function () use ($wallet, $order, $saleAmount, $commission, $shippingCost, $withholdingTax, $orderItemId, $subOrderId) {
+            $netAmount = $saleAmount - $commission - ($shippingCost ?? 0) - ($withholdingTax ?? 0);
 
             $wallet->addPendingBalance($netAmount);
             $wallet->addCommission($commission);
 
-            // Record sale transaction
             WalletTransaction::create([
                 'wallet_id' => $wallet->id,
                 'type' => WalletTransaction::TYPE_SALE,
@@ -54,7 +56,6 @@ class WalletService
                 'order_item_id' => $orderItemId,
             ]);
 
-            // Record commission deduction
             if ($commission > 0) {
                 WalletTransaction::create([
                     'wallet_id' => $wallet->id,
@@ -69,7 +70,6 @@ class WalletService
                 ]);
             }
 
-            // Record shipping cost if applicable
             if ($shippingCost && $shippingCost > 0) {
                 WalletTransaction::create([
                     'wallet_id' => $wallet->id,
@@ -83,9 +83,23 @@ class WalletService
                     'order_item_id' => $orderItemId,
                 ]);
             }
+
+            if ($withholdingTax !== null && $withholdingTax > 0) {
+                WalletTransaction::create([
+                    'wallet_id' => $wallet->id,
+                    'type' => WalletTransaction::TYPE_WITHHOLDING,
+                    'amount' => $withholdingTax,
+                    'direction' => WalletTransaction::DIRECTION_DEBIT,
+                    'balance_type' => WalletTransaction::BALANCE_PENDING,
+                    'description' => "Sipariş #{$order->order_number} - Stopaj",
+                    'order_id' => $order->id,
+                    'sub_order_id' => $subOrderId,
+                    'order_item_id' => $orderItemId,
+                ]);
+            }
         });
 
-        Log::info("Wallet earnings added for seller {$seller->id}: sale={$saleAmount}, commission={$commission}, subOrder={$subOrderId}");
+        Log::info("Wallet earnings added for seller {$seller->id}: sale={$saleAmount}, commission={$commission}, withholding=".($withholdingTax ?? 0).", subOrder={$subOrderId}");
     }
 
     /**
@@ -107,6 +121,7 @@ class WalletService
 
         if ($releaseQuery->exists()) {
             Log::info("Skipping duplicate release for wallet {$wallet->id}, order {$order->order_number}, subOrder {$subOrderId}");
+
             return false;
         }
 
@@ -133,6 +148,19 @@ class WalletService
         DB::transaction(function () use ($wallet, $netAmount, $order, $subOrderId) {
             $wallet->releasePendingToAvailable($netAmount);
 
+            // Pending bakiyeden çıkış (transaction sum tutarlılığı için).
+            WalletTransaction::create([
+                'wallet_id' => $wallet->id,
+                'type' => WalletTransaction::TYPE_RELEASE,
+                'amount' => $netAmount,
+                'direction' => WalletTransaction::DIRECTION_DEBIT,
+                'balance_type' => WalletTransaction::BALANCE_PENDING,
+                'description' => "Sipariş #{$order->order_number} - Bakiye Serbest Bırakma (pending → available)",
+                'order_id' => $order->id,
+                'sub_order_id' => $subOrderId,
+            ]);
+
+            // Available bakiyeye giriş.
             WalletTransaction::create([
                 'wallet_id' => $wallet->id,
                 'type' => WalletTransaction::TYPE_RELEASE,
@@ -164,7 +192,7 @@ class WalletService
             ->get();
 
         // Net pending amount (sale credit - commission debit - shipping debit)
-        $netPending = $pendingTxs->reduce(fn($carry, $tx) => $carry + $tx->signed_amount, 0);
+        $netPending = $pendingTxs->reduce(fn ($carry, $tx) => $carry + $tx->signed_amount, 0);
 
         // Check if balance was already released to available
         $releaseTx = WalletTransaction::where('wallet_id', $wallet->id)
@@ -180,6 +208,7 @@ class WalletService
 
         if ($alreadyReversed) {
             Log::info("Skipping duplicate wallet reversal for seller {$seller->id}, subOrder {$subOrderId}");
+
             return;
         }
 
@@ -245,6 +274,7 @@ class WalletService
 
         if ($alreadyReversed) {
             Log::info("Skipping duplicate item wallet reversal for return request {$returnRequest->id}");
+
             return;
         }
 
@@ -309,7 +339,7 @@ class WalletService
     {
         $wallet = $this->getWallet($seller);
 
-        if (!$wallet->canWithdraw($amount)) {
+        if (! $wallet->canWithdraw($amount)) {
             return false;
         }
 

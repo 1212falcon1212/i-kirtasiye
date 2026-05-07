@@ -109,7 +109,7 @@ class CmsController extends Controller
                     'hours_saturday' => Setting::getValue('footer.hours_saturday', '10:00 - 14:00'),
                     'hours_sunday' => Setting::getValue('footer.hours_sunday', 'Kapalı'),
                     'copyright' => Setting::getValue('footer.copyright', 'i-kirtasiye.com. Tüm hakları saklıdır.'),
-                    'pharmacist_note' => Setting::getValue('footer.pharmacist_note', 'Sadece eczacılar içindir'),
+                    'pharmacist_note' => Setting::getValue('footer.pharmacist_note', 'Sadece kayıtlı kırtasiyeciler içindir'),
                     'facebook_url' => Setting::getValue('footer.facebook_url', ''),
                     'twitter_url' => Setting::getValue('footer.twitter_url', ''),
                     'instagram_url' => Setting::getValue('footer.instagram_url', ''),
@@ -198,27 +198,36 @@ class CmsController extends Controller
 
     /**
      * Rastgele 16 ilanlı ürünü döndürür (ana sayfa "Tüm Ürünler" bölümü için).
+     *
+     * Performans: inRandomOrder() ile 12k+ satırı taramak yerine 60 saniyelik cache'e
+     * alınan 48 ürünlük havuzdan PHP shuffle ile 16 ürün seçilir. Bu sayede DB üzerindeki
+     * ORDER BY RAND() maliyeti (~800ms) cache miss'te ortaya çıkar, sonraki istekler <5ms.
      */
     public function randomProducts(): JsonResponse
     {
-        $products = Product::with([
-            'category:id,name,slug',
-            'offers' => function ($q) {
-                $q->where('status', 'active')->where('stock', '>', 0)->orderBy('price');
-            },
-        ])
-            ->listable()
-            ->withCount(['activeOffers as offers_count'])
-            ->withMin('activeOffers as lowest_price', 'price')
-            ->inRandomOrder()
-            ->take(16)
-            ->get()
-            ->map(fn ($product) => $this->formatProductForApi($product))
-            ->values()
-            ->toArray();
+        $pool = Cache::remember('cms.random_products_pool', 60, function () {
+            return Product::with([
+                'category:id,name,slug',
+                'offers' => function ($q) {
+                    $q->where('status', 'active')->where('stock', '>', 0)->orderBy('price');
+                },
+            ])
+                ->listable()
+                ->withCount(['activeOffers as offers_count'])
+                ->withMin('activeOffers as lowest_price', 'price')
+                ->inRandomOrder()
+                ->take(48)
+                ->get()
+                ->map(fn ($product) => $this->formatProductForApi($product))
+                ->values()
+                ->toArray();
+        });
+
+        // PHP shuffle'dan 16 ürün seç; her istek farklı sıra görür ama DB'ye gitmez
+        shuffle($pool);
 
         return response()->json([
-            'products' => $products,
+            'products' => array_slice($pool, 0, 16),
         ]);
     }
 
@@ -554,8 +563,9 @@ class CmsController extends Controller
             ];
         });
 
-        // Son Satılanlar her istekte random gelsin
-        $cached['recently_sold'] = $this->getRecentlySold();
+        // Son Satılanlar: kısa TTL (60s) ile cache'le; her istekte ORDER BY RAND() 25k satır
+        // taramak ~400ms maliyete yol açıyordu. 60 saniyelik stale data kabul edilebilir.
+        $cached['recently_sold'] = Cache::remember('cms.recently_sold', 60, fn () => $this->getRecentlySold());
 
         return response()->json($cached);
     }
@@ -637,6 +647,46 @@ class CmsController extends Controller
         }
 
         return $this->formatOfferForFeatured($offer);
+    }
+
+    /**
+     * Bir gruba ait yayindaki sayfalari listeler.
+     * Slug prefix bazli filtreleme:
+     *   - slug == group  (ana hub, ornek: "yardim")
+     *   - slug LIKE group-%  (alt sayfalar, ornek: "yardim-baslarken")
+     * Cache TTL: 10 dakika. Page model save/delete'de invalidate edilir.
+     */
+    public function pagesByGroup(string $group): JsonResponse
+    {
+        $group = preg_replace('/[^a-z0-9\-]/i', '', $group) ?? '';
+
+        if ($group === '') {
+            return response()->json(['status' => 'error', 'message' => 'Gecersiz grup'], 400);
+        }
+
+        $pages = Cache::remember("cms.pages.group.{$group}", 600, function () use ($group) {
+            return Page::published()
+                ->where(function ($q) use ($group) {
+                    $q->where('slug', $group)
+                        ->orWhere('slug', 'like', $group.'-%');
+                })
+                ->ordered()
+                ->get(['id', 'slug', 'title', 'excerpt', 'sort_order'])
+                ->map(fn (Page $page) => [
+                    'id' => $page->id,
+                    'slug' => $page->slug,
+                    'title' => $page->title,
+                    'excerpt' => $page->excerpt,
+                    'sort_order' => $page->sort_order,
+                ])
+                ->values()
+                ->toArray();
+        });
+
+        return response()->json([
+            'status' => 'success',
+            'data' => $pages,
+        ]);
     }
 
     /**

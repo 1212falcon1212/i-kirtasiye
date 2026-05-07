@@ -5,7 +5,7 @@ import Link from 'next/link';
 import dynamic from 'next/dynamic';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
-import { ordersApi, Order, SellerOrder, api, integrationsApi, UserIntegration, sellerApi, SellerOrderDetail, SellerStatsResponse, distributorRetailerLinkApi, DistributorRetailerLink, RetailerListItem, invoiceApi, offersApi, Offer, CreateOfferData, UpdateOfferData, productsApi, Product, wishlistApi, campaignsApi, Campaign, CreateCampaignData, reviewsApi, Review, SellerRating, shippingApi, returnsApi, ReturnRequest, ReturnReason, walletApi, addressApi, Address, BankAccount, authApi, notificationsApi, NotificationSetting, platformApi, FeeInfo, paymentsApi, SavedCard } from '@/lib/api';
+import { ordersApi, Order, SellerOrder, api, integrationsApi, UserIntegration, sellerApi, SellerOrderDetail, SellerStatsResponse, distributorRetailerLinkApi, DistributorRetailerLink, RetailerListItem, invoiceApi, offersApi, Offer, CreateOfferData, UpdateOfferData, productsApi, Product, wishlistApi, campaignsApi, Campaign, CreateCampaignData, reviewsApi, Review, SellerRating, shippingApi, returnsApi, ReturnRequest, ReturnReason, walletApi, addressApi, Address, BankAccount, authApi, notificationsApi, NotificationSetting, platformApi, FeeInfo, paymentsApi, SavedCard, sellerShippingApi, SellerShippingSettings } from '@/lib/api';
 import { CityDistrictSelect } from '@/components/forms/CityDistrictSelect';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -177,6 +177,7 @@ const TAB_SUBNAV: Record<string, { id: string; label: string; count?: number }[]
     'ayarlarim': [
         { id: 'kullanici-bilgilerim', label: 'Kullanıcı Bilgilerim' },
         { id: 'satis-bilgilerim', label: 'Satış Bilgilerim' },
+        { id: 'kargo-ayarlari', label: 'Kargo Ayarları' },
         { id: 'adresler', label: 'Adreslerim' },
         { id: 'kartlarim', label: 'Kartlarım' },
         { id: 'bildirim-tercihleri', label: 'Bildirim Tercihleri' },
@@ -1970,6 +1971,222 @@ function BildirimTercihleriContent() {
     );
 }
 
+// Kargo Ayarları (satıcı bazlı kargo ücreti override)
+function KargoAyarlariContent() {
+    const [settings, setSettings] = useState<SellerShippingSettings | null>(null);
+    const [loading, setLoading] = useState(true);
+    const [saving, setSaving] = useState(false);
+    const [feeInput, setFeeInput] = useState('');
+    const [thresholdInput, setThresholdInput] = useState('');
+    const [feeError, setFeeError] = useState<string | null>(null);
+    const [thresholdError, setThresholdError] = useState<string | null>(null);
+
+    useEffect(() => {
+        loadSettings();
+    }, []);
+
+    const loadSettings = async () => {
+        setLoading(true);
+        try {
+            const res = await sellerShippingApi.get();
+            if (res.data) {
+                setSettings(res.data);
+                setFeeInput(res.data.default_shipping_fee !== null ? String(res.data.default_shipping_fee) : '');
+                setThresholdInput(res.data.free_shipping_threshold !== null ? String(res.data.free_shipping_threshold) : '');
+            } else {
+                toast.error(res.error || 'Ayarlar yüklenemedi');
+            }
+        } catch {
+            toast.error('Kargo ayarları yüklenirken hata oluştu');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const validateNumeric = (value: string): { ok: boolean; error?: string } => {
+        if (value.trim() === '') return { ok: true };
+        const n = Number(value);
+        if (Number.isNaN(n)) return { ok: false, error: 'Geçerli bir sayı giriniz' };
+        if (n < 0) return { ok: false, error: 'Negatif değer girilemez' };
+        return { ok: true };
+    };
+
+    const handleSave = async () => {
+        setFeeError(null);
+        setThresholdError(null);
+
+        const feeCheck = validateNumeric(feeInput);
+        const threshCheck = validateNumeric(thresholdInput);
+
+        if (!feeCheck.ok) {
+            setFeeError(feeCheck.error ?? null);
+            return;
+        }
+        if (!threshCheck.ok) {
+            setThresholdError(threshCheck.error ?? null);
+            return;
+        }
+
+        setSaving(true);
+        try {
+            const payload = {
+                default_shipping_fee: feeInput.trim() === '' ? null : Number(feeInput),
+                free_shipping_threshold: thresholdInput.trim() === '' ? null : Number(thresholdInput),
+            };
+
+            const res = await sellerShippingApi.update(payload);
+            if (res.data) {
+                setSettings(res.data);
+                toast.success(res.data.message || 'Kargo ayarlarınız güncellendi');
+            } else {
+                toast.error(res.error || 'Ayarlar güncellenemedi');
+            }
+        } catch {
+            toast.error('Kargo ayarları kaydedilirken hata oluştu');
+        } finally {
+            setSaving(false);
+        }
+    };
+
+    const handleResetToGlobal = async () => {
+        setFeeInput('');
+        setThresholdInput('');
+        setFeeError(null);
+        setThresholdError(null);
+        setSaving(true);
+        try {
+            const res = await sellerShippingApi.update({ default_shipping_fee: null, free_shipping_threshold: null });
+            if (res.data) {
+                setSettings(res.data);
+                toast.success('Sistem varsayılanına döndürüldü');
+            } else {
+                toast.error(res.error || 'Sıfırlanamadı');
+            }
+        } catch {
+            toast.error('Sıfırlama sırasında hata oluştu');
+        } finally {
+            setSaving(false);
+        }
+    };
+
+    if (loading) {
+        return (
+            <div className="space-y-4">
+                <Skeleton className="h-8 w-48" />
+                <Skeleton className="h-48 w-full" />
+            </div>
+        );
+    }
+
+    const formatTry = (v: number) => `₺${v.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+
+    return (
+        <div className="space-y-6">
+            <div className="bg-white rounded-xl border border-slate-200 p-6">
+                <div className="mb-6">
+                    <h3 className="text-lg font-bold text-slate-900">Kargo Ayarları</h3>
+                    <p className="text-sm text-slate-500 mt-1">
+                        Sattığınız ürünler için kargo ücretini ve ücretsiz kargo limitini siz belirleyin.
+                        Boş bırakırsanız sistem varsayılanı uygulanır.
+                    </p>
+                </div>
+
+                {/* Bilgi kartı: aktif ayarlar */}
+                <div className="bg-slate-50 rounded-lg p-4 mb-6 border border-slate-200">
+                    <p className="text-xs font-medium text-slate-500 uppercase tracking-wide mb-3">Şu an aktif olan değerler</p>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <p className="text-xs text-slate-500">Standart Kargo Ücreti</p>
+                            <p className="text-xl font-bold text-slate-900 mt-1">{formatTry(settings?.effective_shipping_fee ?? 0)}</p>
+                            <p className="text-xs text-slate-400 mt-0.5">
+                                {settings?.default_shipping_fee !== null && settings?.default_shipping_fee !== undefined
+                                    ? 'Sizin belirlediğiniz değer'
+                                    : `Sistem varsayılanı (${formatTry(settings?.global.shipping_fee ?? 0)})`}
+                            </p>
+                        </div>
+                        <div>
+                            <p className="text-xs text-slate-500">Ücretsiz Kargo Limiti</p>
+                            <p className="text-xl font-bold text-slate-900 mt-1">{formatTry(settings?.effective_threshold ?? 0)}</p>
+                            <p className="text-xs text-slate-400 mt-0.5">
+                                {settings?.free_shipping_threshold !== null && settings?.free_shipping_threshold !== undefined
+                                    ? 'Sizin belirlediğiniz değer'
+                                    : `Sistem varsayılanı (${formatTry(settings?.global.free_threshold ?? 0)})`}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="space-y-5">
+                    <div>
+                        <label className="block text-sm font-medium text-slate-700 mb-2" htmlFor="seller-shipping-fee">
+                            Standart Kargo Ücreti (₺)
+                        </label>
+                        <Input
+                            id="seller-shipping-fee"
+                            type="number"
+                            inputMode="decimal"
+                            min="0"
+                            step="0.01"
+                            value={feeInput}
+                            onChange={(e) => { setFeeInput(e.target.value); setFeeError(null); }}
+                            placeholder={`Boş bırakın = sistem varsayılanı (${formatTry(settings?.global.shipping_fee ?? 0)})`}
+                            disabled={saving}
+                        />
+                        {feeError && <p className="text-sm text-red-600 mt-1">{feeError}</p>}
+                        <p className="text-xs text-slate-500 mt-1">
+                            Müşteri sizin ürünlerinizi sipariş ettiğinde, ücretsiz kargo eşiğine ulaşmadıysa bu tutar uygulanır.
+                        </p>
+                    </div>
+
+                    <div>
+                        <label className="block text-sm font-medium text-slate-700 mb-2" htmlFor="seller-free-threshold">
+                            Ücretsiz Kargo Limiti (₺)
+                        </label>
+                        <Input
+                            id="seller-free-threshold"
+                            type="number"
+                            inputMode="decimal"
+                            min="0"
+                            step="0.01"
+                            value={thresholdInput}
+                            onChange={(e) => { setThresholdInput(e.target.value); setThresholdError(null); }}
+                            placeholder={`Boş bırakın = sistem varsayılanı (${formatTry(settings?.global.free_threshold ?? 0)})`}
+                            disabled={saving}
+                        />
+                        {thresholdError && <p className="text-sm text-red-600 mt-1">{thresholdError}</p>}
+                        <p className="text-xs text-slate-500 mt-1">
+                            Müşterinin sizden yaptığı alt toplam bu tutarı aşarsa kargo ücretsiz olur. 0 girerseniz ücretsiz kargo devre dışı kalır.
+                        </p>
+                    </div>
+                </div>
+
+                <div className="flex flex-col sm:flex-row gap-3 mt-6 pt-6 border-t border-slate-200">
+                    <Button onClick={handleSave} disabled={saving} className="bg-[#ea580c] hover:bg-[#c2410c] text-white">
+                        {saving ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : null}
+                        Kaydet
+                    </Button>
+                    {settings?.uses_override && (
+                        <Button onClick={handleResetToGlobal} disabled={saving} variant="outline">
+                            Sistem Varsayılanına Döndür
+                        </Button>
+                    )}
+                </div>
+            </div>
+
+            <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 flex items-start gap-2">
+                <Info className="w-4 h-4 text-amber-600 flex-shrink-0 mt-0.5" />
+                <div className="text-sm text-amber-800">
+                    <p className="font-medium mb-1">Önemli</p>
+                    <p>
+                        Kargo ücreti satıcı bazlıdır. Müşteri birden fazla satıcıdan ürün alırsa, her satıcının kendi belirlediği kargo ücreti
+                        ve ücretsiz kargo eşiği bağımsız olarak uygulanır.
+                    </p>
+                </div>
+            </div>
+        </div>
+    );
+}
+
 function SettingsContent({ subNav, user }: { subNav: string; user: import('@/lib/api').User | null }) {
     const [integrations, setIntegrations] = useState<UserIntegration[]>([]);
     const [loadingIntegrations, setLoadingIntegrations] = useState(false);
@@ -2003,6 +2220,10 @@ function SettingsContent({ subNav, user }: { subNav: string; user: import('@/lib
 
             {subNav === 'satis-bilgilerim' && (
                 <SatisBilgileriContent user={user} />
+            )}
+
+            {subNav === 'kargo-ayarlari' && (
+                <KargoAyarlariContent />
             )}
 
             {subNav === 'adresler' && (
@@ -2157,7 +2378,7 @@ function FirmaIstekleriContent({ subNav }: { subNav: string }) {
                     <p className="text-sm text-[#ea580c] font-medium">Tedarikçi Bağlantı İstekleri</p>
                     <p className="text-sm text-[#ea580c] mt-1">
                         Tedarikçiler sizinle bağlantı kurmak için istek gönderebilir.
-                        Onayladığınız tedarikçilerden vadeli alışveriş ve özel fiyat avantajı sağlayabilirsiniz.
+                        Onayladığınız tedarikçilerden özel fiyat avantajı sağlayabilirsiniz.
                     </p>
                 </div>
             </div>
@@ -2354,7 +2575,7 @@ function IstekYollaContent({ subNav }: { subNav: string }) {
                     <p className="text-sm text-[#ea580c] font-medium">Kırtasiyelerle Bağlantı Kurma</p>
                     <p className="text-sm text-[#ea580c] mt-1">
                         Tedarikçi olarak kırtasiyelere bağlantı isteği gönderebilirsiniz.
-                        Onaylanan kırtasiyeler özel fiyatlarınızı görüntüleyebilir ve vadeli alışveriş yapabilir.
+                        Onaylanan kırtasiyeler özel fiyatlarınızı görüntüleyebilir.
                     </p>
                 </div>
             </div>

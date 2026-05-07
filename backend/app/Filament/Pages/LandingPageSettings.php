@@ -305,7 +305,7 @@ class LandingPageSettings extends Page
                                             ->maxLength(100),
                                         Forms\Components\TextInput::make('testimonial1_title')
                                             ->label('Unvan')
-                                            ->helperText('Örnek: Eczacı, İstanbul')
+                                            ->helperText('Örnek: Kırtasiye Sahibi, İstanbul')
                                             ->required()
                                             ->maxLength(100),
                                         Forms\Components\Textarea::make('testimonial1_quote')
@@ -330,7 +330,7 @@ class LandingPageSettings extends Page
                                             ->maxLength(100),
                                         Forms\Components\TextInput::make('testimonial2_title')
                                             ->label('Unvan')
-                                            ->helperText('Örnek: Eczacı, Ankara')
+                                            ->helperText('Örnek: Kırtasiye Sahibi, Ankara')
                                             ->required()
                                             ->maxLength(100),
                                         Forms\Components\Textarea::make('testimonial2_quote')
@@ -355,7 +355,7 @@ class LandingPageSettings extends Page
                                             ->maxLength(100),
                                         Forms\Components\TextInput::make('testimonial3_title')
                                             ->label('Unvan')
-                                            ->helperText('Örnek: Eczacı, İzmir')
+                                            ->helperText('Örnek: Kırtasiye Sahibi, İzmir')
                                             ->required()
                                             ->maxLength(100),
                                         Forms\Components\Textarea::make('testimonial3_quote')

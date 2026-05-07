@@ -84,20 +84,20 @@ function AnimatedCounter({
 }
 
 export default function CtaSection({ content, stats }: CtaSectionProps) {
-  const [gln, setGln] = useState("");
+  const [vergiNo, setVergiNo] = useState("");
   const router = useRouter();
 
   const handleSubmit = useCallback(
     (e: React.FormEvent) => {
       e.preventDefault();
-      const trimmed = gln.trim();
+      const trimmed = vergiNo.trim();
       if (trimmed.length > 0) {
-        router.push(`/register?gln=${encodeURIComponent(trimmed)}`);
+        router.push(`/register?vergi_no=${encodeURIComponent(trimmed)}`);
       } else {
         router.push("/register");
       }
     },
-    [gln, router]
+    [vergiNo, router]
   );
 
   return (
@@ -124,10 +124,10 @@ export default function CtaSection({ content, stats }: CtaSectionProps) {
             className="text-center mb-16"
           >
             <h2 className="text-3xl sm:text-4xl font-extrabold text-white mb-4">
-              Rakamlarla i-Depo
+              Rakamlarla i-Kirtasiye
             </h2>
             <p className="text-lg text-slate-400 max-w-lg mx-auto">
-              Her gün büyüyen güvenilir eczacı ağı
+              Her gün büyüyen güvenilir kırtasiyeci ağı
             </p>
           </motion.div>
 
@@ -184,10 +184,10 @@ export default function CtaSection({ content, stats }: CtaSectionProps) {
             >
               <input
                 type="text"
-                value={gln}
-                onChange={(e) => setGln(e.target.value)}
+                value={vergiNo}
+                onChange={(e) => setVergiNo(e.target.value)}
                 placeholder="Vergi numaranız"
-                maxLength={13}
+                maxLength={10}
                 className="flex-1 px-5 py-4 bg-white/[0.12] border border-white/[0.2] rounded-xl text-white placeholder:text-white/40 font-mono focus:outline-none focus:border-white/40 focus:ring-2 focus:ring-white/10 transition-all backdrop-blur-sm"
               />
               <button

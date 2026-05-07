@@ -85,7 +85,7 @@ class AddressTest extends TestCase
     {
         $addressData = [
             'title' => 'Ev Adresi',
-            'name' => 'Test Eczanesi',
+            'name' => 'Test Kırtasiye',
             'phone' => '5551234567',
             'address' => 'Test Sokak No:1',
             'city' => 'Istanbul',

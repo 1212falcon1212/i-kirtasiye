@@ -1,5 +1,5 @@
 import createMDX from '@next/mdx';
-import withPWAInit from 'next-pwa';
+import withSerwistInit from '@serwist/next';
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -59,60 +59,14 @@ const nextConfig = {
     },
 };
 
-const withPWA = withPWAInit({
-    dest: "public",
+const withSerwist = withSerwistInit({
+    swSrc: 'src/app/sw.ts',
+    swDest: 'public/sw.js',
+    cacheOnNavigation: true,
+    reloadOnOnline: true,
     disable: process.env.NODE_ENV === 'development',
-    register: true,
-    skipWaiting: true,
-    fallbacks: {
-        document: "/offline",
-    },
-    runtimeCaching: [
-        {
-            urlPattern: /^https:\/\/fonts\.(?:googleapis|gstatic)\.com\/.*/i,
-            handler: "CacheFirst",
-            options: {
-                cacheName: "google-fonts",
-                expiration: {
-                    maxEntries: 4,
-                    maxAgeSeconds: 365 * 24 * 60 * 60, // 365 days
-                },
-            },
-        },
-        {
-            urlPattern: /\.(?:eot|otf|ttc|ttf|woff|woff2|font.css)$/i,
-            handler: "StaleWhileRevalidate",
-            options: {
-                cacheName: "static-font-assets",
-                expiration: {
-                    maxEntries: 4,
-                    maxAgeSeconds: 7 * 24 * 60 * 60, // 7 days
-                },
-            },
-        },
-        {
-            urlPattern: /\.(?:jpg|jpeg|gif|png|svg|ico|webp)$/i,
-            handler: "StaleWhileRevalidate",
-            options: {
-                cacheName: "static-image-assets",
-                expiration: {
-                    maxEntries: 64,
-                    maxAgeSeconds: 24 * 60 * 60, // 24 hours
-                },
-            },
-        },
-        {
-            urlPattern: /\/api\/(?:products|categories).*/i,
-            handler: "NetworkFirst",
-            options: {
-                cacheName: "api-data",
-                expiration: {
-                    maxEntries: 32,
-                    maxAgeSeconds: 24 * 60 * 60, // 24 hours
-                },
-                networkTimeoutSeconds: 10,
-            },
-        },
+    additionalPrecacheEntries: [
+        { url: '/offline', revision: process.env.SW_REVISION ?? `${Date.now()}` },
     ],
 });
 
@@ -124,4 +78,4 @@ const withMDX = createMDX({
     },
 });
 
-export default withPWA(withMDX(nextConfig));
+export default withSerwist(withMDX(nextConfig));

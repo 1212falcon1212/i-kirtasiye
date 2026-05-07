@@ -49,20 +49,20 @@ function renderTitle(title: string, highlight: string) {
 }
 
 export default function HeroSection({ content }: HeroSectionProps) {
-  const [gln, setGln] = useState("");
+  const [vergiNo, setVergiNo] = useState("");
   const router = useRouter();
 
   const handleSubmit = useCallback(
     (e: React.FormEvent) => {
       e.preventDefault();
-      const trimmed = gln.trim();
+      const trimmed = vergiNo.trim();
       if (trimmed.length > 0) {
-        router.push(`/register?gln=${encodeURIComponent(trimmed)}`);
+        router.push(`/register?vergi_no=${encodeURIComponent(trimmed)}`);
       } else {
         router.push("/register");
       }
     },
-    [gln, router]
+    [vergiNo, router]
   );
 
   return (
@@ -231,13 +231,13 @@ export default function HeroSection({ content }: HeroSectionProps) {
                   <div className="relative">
                     <input
                       type="text"
-                      value={gln}
-                      onChange={(e) => setGln(e.target.value)}
+                      value={vergiNo}
+                      onChange={(e) => setVergiNo(e.target.value)}
                       placeholder="10 haneli vergi numaranız"
-                      maxLength={13}
+                      maxLength={10}
                       className="w-full px-5 py-4 bg-white/[0.08] border border-white/[0.12] rounded-xl text-white placeholder:text-white/30 font-mono text-base focus:outline-none focus:border-[#ea580c]/60 focus:bg-white/[0.12] focus:ring-2 focus:ring-[#ea580c]/20 transition-all"
                     />
-                    {gln.length === 13 && (
+                    {vergiNo.length === 10 && (
                       <motion.div
                         initial={{ scale: 0 }}
                         animate={{ scale: 1 }}
@@ -258,7 +258,7 @@ export default function HeroSection({ content }: HeroSectionProps) {
                 </form>
 
                 <p className="mt-5 text-center text-xs text-white/35 leading-relaxed">
-                  Kayıt tamamen ücretsiz. Sadece Vergi numarası doğrulamalı kırtasiyecilera açık kapalı devre platform.
+                  Kayıt tamamen ücretsiz. Sadece vergi numarası doğrulamalı kırtasiyecilere açık kapalı devre platform.
                 </p>
 
                 {/* Mini stats */}

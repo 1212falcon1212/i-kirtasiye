@@ -6,7 +6,6 @@ use App\Models\Invoice;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\User;
-use App\Models\Category;
 
 class InvoiceService
 {
@@ -56,7 +55,7 @@ class InvoiceService
             'total_amount' => $totalAmount,
             'seller_info' => [
                 'name' => $seller->business_name,
-                'gln' => $seller->vergi_no,
+                'vergi_no' => $seller->vergi_no,
                 'address' => $seller->address,
                 'city' => $seller->city,
                 'phone' => $seller->phone,
@@ -64,7 +63,7 @@ class InvoiceService
             ],
             'buyer_info' => [
                 'name' => $buyer->business_name,
-                'gln' => $buyer->vergi_no,
+                'vergi_no' => $buyer->vergi_no,
                 'address' => $buyer->address,
                 'city' => $buyer->city,
                 'phone' => $buyer->phone,
@@ -124,7 +123,7 @@ class InvoiceService
             'commission_amount' => $totalCommission,
             'seller_info' => [
                 'name' => $seller->business_name,
-                'gln' => $seller->vergi_no,
+                'vergi_no' => $seller->vergi_no,
                 'address' => $seller->address,
                 'city' => $seller->city,
                 'phone' => $seller->phone,
@@ -196,7 +195,7 @@ class InvoiceService
             'commission_amount' => $totalCommission,
             'seller_info' => [
                 'name' => $seller->business_name,
-                'gln' => $seller->vergi_no,
+                'vergi_no' => $seller->vergi_no,
                 'address' => $seller->address,
                 'city' => $seller->city,
             ],

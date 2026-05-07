@@ -43,7 +43,7 @@ class FooterSettingsPage extends Page implements HasForms
             'hours_saturday' => Setting::getValue('footer.hours_saturday', '10:00 - 14:00'),
             'hours_sunday' => Setting::getValue('footer.hours_sunday', 'Kapalı'),
             'copyright' => Setting::getValue('footer.copyright', 'i-kirtasiye.com. Tüm hakları saklıdır.'),
-            'pharmacist_note' => Setting::getValue('footer.pharmacist_note', 'Sadece eczacılar içindir'),
+            'pharmacist_note' => Setting::getValue('footer.pharmacist_note', 'Sadece kayıtlı kırtasiyeciler içindir'),
             'facebook_url' => Setting::getValue('footer.facebook_url', ''),
             'twitter_url' => Setting::getValue('footer.twitter_url', ''),
             'instagram_url' => Setting::getValue('footer.instagram_url', ''),
@@ -102,8 +102,8 @@ class FooterSettingsPage extends Page implements HasForms
                             ->label('Telif Hakkı')
                             ->placeholder('i-kirtasiye.com. Tum haklari saklidir.'),
                         TextInput::make('pharmacist_note')
-                            ->label('Eczacı Notu')
-                            ->placeholder('Sadece eczacilar icindir'),
+                            ->label('Footer Üye Notu')
+                            ->placeholder('Sadece kayitli kirtasiyeciler icindir'),
                     ])
                     ->columns(2),
 

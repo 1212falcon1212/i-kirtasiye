@@ -7,17 +7,20 @@ use Filament\Forms\Components\Card;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
-use Filament\Pages\Page;
-use Filament\Notifications\Notification;
 use Filament\Forms\Form;
+use Filament\Notifications\Notification;
+use Filament\Pages\Page;
 
 class SmsSettings extends Page implements HasForms
 {
     use InteractsWithForms;
 
     protected static ?string $navigationIcon = 'heroicon-o-chat-bubble-left-ellipsis';
+
     protected static ?string $navigationGroup = 'Ayarlar';
+
     protected static ?string $title = 'SMS Ayarları';
+
     protected static string $view = 'filament.pages.sms-settings';
 
     public ?array $data = [];
@@ -47,7 +50,7 @@ class SmsSettings extends Page implements HasForms
                         TextInput::make('netgsm_header')
                             ->label('SMS Başlığı (Netgsm Panelinde Tanımlı)')
                             ->required()
-                            ->placeholder('ECZANE...'),
+                            ->placeholder('KIRTASIYE...'),
                     ])
                     ->columns(1),
             ])

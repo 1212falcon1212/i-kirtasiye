@@ -10,13 +10,35 @@ use App\Models\SubOrder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
+/**
+ * Sepetten sipariş oluşturma ve sipariş yaşam döngüsü işlemleri.
+ *
+ * Komisyon formülü (T0 - 2026-05, kullanıcı kuralı):
+ *   Her sipariş kalemi için:
+ *     vatRate     = item.product.category.vat_rate ?? config('commission.default_vat_rate')
+ *     totalPrice  = item.unit_price * item.quantity (KDV dahil)
+ *     netPrice    = totalPrice / (1 + vatRate / 100)
+ *
+ *     commission  = totalPrice * commission_percentage / 100   (varsayılan %10)
+ *     flatFee     = flat_service_fee / sellerItemCount         (her satıcı bağımsız ₺50)
+ *     withholding = netPrice * withholding_tax_rate / 100      (varsayılan %1, KDV hariç)
+ *
+ *     sellerPayout = totalPrice - commission - flatFee - withholding
+ *
+ * Sabit hizmet bedeli her satıcı için bağımsız uygulanır; satıcının
+ * kalem sayısına eşit bölünür. Yüzdelik komisyon her kaleme ayrı uygulanır.
+ */
 class OrderService
 {
-    protected CartService $cartService;
+    protected ShippingFeeResolver $shippingResolver;
 
-    public function __construct(CartService $cartService)
-    {
-        $this->cartService = $cartService;
+    public function __construct(
+        protected CartService $cartService,
+        protected ?FeeCalculationService $feeCalculator = null,
+        ?ShippingFeeResolver $shippingResolver = null,
+    ) {
+        $this->feeCalculator = $feeCalculator ?? app(FeeCalculationService::class);
+        $this->shippingResolver = $shippingResolver ?? app(ShippingFeeResolver::class);
     }
 
     /**
@@ -54,22 +76,39 @@ class OrderService
             throw new \Exception('Minimum sipariş tutarı ₺'.number_format($minOrderAmount, 0, ',', '.')."'dir.");
         }
 
-        return DB::transaction(function () use ($cart, $shippingAddress, $notes, $shippingProvider, $shippingCost, $paymentMethod) {
+        return DB::transaction(function () use ($cart, $shippingAddress, $notes, $shippingProvider, $paymentMethod) {
             $orderNumber = $this->generateOrderNumber();
             $subtotal = 0;
             $totalCommission = 0;
 
-            // Sabit hizmet bedeli (50 TL / satıcı)
-            $flatServiceFee = (float) Setting::getValue('commission.flat_service_fee', 50);
-            $withholdingRate = (float) Setting::getValue('commission.withholding_tax_rate', 1.00);
-            $serviceFeeEnabled = (bool) Setting::getValue('commission.enabled', true);
+            $rates = $this->feeCalculator->getRates();
 
-            // Group items by seller to distribute flat fee
+            // Satıcı bazlı kalem sayısı + alt toplam:
+            //  - Kalem sayısı: sabit hizmet bedelinin satıcıdaki kalemlere
+            //    eşit dağıtılması için.
+            //  - Alt toplam: satıcı bazlı kargo ücretini ve ücretsiz kargo
+            //    eşiğini değerlendirmek için.
             $sellerItemCounts = [];
+            $sellerSubtotals = [];
             foreach ($cart->items as $item) {
                 $sid = $item->seller_id;
                 $sellerItemCounts[$sid] = ($sellerItemCounts[$sid] ?? 0) + 1;
+                $sellerSubtotals[$sid] = ($sellerSubtotals[$sid] ?? 0)
+                    + ((float) $item->price_at_addition * $item->quantity);
             }
+
+            // Her satıcı için kargo ücretini çöz (override > global default).
+            $sellerShipping = $this->shippingResolver->resolveForCart(
+                collect($sellerSubtotals)->map(fn ($sub, $sid) => [
+                    'seller_id' => (int) $sid,
+                    'subtotal' => (float) $sub,
+                ])->values()->all()
+            );
+
+            // Toplam kargo: satıcılar arası toplam. Müşterinin gönderdiği
+            // shippingCost backwards-compat amaçlı kabul edilir; artık
+            // sunucu satıcı bazlı kuralla yeniden hesaplar.
+            $resolvedShippingCost = $sellerShipping['total'];
 
             // Calculate totals
             $orderItemsData = [];
@@ -78,15 +117,42 @@ class OrderService
                 $quantity = $item->quantity;
                 $totalPrice = $unitPrice * $quantity;
 
-                // Sabit hizmet bedeli payı (satıcıdaki item sayısına bölünür)
-                $feeShare = $serviceFeeEnabled
-                    ? $flatServiceFee / $sellerItemCounts[$item->seller_id]
-                    : 0;
-                $vatRate = (float) ($item->product?->category?->vat_rate ?? 20);
-                $priceExclVat = $totalPrice / (1 + $vatRate / 100);
-                $withholdingTax = $priceExclVat * ($withholdingRate / 100);
-                $commissionAmount = $feeShare;
-                $sellerPayoutAmount = $totalPrice - $feeShare - $withholdingTax;
+                // Sabit hizmet bedeli payı (satıcıdaki item sayısına bölünür).
+                $appliesFlatFee = $rates['service_fee_enabled']
+                    && in_array($rates['fee_mode'], ['flat', 'combined'], true);
+                $flatFeeShare = $appliesFlatFee
+                    ? $rates['flat_service_fee'] / $sellerItemCounts[$item->seller_id]
+                    : 0.0;
+
+                // Satıcı bazlı kargo payı: o satıcının toplam kargosu / kalem sayısı.
+                $sellerShipFee = $sellerShipping['per_seller'][$item->seller_id]['fee'] ?? 0.0;
+                $shippingShare = $sellerItemCounts[$item->seller_id] > 0
+                    ? $sellerShipFee / $sellerItemCounts[$item->seller_id]
+                    : 0.0;
+
+                // KDV oranı: önce kategori.vat_rate, yoksa config('commission.default_vat_rate').
+                $vatRate = $item->product?->category?->vat_rate !== null
+                    ? (float) $item->product->category->vat_rate
+                    : (float) $rates['default_vat_rate'];
+
+                // fee_mode='category' ise kategorinin kendi komisyon oranını kullan.
+                $categoryRate = $rates['fee_mode'] === 'category'
+                    ? (float) ($item->product?->category?->commission_rate ?? 0)
+                    : null;
+
+                $fees = $this->feeCalculator->calculateFees(
+                    totalPrice: $totalPrice,
+                    flatFeeShare: $flatFeeShare,
+                    shippingCostShare: $shippingShare,
+                    categoryCommissionRate: $categoryRate,
+                    vatRate: $vatRate,
+                );
+
+                // commission_amount kolonu satıcıdan toplam kesinti payını tutar:
+                // (yüzdelik komisyon + sabit hizmet bedeli payı). Stopaj ve kargo
+                // payı ayrı kolonlarda izlenir. Net hakediş = total_price - tüm kesintiler.
+                $commissionAmount = $fees['service_fee_amount'];
+                $sellerPayoutAmount = $fees['net_seller_amount'];
 
                 $subtotal += $totalPrice;
                 $totalCommission += $commissionAmount;
@@ -98,9 +164,12 @@ class OrderService
                     'quantity' => $quantity,
                     'unit_price' => $unitPrice,
                     'total_price' => $totalPrice,
-                    'commission_rate' => 0,
+                    'commission_rate' => $fees['commission_rate'],
                     'commission_amount' => $commissionAmount,
+                    'withholding_tax' => $fees['withholding_tax'],
+                    'shipping_cost_share' => $fees['shipping_cost_share'],
                     'seller_payout_amount' => $sellerPayoutAmount,
+                    'net_seller_amount' => $sellerPayoutAmount,
                 ];
 
                 // Decrease stock
@@ -109,8 +178,11 @@ class OrderService
                 }
             }
 
-            // Kargo ücretsiz - satıcı karşılar
-            $totalAmount = $subtotal;
+            // Toplam kargo: satıcı bazlı override > global default kuralıyla
+            // sunucu tarafından yeniden hesaplanır. Frontend'in gönderdiği
+            // shippingCost değeri yalnızca legacy/diagnostic amaçlıdır.
+            $finalShippingCost = $resolvedShippingCost;
+            $totalAmount = $subtotal + $finalShippingCost;
 
             // Create order
             $order = Order::create([
@@ -119,7 +191,7 @@ class OrderService
                 'subtotal' => $subtotal,
                 'total_commission' => $totalCommission,
                 'total_amount' => $totalAmount,
-                'shipping_cost' => $shippingCost,
+                'shipping_cost' => $finalShippingCost,
                 'shipping_provider' => $shippingProvider,
                 'payment_method' => $paymentMethod,
                 'status' => 'pending',

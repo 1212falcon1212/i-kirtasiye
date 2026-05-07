@@ -20,7 +20,7 @@ class OfferPolicy
             return true;
         }
 
-        // Approved pharmacists can view offers
+        // Approved retailers can view offers
         return $user->isRetailer() && $user->isApproved();
     }
 
@@ -34,7 +34,7 @@ class OfferPolicy
             return true;
         }
 
-        // Approved pharmacists can view any offer (for purchasing)
+        // Approved retailers can view any offer (for purchasing)
         if ($user->isRetailer() && $user->isApproved()) {
             return true;
         }
@@ -47,7 +47,7 @@ class OfferPolicy
      */
     public function create(User $user): bool
     {
-        // Only approved pharmacists can create offers
+        // Only approved retailers can create offers
         return $user->isRetailer() && $user->isApproved();
     }
 

@@ -29,7 +29,9 @@ import {
     Loader2,
     Minus,
     Plus,
+    ShieldCheck,
     ShoppingCart,
+    Truck,
 } from 'lucide-react';
 
 const formatTL = (n?: number | string | null) => {
@@ -480,63 +482,200 @@ export function ProductDetailClient() {
                                 </div>
                             )}
                         </div>
-                        {cheapestOffer && cheapestOffer.stock > 0 && canBuyFromSeller(cheapestOffer.seller?.id ?? 0) && (
-                            <div className="hidden sm:flex items-stretch gap-2">
+                    </div>
+
+                    {/* Best price hero CTA — appears directly above the offers list */}
+                    {cheapestOffer && cheapestOffer.stock > 0 && (() => {
+                        const offerPrices = offers.map((o) => Number(o.price)).filter((p) => Number.isFinite(p));
+                        const minPrice = offerPrices.length ? Math.min(...offerPrices) : Number(cheapestOffer.price);
+                        const maxPrice = offerPrices.length ? Math.max(...offerPrices) : Number(cheapestOffer.price);
+                        const sellerCount = offers.length;
+                        const hasRange = sellerCount > 1 && maxPrice > minPrice;
+                        const canBuy = canBuyFromSeller(cheapestOffer.seller?.id ?? 0);
+
+                        return (
+                            <div
+                                className="rounded-[12px] p-4 sm:p-5 mb-4"
+                                style={{
+                                    background: 'var(--bg-elevated)',
+                                    border: '1px solid var(--border)',
+                                    boxShadow: 'var(--shadow-sm)',
+                                }}
+                            >
+                                {/* PSF + En düşük ilan fiyatı paneli */}
                                 <div
-                                    className="flex items-center overflow-hidden"
-                                    style={{
-                                        border: '1px solid var(--border)',
-                                        borderRadius: 'var(--radius)',
-                                    }}
+                                    className="rounded-[10px] p-4 mb-3"
+                                    style={{ background: 'var(--bg-muted)' }}
                                 >
-                                    <button
-                                        type="button"
-                                        onClick={() => handleQuantityChange(-1)}
-                                        className="px-2.5 h-9"
-                                        aria-label="Adet azalt"
-                                    >
-                                        <Minus className="w-3.5 h-3.5" />
-                                    </button>
-                                    <input
-                                        className="mono w-12 text-center text-[13px]"
-                                        value={quantity}
-                                        onChange={(e) => {
-                                            const v = parseInt(e.target.value);
-                                            if (Number.isFinite(v) && v > 0) setQuantity(v);
-                                        }}
+                                    <div className="flex items-start justify-between gap-3 flex-wrap">
+                                        <div className="min-w-0">
+                                            <div
+                                                className="text-[10px] font-bold uppercase tracking-wider mb-1"
+                                                style={{ color: 'var(--fg-soft)' }}
+                                            >
+                                                PSF (Önerilen Satış)
+                                            </div>
+                                            <div
+                                                className="mono text-[15px] line-through"
+                                                style={{ color: 'var(--fg-muted)' }}
+                                            >
+                                                {psf ? formatTL(psf) : '—'}
+                                            </div>
+                                        </div>
+                                        <div className="text-right">
+                                            <div
+                                                className="text-[10px] font-bold uppercase tracking-wider mb-1"
+                                                style={{ color: 'var(--success)' }}
+                                            >
+                                                En Düşük İlan Fiyatı
+                                            </div>
+                                            <div className="flex items-baseline gap-1 justify-end">
+                                                <span
+                                                    className="mono text-[28px] sm:text-[30px] font-bold leading-none"
+                                                    style={{ color: 'var(--fg)' }}
+                                                >
+                                                    {formatTL(cheapestOffer.price).replace(' ₺', '')}
+                                                </span>
+                                                <span
+                                                    className="text-[12px] font-semibold"
+                                                    style={{ color: 'var(--fg-muted)' }}
+                                                >
+                                                    TL
+                                                </span>
+                                            </div>
+                                            <div
+                                                className="text-[11px] mt-0.5"
+                                                style={{ color: 'var(--fg-soft)' }}
+                                            >
+                                                KDV dahil · adet başı
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Satıcı sayısı + fiyat aralığı şeridi */}
+                                {sellerCount > 1 && (
+                                    <div
+                                        className="rounded-[8px] px-3 py-2 mb-3 text-[12px]"
                                         style={{
-                                            height: 36,
-                                            background: 'transparent',
-                                            outline: 'none',
-                                            border: 'none',
+                                            background: 'var(--warning-soft, #fef3c7)',
+                                            color: 'var(--warning-strong, #92400e)',
                                         }}
-                                    />
+                                    >
+                                        <span className="font-bold">{sellerCount} satıcı</span> bu ürünü listeliyor
+                                        {hasRange && (
+                                            <>
+                                                {' — fiyat aralığı '}
+                                                <span className="mono font-semibold">{formatTL(minPrice)}</span>
+                                                {' – '}
+                                                <span className="mono font-semibold">{formatTL(maxPrice)}</span>
+                                                .
+                                            </>
+                                        )}
+                                    </div>
+                                )}
+
+                                {/* Quantity + CTA + Wishlist */}
+                                <div className="flex items-stretch gap-2">
+                                    <div
+                                        className="flex items-center overflow-hidden flex-shrink-0"
+                                        style={{
+                                            border: '1px solid var(--border)',
+                                            background: 'var(--bg-elevated)',
+                                            borderRadius: 'var(--radius)',
+                                        }}
+                                    >
+                                        <button
+                                            type="button"
+                                            onClick={() => handleQuantityChange(-1)}
+                                            className="px-3 h-11"
+                                            aria-label="Adet azalt"
+                                        >
+                                            <Minus className="w-3.5 h-3.5" />
+                                        </button>
+                                        <input
+                                            className="mono w-10 text-center text-[14px] font-semibold"
+                                            value={quantity}
+                                            onChange={(e) => {
+                                                const v = parseInt(e.target.value);
+                                                if (Number.isFinite(v) && v > 0) setQuantity(v);
+                                            }}
+                                            style={{
+                                                height: 44,
+                                                background: 'transparent',
+                                                outline: 'none',
+                                                border: 'none',
+                                            }}
+                                        />
+                                        <button
+                                            type="button"
+                                            onClick={() => handleQuantityChange(1)}
+                                            className="px-3 h-11"
+                                            aria-label="Adet arttır"
+                                        >
+                                            <Plus className="w-3.5 h-3.5" />
+                                        </button>
+                                    </div>
+
                                     <button
                                         type="button"
-                                        onClick={() => handleQuantityChange(1)}
-                                        className="px-2.5 h-9"
-                                        aria-label="Adet arttır"
+                                        onClick={handleAddCheapestToCart}
+                                        disabled={adding || !canBuy}
+                                        title={!canBuy ? 'Bu satıcıdan alış izniniz yok' : undefined}
+                                        className="btn btn-primary flex-1 whitespace-nowrap text-[14px] font-bold"
+                                        style={{ height: 44, opacity: !canBuy ? 0.6 : undefined, cursor: !canBuy ? 'not-allowed' : undefined }}
                                     >
-                                        <Plus className="w-3.5 h-3.5" />
+                                        {adding ? (
+                                            <Loader2 className="w-4 h-4 animate-spin" />
+                                        ) : (
+                                            <>
+                                                <ShoppingCart className="w-4 h-4" />
+                                                {canBuy ? 'En ucuz ilanı sepete ekle' : 'Bu satıcıdan alış izniniz yok'}
+                                            </>
+                                        )}
+                                    </button>
+
+                                    <button
+                                        type="button"
+                                        onClick={handleToggleFavorite}
+                                        className="flex items-center justify-center flex-shrink-0"
+                                        aria-label={isFavorite ? 'Favorilerden çıkar' : 'Favorilere ekle'}
+                                        style={{
+                                            width: 44,
+                                            height: 44,
+                                            border: '1px solid var(--border)',
+                                            background: 'var(--bg-elevated)',
+                                            borderRadius: 'var(--radius)',
+                                        }}
+                                    >
+                                        <Heart
+                                            className="w-4 h-4"
+                                            fill={isFavorite ? 'currentColor' : 'none'}
+                                            style={{
+                                                color: isFavorite ? 'var(--danger)' : 'var(--fg)',
+                                            }}
+                                        />
                                     </button>
                                 </div>
-                                <button
-                                    type="button"
-                                    onClick={handleAddCheapestToCart}
-                                    disabled={adding}
-                                    className="btn btn-primary btn-sm whitespace-nowrap"
+
+                                {/* Footer info */}
+                                <div
+                                    className="flex items-center gap-4 mt-3 text-[12px] flex-wrap"
+                                    style={{ color: 'var(--fg-soft)' }}
                                 >
-                                    {adding ? (
-                                        <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                                    ) : (
-                                        <>
-                                            <ShoppingCart className="w-3.5 h-3.5" /> En ucuzu sepete
-                                        </>
-                                    )}
-                                </button>
+                                    <span className="inline-flex items-center gap-1.5">
+                                        <Truck className="w-3.5 h-3.5" style={{ color: 'var(--success)' }} />
+                                        1-2 günde teslim
+                                    </span>
+                                    <span className="inline-flex items-center gap-1.5">
+                                        <ShieldCheck className="w-3.5 h-3.5" style={{ color: 'var(--accent)' }} />
+                                        Onaylı satıcı garantisi
+                                    </span>
+                                </div>
                             </div>
-                        )}
-                    </div>
+                        );
+                    })()}
+
                     <OfferTable offers={offers} canBuyFromSeller={canBuyFromSeller} />
                 </div>
             </div>

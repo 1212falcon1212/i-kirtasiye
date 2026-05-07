@@ -47,7 +47,7 @@ class InvoiceFactory extends Factory
                 'tax_office' => fake()->city().' Vergi Dairesi',
             ],
             'buyer_info' => [
-                'name' => fake()->company().' Eczanesi',
+                'name' => fake()->company().' Kırtasiye',
                 'email' => fake()->safeEmail(),
                 'phone' => fake()->phoneNumber(),
                 'tax_number' => fake()->numerify('##########'),

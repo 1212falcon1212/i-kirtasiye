@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
 import { MarketHomeClient } from './MarketHomeClient';
+import { serverFetch } from '@/lib/server-fetch';
+import type { CmsHomepageResponse, ProductsResponse } from '@/lib/api';
 
 export const metadata: Metadata = {
   title: 'Pazaryeri | i-kirtasiye - B2B Kırtasiye Tedarik Platformu',
@@ -33,6 +35,25 @@ export const metadata: Metadata = {
   },
 };
 
-export default function MarketHomePage() {
-  return <MarketHomeClient />;
+// Hero + ilk 40 ürünü server tarafında ISR ile prefetch ediyoruz.
+// Backend `/cms/homepage` ve `/products` endpointleri public — auth gerektirmiyor.
+// Layout `'use client'` AuthContext gate olsa bile page.tsx server component
+// olarak kalabilir; child olarak client component (MarketHomeClient) render edilir.
+export const revalidate = 120; // 2 dk ISR
+
+export default async function MarketHomePage() {
+  const [homepage, products] = await Promise.all([
+    serverFetch<CmsHomepageResponse>('/cms/homepage', { revalidate: 120 }),
+    serverFetch<ProductsResponse>(
+      '/products?per_page=40&sort_by=offers_count',
+      { revalidate: 120 },
+    ),
+  ]);
+
+  return (
+    <MarketHomeClient
+      initialHomepage={homepage}
+      initialProducts={products}
+    />
+  );
 }

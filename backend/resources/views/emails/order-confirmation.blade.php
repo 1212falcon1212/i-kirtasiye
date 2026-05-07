@@ -164,7 +164,7 @@
                                 <a href="https://i-kirtasiye.com" style="color:#0390b1;text-decoration:none;">i-kirtasiye.com</a>
                             </p>
                             <p style="margin:0 0 12px;font-size:12px;color:#9ca3af;">
-                                Türkiye'nin İlk Komisyonsuz B2B Dermokozmetik Pazaryeri
+                                Türkiye'nin İlk Komisyonsuz B2B Kırtasiye Pazaryeri
                             </p>
                             <p style="margin:0;font-size:11px;color:#d1d5db;">
                                 Bu e-posta otomatik olarak gönderilmiştir. Yanıtlamayınız.

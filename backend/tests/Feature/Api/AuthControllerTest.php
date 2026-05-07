@@ -2,10 +2,8 @@
 
 namespace Tests\Feature\Api;
 
-use App\Models\GlnWhitelist;
 use App\Models\User;
-use App\Services\GLN\GlnVerificationResult;
-use App\Services\GLN\WhitelistGlnService;
+use App\Models\VergiNoWhitelist;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
@@ -15,33 +13,41 @@ class AuthControllerTest extends TestCase
     use RefreshDatabase;
 
     /**
-     * Test user can register with valid GLN code.
+     * Helper: build a valid retailer registration payload.
+     *
+     * @return array<string, mixed>
      */
-    public function test_user_can_register(): void
+    protected function retailerRegisterPayload(array $overrides = []): array
     {
-        // Create a valid GLN code in the whitelist (8680000000013 has valid check digit)
-        $glnWhitelist = GlnWhitelist::factory()->create([
-            'gln_code' => '8680000000013',
-            'pharmacy_name' => 'Test Eczanesi',
-            'city' => 'Istanbul',
-            'district' => 'Kadikoy',
-            'address' => 'Test Sokak No:1',
-            'is_active' => true,
-            'is_used' => false,
-        ]);
-
-        $response = $this->postJson('/api/auth/register', [
+        return array_merge([
             'email' => 'test@example.com',
             'password' => 'Password123!',
             'password_confirmation' => 'Password123!',
-            'gln_code' => '8680000000013',
-            'pharmacy_name' => 'Test Eczanesi',
-            'nickname' => 'testeczane',
+            'business_name' => 'Test Kırtasiye',
+            'nickname' => 'testkirtasiye',
+            'vergi_no' => '1234567890',
             'phone' => '5551234567',
             'address' => 'Test Address',
             'city' => 'Istanbul',
-            'role' => 'pharmacy',
+            'role' => User::ROLE_RETAILER,
+        ], $overrides);
+    }
+
+    /**
+     * Test user can register with valid vergi numarası.
+     */
+    public function test_user_can_register(): void
+    {
+        VergiNoWhitelist::query()->create([
+            'vergi_no' => '1234567890',
+            'company_name' => 'Test Kırtasiye',
+            'city' => 'Istanbul',
+            'district' => 'Kadıköy',
+            'address' => 'Test Sokak No:1',
+            'is_active' => true,
         ]);
+
+        $response = $this->postJson('/api/auth/register', $this->retailerRegisterPayload());
 
         $response->assertStatus(201)
             ->assertJsonStructure([
@@ -49,8 +55,8 @@ class AuthControllerTest extends TestCase
                 'user' => [
                     'id',
                     'email',
-                    'gln_code',
-                    'pharmacy_name',
+                    'vergi_no',
+                    'business_name',
                     'city',
                     'is_verified',
                     'role',
@@ -58,26 +64,18 @@ class AuthControllerTest extends TestCase
                 'token',
             ])
             ->assertJson([
-                'message' => 'Kayit basarili.',
                 'user' => [
                     'email' => 'test@example.com',
-                    'gln_code' => '8680000000013',
-                    'role' => 'pharmacy',
+                    'vergi_no' => '1234567890',
+                    'role' => User::ROLE_RETAILER,
                     'is_verified' => true,
                 ],
             ]);
 
-        // Check user was created in database
         $this->assertDatabaseHas('users', [
             'email' => 'test@example.com',
-            'gln_code' => '8680000000013',
-            'role' => 'pharmacy',
-        ]);
-
-        // Check GLN was marked as used
-        $this->assertDatabaseHas('gln_whitelist', [
-            'gln_code' => '8680000000013',
-            'is_used' => true,
+            'vergi_no' => '1234567890',
+            'role' => User::ROLE_RETAILER,
         ]);
     }
 
@@ -103,8 +101,8 @@ class AuthControllerTest extends TestCase
                 'user' => [
                     'id',
                     'email',
-                    'gln_code',
-                    'pharmacy_name',
+                    'vergi_no',
+                    'business_name',
                     'city',
                     'is_verified',
                     'role',
@@ -119,7 +117,6 @@ class AuthControllerTest extends TestCase
                 ],
             ]);
 
-        // Check token was created
         $this->assertNotEmpty($response->json('token'));
     }
 
@@ -132,11 +129,10 @@ class AuthControllerTest extends TestCase
             'is_verified' => true,
         ]);
 
-        // Create a token for the user
         $token = $user->createToken('auth-token')->plainTextToken;
 
         $response = $this->withHeaders([
-            'Authorization' => 'Bearer ' . $token,
+            'Authorization' => 'Bearer '.$token,
         ])->postJson('/api/auth/logout');
 
         $response->assertStatus(200)
@@ -144,7 +140,6 @@ class AuthControllerTest extends TestCase
                 'message' => 'Çıkış başarılı.',
             ]);
 
-        // Check token was deleted
         $this->assertDatabaseMissing('personal_access_tokens', [
             'tokenable_id' => $user->id,
             'tokenable_type' => User::class,
@@ -156,13 +151,12 @@ class AuthControllerTest extends TestCase
      */
     public function test_user_cannot_login_with_invalid_credentials(): void
     {
-        $user = User::factory()->create([
+        User::factory()->create([
             'email' => 'test@example.com',
             'password' => Hash::make('Password123!'),
             'is_verified' => true,
         ]);
 
-        // Test with wrong password
         $response = $this->postJson('/api/auth/login', [
             'email' => 'test@example.com',
             'password' => 'WrongPassword123!',
@@ -197,7 +191,7 @@ class AuthControllerTest extends TestCase
      */
     public function test_unverified_user_cannot_login(): void
     {
-        $user = User::factory()->create([
+        User::factory()->create([
             'email' => 'test@example.com',
             'password' => Hash::make('Password123!'),
             'is_verified' => false,
@@ -216,46 +210,33 @@ class AuthControllerTest extends TestCase
     }
 
     /**
-     * Test registration fails with already registered GLN.
+     * Test registration fails with already registered vergi numarası.
      */
-    public function test_registration_fails_with_already_registered_gln(): void
+    public function test_registration_fails_with_already_registered_vergi_no(): void
     {
-        // Create a GLN that is already used
-        $existingUser = User::factory()->create([
-            'gln_code' => '8680000000013',
+        User::factory()->create([
+            'vergi_no' => '1234567890',
         ]);
 
-        GlnWhitelist::factory()->create([
-            'gln_code' => '8680000000013',
-            'is_active' => true,
-            'is_used' => true,
-            'used_by_user_id' => $existingUser->id,
-        ]);
-
-        $response = $this->postJson('/api/auth/register', [
+        $response = $this->postJson('/api/auth/register', $this->retailerRegisterPayload([
             'email' => 'new@example.com',
-            'password' => 'Password123!',
-            'password_confirmation' => 'Password123!',
-            'gln_code' => '8680000000013',
-        ]);
+            'vergi_no' => '1234567890',
+        ]));
 
         $response->assertStatus(422);
     }
 
     /**
-     * Test registration fails with invalid GLN format.
+     * Test registration fails with invalid vergi numarası format.
      */
-    public function test_registration_fails_with_invalid_gln_format(): void
+    public function test_registration_fails_with_invalid_vergi_no_format(): void
     {
-        $response = $this->postJson('/api/auth/register', [
-            'email' => 'test@example.com',
-            'password' => 'Password123!',
-            'password_confirmation' => 'Password123!',
-            'gln_code' => '123456', // Invalid length
-        ]);
+        $response = $this->postJson('/api/auth/register', $this->retailerRegisterPayload([
+            'vergi_no' => '12345',
+        ]));
 
         $response->assertStatus(422)
-            ->assertJsonValidationErrors(['gln_code']);
+            ->assertJsonValidationErrors(['vergi_no']);
     }
 
     /**
@@ -263,18 +244,10 @@ class AuthControllerTest extends TestCase
      */
     public function test_registration_fails_with_weak_password(): void
     {
-        GlnWhitelist::factory()->create([
-            'gln_code' => '8680000000013',
-            'is_active' => true,
-            'is_used' => false,
-        ]);
-
-        $response = $this->postJson('/api/auth/register', [
-            'email' => 'test@example.com',
+        $response = $this->postJson('/api/auth/register', $this->retailerRegisterPayload([
             'password' => 'weak',
             'password_confirmation' => 'weak',
-            'gln_code' => '8680000000013',
-        ]);
+        ]));
 
         $response->assertStatus(422)
             ->assertJsonValidationErrors(['password']);
@@ -298,14 +271,14 @@ class AuthControllerTest extends TestCase
     {
         $user = User::factory()->create([
             'email' => 'test@example.com',
-            'pharmacy_name' => 'Test Eczanesi',
+            'business_name' => 'Test Kırtasiye',
             'is_verified' => true,
         ]);
 
         $token = $user->createToken('auth-token')->plainTextToken;
 
         $response = $this->withHeaders([
-            'Authorization' => 'Bearer ' . $token,
+            'Authorization' => 'Bearer '.$token,
         ])->getJson('/api/auth/user');
 
         $response->assertStatus(200)
@@ -313,8 +286,8 @@ class AuthControllerTest extends TestCase
                 'user' => [
                     'id',
                     'email',
-                    'gln_code',
-                    'pharmacy_name',
+                    'vergi_no',
+                    'business_name',
                     'phone',
                     'address',
                     'city',
@@ -327,7 +300,7 @@ class AuthControllerTest extends TestCase
                 'user' => [
                     'id' => $user->id,
                     'email' => 'test@example.com',
-                    'pharmacy_name' => 'Test Eczanesi',
+                    'business_name' => 'Test Kırtasiye',
                 ],
             ]);
     }
@@ -351,16 +324,14 @@ class AuthControllerTest extends TestCase
             'is_verified' => true,
         ]);
 
-        // Create multiple tokens
         $token1 = $user->createToken('auth-token-1')->plainTextToken;
-        $token2 = $user->createToken('auth-token-2')->plainTextToken;
-        $token3 = $user->createToken('auth-token-3')->plainTextToken;
+        $user->createToken('auth-token-2');
+        $user->createToken('auth-token-3');
 
-        // Verify tokens exist
         $this->assertEquals(3, $user->tokens()->count());
 
         $response = $this->withHeaders([
-            'Authorization' => 'Bearer ' . $token1,
+            'Authorization' => 'Bearer '.$token1,
         ])->postJson('/api/auth/logout-all');
 
         $response->assertStatus(200)
@@ -368,7 +339,6 @@ class AuthControllerTest extends TestCase
                 'message' => 'Tüm cihazlardan çıkış yapıldı.',
             ]);
 
-        // Check all tokens were deleted
         $this->assertEquals(0, $user->fresh()->tokens()->count());
     }
 
@@ -383,7 +353,6 @@ class AuthControllerTest extends TestCase
             'is_verified' => true,
         ]);
 
-        // Create some existing tokens
         $user->createToken('old-token-1');
         $user->createToken('old-token-2');
 

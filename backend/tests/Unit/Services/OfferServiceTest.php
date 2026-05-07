@@ -70,7 +70,7 @@ class OfferServiceTest extends TestCase
     public function test_offer_belongs_to_seller(): void
     {
         $seller = User::factory()->seller()->create([
-            'pharmacy_name' => 'Test Eczanesi',
+            'business_name' => 'Test Kırtasiye',
         ]);
         $offer = Offer::factory()
             ->forSeller($seller)
@@ -78,7 +78,7 @@ class OfferServiceTest extends TestCase
             ->create();
 
         $this->assertInstanceOf(User::class, $offer->seller);
-        $this->assertEquals('Test Eczanesi', $offer->seller->pharmacy_name);
+        $this->assertEquals('Test Kırtasiye', $offer->seller->business_name);
     }
 
     /**
@@ -288,7 +288,7 @@ class OfferServiceTest extends TestCase
         $activeOffers = Offer::active()->get();
 
         $this->assertCount(3, $activeOffers);
-        $this->assertTrue($activeOffers->every(fn($o) => $o->status === 'active'));
+        $this->assertTrue($activeOffers->every(fn ($o) => $o->status === 'active'));
     }
 
     /**
@@ -302,7 +302,7 @@ class OfferServiceTest extends TestCase
         $inStockOffers = Offer::inStock()->get();
 
         $this->assertCount(3, $inStockOffers);
-        $this->assertTrue($inStockOffers->every(fn($o) => $o->stock > 0));
+        $this->assertTrue($inStockOffers->every(fn ($o) => $o->stock > 0));
     }
 
     /**
@@ -316,7 +316,7 @@ class OfferServiceTest extends TestCase
         $notExpiredOffers = Offer::notExpired()->get();
 
         $this->assertCount(3, $notExpiredOffers);
-        $this->assertTrue($notExpiredOffers->every(fn($o) => !$o->isExpired()));
+        $this->assertTrue($notExpiredOffers->every(fn ($o) => ! $o->isExpired()));
     }
 
     /**

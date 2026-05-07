@@ -20,7 +20,7 @@ class OrderPolicy
             return true;
         }
 
-        // Approved pharmacists can view orders
+        // Approved retailers can view orders
         return $user->isRetailer() && $user->isApproved();
     }
 
@@ -48,7 +48,7 @@ class OrderPolicy
      */
     public function create(User $user): bool
     {
-        // Only approved pharmacists can create orders
+        // Only approved retailers can create orders
         return $user->isRetailer() && $user->isApproved();
     }
 

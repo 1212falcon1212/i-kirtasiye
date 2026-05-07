@@ -5,14 +5,16 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import {
-    Search, User as UserIcon, ChevronDown, Truck,
+    Search, User as UserIcon, ChevronDown, ChevronRight, Truck,
     ShieldCheck, HelpCircle, LogOut, Package, LayoutDashboard,
-    Loader2, ArrowRight, X,
+    Loader2, ArrowRight, X, Menu, Tag, ScanLine,
 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { Logo } from '@/components/Logo';
 import { MiniCart } from '@/components/cart/MiniCart';
 import { NotificationDropdown } from '@/components/market/NotificationDropdown';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
+import { BarcodeScanner } from '@/components/mobile/BarcodeScanner';
 import { api, productsApi, type Product } from '@/lib/api';
 import { useDebounce } from '@/hooks/use-debounce';
 
@@ -56,6 +58,9 @@ export function MarketHeader({ activeNav }: MarketHeaderProps) {
     const [accountOpen, setAccountOpen] = useState(false);
     const [categories, setCategories] = useState<CategoryNode[]>([]);
     const [hoveredCat, setHoveredCat] = useState<number | null>(null);
+    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const [mobileCatExpanded, setMobileCatExpanded] = useState<number | null>(null);
+    const [scannerOpen, setScannerOpen] = useState(false);
     const accountRef = useRef<HTMLDivElement>(null);
     const searchRef = useRef<HTMLDivElement>(null);
     const debouncedSearch = useDebounce(search.trim(), 250);
@@ -144,6 +149,19 @@ export function MarketHeader({ activeNav }: MarketHeaderProps) {
         [router],
     );
 
+    const handleBarcodeScan = useCallback(
+        (barcode: string) => {
+            const value = barcode.trim();
+            setScannerOpen(false);
+            if (!value) return;
+            setSearch(value);
+            setSearchOpen(false);
+            setMobileMenuOpen(false);
+            router.push(`/market/search?q=${encodeURIComponent(value)}`);
+        },
+        [router],
+    );
+
     const navItems = categories.slice(0, 8);
 
     return (
@@ -165,7 +183,7 @@ export function MarketHeader({ activeNav }: MarketHeaderProps) {
                             <Truck className="w-3.5 h-3.5" /> 1.500₺ üzeri kargo bedava
                         </span>
                         <span className="inline-flex items-center gap-1.5">
-                            <ShieldCheck className="w-3.5 h-3.5" /> Güvenli ödeme & vadeli alışveriş
+                            <ShieldCheck className="w-3.5 h-3.5" /> Güvenli ödeme altyapısı
                         </span>
                     </div>
                     <div className="flex gap-3 items-center ml-auto" style={{ color: 'var(--accent-on)' }}>
@@ -181,60 +199,92 @@ export function MarketHeader({ activeNav }: MarketHeaderProps) {
             </div>
 
             {/* TopBar: logo, search, tools */}
-            <div className="max-w-[1440px] mx-auto px-4 sm:px-6 py-3.5 flex items-center gap-4">
+            <div className="max-w-[1440px] mx-auto px-3 sm:px-6 py-3 sm:py-3.5 flex items-center gap-2 sm:gap-4">
+                {/* Mobile hamburger */}
+                <button
+                    type="button"
+                    onClick={() => setMobileMenuOpen(true)}
+                    aria-label="Menüyü aç"
+                    className="lg:hidden inline-flex items-center justify-center rounded-md transition-colors"
+                    style={{
+                        width: 40,
+                        height: 40,
+                        background: 'transparent',
+                        color: 'var(--fg)',
+                    }}
+                >
+                    <Menu className="w-5 h-5" />
+                </button>
+
                 <Logo size="md" href="/market" />
 
-                <div ref={searchRef} className="flex-1 relative">
-                    <form onSubmit={onSearch} className="relative">
-                        <Search
-                            className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4"
-                            style={{ color: 'var(--fg-soft)' }}
-                        />
-                        <input
-                            type="search"
-                            value={search}
-                            onChange={(e) => {
-                                setSearch(e.target.value);
-                                setSearchOpen(true);
-                            }}
-                            onFocus={() => search.length >= 2 && setSearchOpen(true)}
-                            placeholder="Ürün, marka veya barkod ile ara — örn. Faber-Castell 9000"
-                            className="input"
-                            style={{
-                                paddingLeft: 36,
-                                paddingRight: search ? 110 : 84,
-                                height: 44,
-                                fontSize: 14,
-                                background: 'var(--bg-elevated)',
-                                color: 'var(--fg)',
-                                border: '1px solid var(--border)',
-                            }}
-                            autoComplete="off"
-                        />
-                        {search && (
+                <div ref={searchRef} className="flex-1 relative min-w-0 hidden md:block">
+                    <form onSubmit={onSearch} className="flex items-stretch gap-2">
+                        <div className="relative flex-1 min-w-0">
+                            <Search
+                                className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none"
+                                style={{ color: 'var(--fg-soft)' }}
+                            />
+                            <input
+                                type="search"
+                                value={search}
+                                onChange={(e) => {
+                                    setSearch(e.target.value);
+                                    setSearchOpen(true);
+                                }}
+                                onFocus={() => search.length >= 2 && setSearchOpen(true)}
+                                placeholder="Ürün, marka veya barkod ara…"
+                                className="input w-full"
+                                style={{
+                                    paddingLeft: 36,
+                                    paddingRight: search ? 72 : 44,
+                                    height: 40,
+                                    fontSize: 14,
+                                    background: 'var(--bg-elevated)',
+                                    color: 'var(--fg)',
+                                    border: '1px solid var(--border)',
+                                }}
+                                autoComplete="off"
+                            />
+                            {search && (
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        setSearch('');
+                                        setSearchOpen(false);
+                                    }}
+                                    className="absolute top-1/2 -translate-y-1/2 p-1"
+                                    style={{ right: 40, color: 'var(--fg-soft)' }}
+                                    aria-label="Aramayı temizle"
+                                >
+                                    <X className="w-4 h-4" />
+                                </button>
+                            )}
                             <button
                                 type="button"
-                                onClick={() => {
-                                    setSearch('');
-                                    setSearchOpen(false);
-                                }}
-                                className="absolute"
+                                onClick={() => setScannerOpen(true)}
+                                className="absolute top-1/2 -translate-y-1/2 inline-flex items-center justify-center transition-colors"
                                 style={{
-                                    right: 96,
-                                    top: 14,
-                                    color: 'var(--fg-soft)',
+                                    right: 6,
+                                    height: 28,
+                                    width: 28,
+                                    color: 'var(--fg-muted)',
+                                    borderRadius: 6,
                                 }}
-                                aria-label="Aramayı temizle"
+                                aria-label="Barkod tara"
+                                title="Barkod tara"
                             >
-                                <X className="w-4 h-4" />
+                                <ScanLine className="w-4 h-4" />
                             </button>
-                        )}
+                        </div>
                         <button
                             type="submit"
-                            className="btn btn-primary absolute"
-                            style={{ right: 4, top: 4, height: 36, padding: '0 16px' }}
+                            className="btn btn-primary flex-shrink-0"
+                            style={{ height: 40, width: 40, padding: 0 }}
+                            aria-label="Ara"
+                            title="Ara"
                         >
-                            Ara
+                            <Search className="w-4 h-4" />
                         </button>
                     </form>
 
@@ -362,10 +412,12 @@ export function MarketHeader({ activeNav }: MarketHeaderProps) {
                     )}
                 </div>
 
-                <div className="flex gap-1.5 items-center flex-shrink-0">
-                    <NotificationDropdown />
+                <div className="flex gap-2 sm:gap-3 items-center flex-shrink-0">
+                    <div className="hidden md:block">
+                        <NotificationDropdown />
+                    </div>
 
-                    <div ref={accountRef} className="relative">
+                    <div ref={accountRef} className="relative hidden md:block">
                         <button
                             type="button"
                             className="btn btn-ghost"
@@ -425,8 +477,8 @@ export function MarketHeader({ activeNav }: MarketHeaderProps) {
                 </div>
             </div>
 
-            {/* Category nav — equally distributed top-level categories */}
-            <nav style={{ background: 'var(--accent-hover)', borderTop: '1px solid rgba(255,255,255,0.12)' }}>
+            {/* Category nav — equally distributed top-level categories (desktop only) */}
+            <nav className="hidden lg:block" style={{ background: 'var(--accent-hover)', borderTop: '1px solid rgba(255,255,255,0.12)' }}>
                 <div className="max-w-[1440px] mx-auto px-4 sm:px-6 flex items-stretch overflow-x-auto lg:overflow-visible scrollbar-hide relative">
                     {navItems.map((cat) => {
                         const active = activeNav === cat.name;
@@ -507,7 +559,247 @@ export function MarketHeader({ activeNav }: MarketHeaderProps) {
                     })}
                 </div>
             </nav>
+
+            {/* Mobile slide-out menu */}
+            <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
+                <SheetContent side="left" className="w-[85vw] max-w-[360px] p-0 overflow-y-auto">
+                    <SheetHeader className="px-4 py-4 border-b" style={{ borderColor: 'var(--border)', background: 'var(--accent)' }}>
+                        <SheetTitle className="text-left text-white">
+                            {user ? (
+                                <div className="flex items-center gap-3">
+                                    <div
+                                        className="w-10 h-10 rounded-full flex items-center justify-center font-bold"
+                                        style={{ background: 'rgba(255,255,255,0.22)', color: '#ffffff' }}
+                                    >
+                                        {(user.nickname || user.business_name || user.email || 'U')
+                                            .charAt(0)
+                                            .toUpperCase()}
+                                    </div>
+                                    <div className="min-w-0">
+                                        <div className="text-[15px] font-semibold truncate">
+                                            {user.nickname || user.business_name || 'Misafir'}
+                                        </div>
+                                        {user.email && (
+                                            <div className="text-[11px] font-normal opacity-80 truncate">
+                                                {user.email}
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            ) : (
+                                <span className="text-[16px] font-semibold">Menü</span>
+                            )}
+                        </SheetTitle>
+                    </SheetHeader>
+
+                    {/* Mobile search */}
+                    <div className="px-4 py-3 border-b" style={{ borderColor: 'var(--border)' }}>
+                        <form
+                            onSubmit={(e) => {
+                                e.preventDefault();
+                                const q = search.trim();
+                                if (q) {
+                                    setMobileMenuOpen(false);
+                                    router.push(`/market/search?q=${encodeURIComponent(q)}`);
+                                }
+                            }}
+                            className="relative flex gap-2"
+                        >
+                            <div className="relative flex-1">
+                                <Search
+                                    className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4"
+                                    style={{ color: 'var(--fg-soft)' }}
+                                />
+                                <input
+                                    type="search"
+                                    value={search}
+                                    onChange={(e) => setSearch(e.target.value)}
+                                    placeholder="Ürün, marka veya barkod ara…"
+                                    className="input"
+                                    style={{
+                                        paddingLeft: 36,
+                                        paddingRight: 12,
+                                        height: 40,
+                                        fontSize: 14,
+                                    }}
+                                    autoComplete="off"
+                                />
+                            </div>
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    setMobileMenuOpen(false);
+                                    setScannerOpen(true);
+                                }}
+                                className="inline-flex items-center justify-center flex-shrink-0 transition-colors"
+                                style={{
+                                    width: 40,
+                                    height: 40,
+                                    color: 'var(--fg)',
+                                    background: 'var(--bg-muted)',
+                                    border: '1px solid var(--border)',
+                                    borderRadius: 'var(--radius)',
+                                }}
+                                aria-label="Barkod tara"
+                            >
+                                <ScanLine className="w-4 h-4" />
+                            </button>
+                        </form>
+                    </div>
+
+                    <div className="py-2">
+                        {user ? (
+                            <>
+                                <MobileMenuItem
+                                    href="/market/hesabim"
+                                    icon={<LayoutDashboard className="w-4 h-4" />}
+                                    label="Hesabım"
+                                    onClose={() => setMobileMenuOpen(false)}
+                                />
+                                <MobileMenuItem
+                                    href="/market/hesabim?tab=orders"
+                                    icon={<Package className="w-4 h-4" />}
+                                    label="Siparişlerim"
+                                    onClose={() => setMobileMenuOpen(false)}
+                                />
+                            </>
+                        ) : (
+                            <MobileMenuItem
+                                href="/login"
+                                icon={<UserIcon className="w-4 h-4" />}
+                                label="Giriş yap"
+                                onClose={() => setMobileMenuOpen(false)}
+                            />
+                        )}
+                        <MobileMenuItem
+                            href="/market/kampanyalar"
+                            icon={<Tag className="w-4 h-4" />}
+                            label="Kampanyalar"
+                            onClose={() => setMobileMenuOpen(false)}
+                        />
+                    </div>
+
+                    <div className="border-t pt-2 pb-1" style={{ borderColor: 'var(--border)' }}>
+                        <div
+                            className="px-4 py-2 text-[11px] font-bold uppercase tracking-wider"
+                            style={{ color: 'var(--fg-soft)' }}
+                        >
+                            Kategoriler
+                        </div>
+                        {categories.map((cat) => {
+                            const expanded = mobileCatExpanded === cat.id;
+                            const hasChildren = cat.children && cat.children.length > 0;
+                            return (
+                                <div key={cat.id}>
+                                    <div className="flex items-stretch">
+                                        <Link
+                                            href={`/market/category/${cat.full_slug ?? cat.slug}`}
+                                            onClick={() => setMobileMenuOpen(false)}
+                                            className="flex-1 px-4 py-2.5 text-[14px] font-medium"
+                                            style={{ color: 'var(--fg)' }}
+                                        >
+                                            {cat.name}
+                                        </Link>
+                                        {hasChildren && (
+                                            <button
+                                                type="button"
+                                                onClick={() =>
+                                                    setMobileCatExpanded(expanded ? null : cat.id)
+                                                }
+                                                aria-label={`${cat.name} alt kategorileri`}
+                                                className="px-3 transition-colors"
+                                                style={{ color: 'var(--fg-muted)' }}
+                                            >
+                                                <ChevronRight
+                                                    className="w-4 h-4 transition-transform"
+                                                    style={{
+                                                        transform: expanded ? 'rotate(90deg)' : 'rotate(0deg)',
+                                                    }}
+                                                />
+                                            </button>
+                                        )}
+                                    </div>
+                                    {expanded && hasChildren && (
+                                        <div style={{ background: 'var(--bg-muted)' }}>
+                                            {cat.children!.map((ch) => (
+                                                <Link
+                                                    key={ch.id}
+                                                    href={`/market/category/${ch.full_slug ?? ch.slug}`}
+                                                    onClick={() => setMobileMenuOpen(false)}
+                                                    className="block pl-8 pr-4 py-2 text-[13px]"
+                                                    style={{ color: 'var(--fg-muted)' }}
+                                                >
+                                                    {ch.name}
+                                                </Link>
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
+                            );
+                        })}
+                    </div>
+
+                    <div className="border-t mt-2 pt-2 pb-4" style={{ borderColor: 'var(--border)' }}>
+                        <MobileMenuItem
+                            href="/yardim"
+                            icon={<HelpCircle className="w-4 h-4" />}
+                            label="Yardım merkezi"
+                            onClose={() => setMobileMenuOpen(false)}
+                        />
+                        <MobileMenuItem
+                            href="/register"
+                            icon={<Truck className="w-4 h-4" />}
+                            label="Tedarikçi ol"
+                            onClose={() => setMobileMenuOpen(false)}
+                        />
+                        {user && (
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    setMobileMenuOpen(false);
+                                    logout();
+                                }}
+                                className="w-full flex items-center gap-3 px-4 py-3 text-[14px] font-medium text-left"
+                                style={{ color: 'var(--danger)' }}
+                            >
+                                <LogOut className="w-4 h-4" /> Çıkış yap
+                            </button>
+                        )}
+                    </div>
+                </SheetContent>
+            </Sheet>
+
+            {scannerOpen && (
+                <BarcodeScanner
+                    onScan={handleBarcodeScan}
+                    onClose={() => setScannerOpen(false)}
+                />
+            )}
         </header>
+    );
+}
+
+function MobileMenuItem({
+    href,
+    icon,
+    label,
+    onClose,
+}: {
+    href: string;
+    icon: React.ReactNode;
+    label: string;
+    onClose: () => void;
+}) {
+    return (
+        <Link
+            href={href}
+            onClick={onClose}
+            className="flex items-center gap-3 px-4 py-3 text-[14px] font-medium transition-colors"
+            style={{ color: 'var(--fg)' }}
+        >
+            {icon}
+            {label}
+        </Link>
     );
 }
 

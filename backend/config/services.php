@@ -41,23 +41,4 @@ return [
         ],
     ],
 
-    /*
-    |--------------------------------------------------------------------------
-    | GLN Verification Service
-    |--------------------------------------------------------------------------
-    |
-    | Configuration for GLN (Global Location Number) verification.
-    | Supported drivers: "whitelist", "its"
-    |
-    */
-    'gln' => [
-        'driver' => env('GLN_DRIVER', 'whitelist'),
-
-        'its' => [
-            'api_url' => env('GLN_ITS_API_URL'),
-            'api_key' => env('GLN_ITS_API_KEY'),
-            'timeout' => env('GLN_ITS_TIMEOUT', 30),
-        ],
-    ],
-
 ];

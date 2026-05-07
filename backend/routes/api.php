@@ -231,6 +231,10 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/products', [\App\Http\Controllers\Api\SellerController::class, 'products']);
         Route::get('/orders', [\App\Http\Controllers\Api\SellerController::class, 'orders']);
         Route::get('/orders/{order}', [\App\Http\Controllers\Api\SellerController::class, 'orderDetail']);
+
+        // Satıcı bazlı kargo ayarları (override). NULL değer = global default kullanılır.
+        Route::get('/shipping-settings', [\App\Http\Controllers\Api\SellerShippingSettingsController::class, 'show']);
+        Route::patch('/shipping-settings', [\App\Http\Controllers\Api\SellerShippingSettingsController::class, 'update']);
     });
 
     // Invoice routes
@@ -336,6 +340,7 @@ Route::prefix('cms')->middleware('cache.headers:600')->group(function () {
     Route::get('/banners/{location}', [\App\Http\Controllers\Api\CmsController::class, 'banners']);
     Route::get('/featured-sections', [\App\Http\Controllers\Api\CmsController::class, 'featuredSections']);
     Route::get('/random-products', [\App\Http\Controllers\Api\CmsController::class, 'randomProducts']);
+    Route::get('/pages-by-group/{group}', [\App\Http\Controllers\Api\CmsController::class, 'pagesByGroup']);
     Route::get('/pages/{slug}', [\App\Http\Controllers\Api\CmsController::class, 'page']);
 });
 

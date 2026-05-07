@@ -15,6 +15,7 @@ class CampaignControllerTest extends TestCase
     use RefreshDatabase;
 
     protected User $seller;
+
     protected string $token;
 
     protected function setUp(): void
@@ -29,7 +30,7 @@ class CampaignControllerTest extends TestCase
      */
     protected function authHeaders(): array
     {
-        return ['Authorization' => 'Bearer ' . $this->token];
+        return ['Authorization' => 'Bearer '.$this->token];
     }
 
     /**
@@ -975,7 +976,7 @@ class CampaignControllerTest extends TestCase
         Campaign::factory()->forSeller($this->seller)->active()->brandDiscount()->count(2)->create();
 
         // Act - This is a public endpoint
-        $response = $this->getJson('/api/campaigns/active?type=' . Campaign::TYPE_STORE_DISCOUNT);
+        $response = $this->getJson('/api/campaigns/active?type='.Campaign::TYPE_STORE_DISCOUNT);
 
         // Assert
         $response->assertStatus(200)
@@ -1021,7 +1022,7 @@ class CampaignControllerTest extends TestCase
                         'name',
                         'seller' => [
                             'id',
-                            'pharmacy_name',
+                            'business_name',
                         ],
                     ],
                 ],

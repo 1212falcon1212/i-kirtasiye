@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class SellerWallet extends Model
 {
     use HasFactory;
+
     protected $fillable = [
         'seller_id',
         'balance',
@@ -78,16 +79,22 @@ class SellerWallet extends Model
     }
 
     /**
-     * Release pending balance to available
+     * Release pending balance to available.
+     *
+     * `refresh()` ile model state'i DB ile senkronize edilir; aynı request içinde
+     * art arda gelen çağrılarda stale attribute'ın yanlış kontrol yapmasını önler.
      */
     public function releasePendingToAvailable(float $amount): bool
     {
-        if ($amount > $this->pending_balance) {
+        $this->refresh();
+
+        if ($amount > (float) $this->pending_balance) {
             return false;
         }
 
         $this->decrement('pending_balance', $amount);
         $this->increment('balance', $amount);
+
         return true;
     }
 
@@ -102,6 +109,7 @@ class SellerWallet extends Model
 
         $this->decrement('balance', $amount);
         $this->increment('withdrawn_balance', $amount);
+
         return true;
     }
 

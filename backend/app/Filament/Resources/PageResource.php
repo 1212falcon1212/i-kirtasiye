@@ -6,12 +6,12 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\PageResource\Pages;
 use App\Models\Page;
-use FilamentTiptapEditor\TiptapEditor;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use FilamentTiptapEditor\TiptapEditor;
 use Illuminate\Support\Str;
 
 class PageResource extends Resource
@@ -44,7 +44,7 @@ class PageResource extends Resource
                                     ->required()
                                     ->maxLength(255)
                                     ->live(onBlur: true)
-                                    ->afterStateUpdated(fn(Forms\Set $set, ?string $state) => $set('slug', Str::slug($state ?? ''))),
+                                    ->afterStateUpdated(fn (Forms\Set $set, ?string $state) => $set('slug', Str::slug($state ?? ''))),
                                 Forms\Components\TextInput::make('slug')
                                     ->label('Slug')
                                     ->required()
@@ -79,6 +79,8 @@ class PageResource extends Resource
                                             ->options([
                                                 'default' => 'Varsayilan',
                                                 'contact' => 'Iletisim',
+                                                'legal' => 'Yasal',
+                                                'help' => 'Yardim',
                                             ])
                                             ->default('default')
                                             ->required(),
@@ -120,12 +122,12 @@ class PageResource extends Resource
                 Tables\Columns\TextColumn::make('status')
                     ->label('Durum')
                     ->badge()
-                    ->color(fn(string $state): string => match ($state) {
+                    ->color(fn (string $state): string => match ($state) {
                         'published' => 'success',
                         'draft' => 'warning',
                         default => 'gray',
                     })
-                    ->formatStateUsing(fn(string $state): string => match ($state) {
+                    ->formatStateUsing(fn (string $state): string => match ($state) {
                         'published' => 'Yayinda',
                         'draft' => 'Taslak',
                         default => $state,
@@ -134,9 +136,11 @@ class PageResource extends Resource
                     ->label('Sablon')
                     ->badge()
                     ->color('info')
-                    ->formatStateUsing(fn(string $state): string => match ($state) {
+                    ->formatStateUsing(fn (string $state): string => match ($state) {
                         'default' => 'Varsayilan',
                         'contact' => 'Iletisim',
+                        'legal' => 'Yasal',
+                        'help' => 'Yardim',
                         default => $state,
                     }),
                 Tables\Columns\TextColumn::make('updated_at')

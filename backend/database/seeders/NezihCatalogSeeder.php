@@ -33,13 +33,23 @@ class NezihCatalogSeeder extends Seeder
         $data = json_decode($raw, true);
         $products = $data['products'] ?? [];
 
-        // Sadece kullanılabilir ürünleri filtrele
+        // Sadece kullanılabilir ürünleri filtrele.
+        // i-kirtasiye için eczane/medikal artığı isimleri ayıkla (örn. "Fazilet Eczanesi" kitabı).
         $usable = array_filter($products, function ($p) {
-            return ! empty($p['name'])
-                && ! empty($p['price'])
-                && ! empty($p['categories'])
-                && ! empty($p['images'])
-                && is_array($p['categories']);
+            if (empty($p['name'])
+                || empty($p['price'])
+                || empty($p['categories'])
+                || empty($p['images'])
+                || ! is_array($p['categories'])) {
+                return false;
+            }
+
+            $name = mb_strtolower((string) $p['name'], 'UTF-8');
+            if (str_contains($name, 'eczane') || str_contains($name, 'eczanesi')) {
+                return false;
+            }
+
+            return true;
         });
 
         $this->command->info('   Kullanılabilir ürün: '.count($usable));

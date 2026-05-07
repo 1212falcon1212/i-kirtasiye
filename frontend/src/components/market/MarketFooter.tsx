@@ -23,10 +23,10 @@ const COLUMNS: { h: string; links: { label: string; href: string }[] }[] = [
     {
         h: 'Bayiler',
         links: [
-            { label: 'Vadeli alışveriş', href: '/yardim/alici-rehberi/sepet-odeme' },
             { label: 'Toplu sipariş', href: '/yardim/alici-rehberi/siparis-takibi' },
             { label: 'Kurumsal hesap', href: '/iletisim' },
             { label: 'Faturalar', href: '/market/hesabim?tab=invoices' },
+            { label: 'Sepet ve ödeme', href: '/yardim/alici-rehberi/sepet-odeme' },
         ],
     },
     {
@@ -44,8 +44,8 @@ export function MarketFooter() {
     return (
         <footer
             style={{
-                background: 'var(--accent)',
-                color: 'var(--accent-on)',
+                background: 'var(--footer-bg)',
+                color: 'var(--footer-fg)',
                 marginTop: 48,
             }}
         >
@@ -55,7 +55,7 @@ export function MarketFooter() {
                         <Logo size="md" />
                         <p
                             className="mt-3 text-sm max-w-[280px]"
-                            style={{ color: 'var(--accent-on-muted)' }}
+                            style={{ color: 'var(--footer-fg-muted)' }}
                         >
                             Türkiye&apos;nin B2B kırtasiye ve ofis malzemeleri toptan pazaryeri. Bayiler ve toptancılar için.
                         </p>
@@ -64,7 +64,7 @@ export function MarketFooter() {
                         <div key={col.h}>
                             <div
                                 className="text-[11px] font-bold uppercase tracking-[0.08em] mb-3"
-                                style={{ color: '#ffffff' }}
+                                style={{ color: 'var(--footer-fg)' }}
                             >
                                 {col.h}
                             </div>
@@ -73,13 +73,13 @@ export function MarketFooter() {
                                     <li key={l.href}>
                                         <Link
                                             href={l.href}
-                                            className="text-[13px] transition-opacity hover:opacity-100"
-                                            style={{ color: 'var(--accent-on-muted)', opacity: 1 }}
+                                            className="text-[13px] transition-colors"
+                                            style={{ color: 'var(--footer-fg-muted)' }}
                                             onMouseEnter={(e) => {
-                                                e.currentTarget.style.color = '#ffffff';
+                                                e.currentTarget.style.color = 'var(--footer-fg)';
                                             }}
                                             onMouseLeave={(e) => {
-                                                e.currentTarget.style.color = 'var(--accent-on-muted)';
+                                                e.currentTarget.style.color = 'var(--footer-fg-muted)';
                                             }}
                                         >
                                             {l.label}
@@ -94,8 +94,8 @@ export function MarketFooter() {
                 <div
                     className="mt-10 pt-5 flex flex-col sm:flex-row gap-2 justify-between text-xs"
                     style={{
-                        borderTop: '1px solid rgba(255,255,255,0.18)',
-                        color: 'var(--accent-on-muted)',
+                        borderTop: '1px solid var(--footer-border)',
+                        color: 'var(--footer-fg-muted)',
                     }}
                 >
                     <span>© {new Date().getFullYear()} i-kirtasiye B2B</span>

@@ -363,7 +363,8 @@ class OrderController extends Controller
                 (float) $item->commission_amount,
                 (float) $item->shipping_cost_share,
                 $item->id,
-                $subOrder->id
+                $subOrder->id,
+                (float) $item->withholding_tax,
             );
         }
     }

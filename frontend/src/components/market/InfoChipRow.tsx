@@ -1,4 +1,4 @@
-import { Zap, Truck, ShieldCheck, Box } from 'lucide-react';
+import { Zap, Truck, ShieldCheck } from 'lucide-react';
 
 const ITEMS = [
     {
@@ -19,12 +19,6 @@ const ITEMS = [
         desc: 'Onaylı bayi ve tedarikçilerden',
         tone: 'warning' as const,
     },
-    {
-        Icon: Box,
-        title: 'Vadeli Alışveriş',
-        desc: '30-60-90 gün vadeli ödeme',
-        tone: 'accent' as const,
-    },
 ];
 
 const tone = (t: 'accent' | 'success' | 'warning') => {
@@ -36,7 +30,7 @@ const tone = (t: 'accent' | 'success' | 'warning') => {
 export function InfoChipRow() {
     return (
         <section className="max-w-[1440px] mx-auto px-4 sm:px-6 pt-4">
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 {ITEMS.map(({ Icon, title, desc, tone: t }) => {
                     const c = tone(t);
                     return (

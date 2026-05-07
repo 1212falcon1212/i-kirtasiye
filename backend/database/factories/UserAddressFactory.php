@@ -22,7 +22,7 @@ class UserAddressFactory extends Factory
     {
         return [
             'user_id' => User::factory(),
-            'title' => fake()->randomElement(['Ev', 'İş', 'Depo', 'Eczane']),
+            'title' => fake()->randomElement(['Ev', 'İş', 'Depo', 'Mağaza']),
             'name' => fake()->name(),
             'phone' => '5'.fake()->numerify('##').fake()->numerify('#######'),
             'address' => fake()->streetAddress(),

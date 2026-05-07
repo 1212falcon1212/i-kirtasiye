@@ -32,7 +32,7 @@ class SellerDocument extends Model
      */
     public const TYPE_LABELS = [
         'ruhsat' => 'İşletme Belgesi',
-        'oda_kaydi' => 'Eczacı Odası Kayıt Belgesi',
+        'oda_kaydi' => 'Ticaret/Esnaf Odası Kayıt Belgesi',
         'kimlik' => 'Kimlik Fotokopisi',
         'vergi_levhasi' => 'Vergi Levhası',
         'imza_sirkusu' => 'İmza Sirküleri',

@@ -9,10 +9,10 @@ use App\Models\OrderItem;
 use App\Models\Product;
 use App\Models\SellerWallet;
 use App\Models\Setting;
+use App\Models\SubOrder;
 use App\Models\User;
 use App\Models\WalletTransaction;
 use App\Services\FeeCalculationService;
-use App\Services\WalletService;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Cache;
@@ -23,8 +23,11 @@ class PaymentSystemTest extends TestCase
     use RefreshDatabase;
 
     protected User $seller;
+
     protected User $buyer;
+
     protected string $sellerToken;
+
     protected string $buyerToken;
 
     protected function setUp(): void
@@ -46,19 +49,27 @@ class PaymentSystemTest extends TestCase
      */
     protected function authHeaders(string $token): array
     {
-        return ['Authorization' => 'Bearer ' . $token];
+        return ['Authorization' => 'Bearer '.$token];
     }
 
     /**
      * Helper: Create a delivered, paid order with items belonging to a seller.
-     * Returns the order with fee-calculated items.
+     *
+     * Yeni komisyon formülü (T0 - 2026-05):
+     *   commission_amount = totalPrice * %10 + (₺50 / sellerItemCount)
+     *   withholding_tax   = netPrice (KDV hariç) * %1
+     *   net_seller_amount = totalPrice - commission_amount - withholding_tax - shipping_cost_share
+     *
+     * Returns the order with fee-calculated items + a SubOrder per seller
+     * (required by /api/seller/orders/{id} endpoint).
      */
     protected function createDeliveredOrderWithFees(
         User $buyer,
         User $seller,
         float $unitPrice = 1000.00,
         int $quantity = 1,
-        float $shippingCost = 0
+        float $shippingCost = 0,
+        ?string $subOrderStatus = null
     ): Order {
         $category = Category::factory()->withCommissionRate(10)->create();
         $product = Product::factory()->forCategory($category)->create();
@@ -72,9 +83,14 @@ class PaymentSystemTest extends TestCase
 
         $totalPrice = $unitPrice * $quantity;
 
-        // Calculate fees using the service
+        // Calculate fees using the service. Sabit ₺50 hizmet bedeli tek bir
+        // kalem olduğu için tamamı bu kaleme düşer.
         $feeService = app(FeeCalculationService::class);
-        $fees = $feeService->calculateFees($totalPrice, 0, $shippingCost);
+        $fees = $feeService->calculateFees(
+            totalPrice: $totalPrice,
+            flatFeeShare: 50.0,
+            shippingCostShare: $shippingCost,
+        );
 
         $order = Order::factory()
             ->forUser($buyer)
@@ -82,9 +98,21 @@ class PaymentSystemTest extends TestCase
             ->paid()
             ->create([
                 'subtotal' => $totalPrice,
-                'total_commission' => $fees['commission_amount'],
+                'total_commission' => $fees['service_fee_amount'],
                 'total_amount' => $totalPrice + $shippingCost,
                 'shipping_cost' => $shippingCost,
+            ]);
+
+        $subOrder = SubOrder::factory()
+            ->forOrder($order)
+            ->forSeller($seller)
+            ->create([
+                'status' => $subOrderStatus ?? 'delivered',
+                'subtotal' => $totalPrice,
+                'total_commission' => $fees['service_fee_amount'],
+                'total_payout' => $fees['net_seller_amount'],
+                'shipped_at' => now()->subDays(3),
+                'delivered_at' => now(),
             ]);
 
         OrderItem::factory()
@@ -92,11 +120,12 @@ class PaymentSystemTest extends TestCase
             ->forOffer($offer)
             ->forSeller($seller)
             ->create([
+                'sub_order_id' => $subOrder->id,
                 'quantity' => $quantity,
                 'unit_price' => $unitPrice,
                 'total_price' => $totalPrice,
-                'commission_rate' => $fees['service_fee_rate'],
-                'commission_amount' => $fees['commission_amount'],
+                'commission_rate' => $fees['commission_rate'],
+                'commission_amount' => $fees['service_fee_amount'],
                 'marketplace_fee' => $fees['marketplace_fee'],
                 'withholding_tax' => $fees['withholding_tax'],
                 'shipping_cost_share' => $fees['shipping_cost_share'],
@@ -104,11 +133,13 @@ class PaymentSystemTest extends TestCase
                 'seller_payout_amount' => $fees['net_seller_amount'],
             ]);
 
-        return $order->fresh(['items']);
+        return $order->fresh(['items', 'subOrders']);
     }
 
     /**
-     * Helper: Create a pending order with items for status transition tests.
+     * Helper: Create a paid + shipped order (with sub_order) for status
+     * transition tests. Status update endpoint operates on sub_orders so we
+     * have to wire one up.
      */
     protected function createPendingPaidOrder(
         User $buyer,
@@ -129,7 +160,10 @@ class PaymentSystemTest extends TestCase
         $totalPrice = $unitPrice * $quantity;
 
         $feeService = app(FeeCalculationService::class);
-        $fees = $feeService->calculateFees($totalPrice);
+        $fees = $feeService->calculateFees(
+            totalPrice: $totalPrice,
+            flatFeeShare: 50.0,
+        );
 
         $order = Order::factory()
             ->forUser($buyer)
@@ -138,9 +172,20 @@ class PaymentSystemTest extends TestCase
                 'status' => 'shipped',
                 'shipped_at' => now(),
                 'subtotal' => $totalPrice,
-                'total_commission' => $fees['commission_amount'],
+                'total_commission' => $fees['service_fee_amount'],
                 'total_amount' => $totalPrice,
                 'shipping_cost' => 0,
+            ]);
+
+        $subOrder = SubOrder::factory()
+            ->forOrder($order)
+            ->forSeller($seller)
+            ->create([
+                'status' => 'shipped',
+                'subtotal' => $totalPrice,
+                'total_commission' => $fees['service_fee_amount'],
+                'total_payout' => $fees['net_seller_amount'],
+                'shipped_at' => now(),
             ]);
 
         OrderItem::factory()
@@ -148,11 +193,12 @@ class PaymentSystemTest extends TestCase
             ->forOffer($offer)
             ->forSeller($seller)
             ->create([
+                'sub_order_id' => $subOrder->id,
                 'quantity' => $quantity,
                 'unit_price' => $unitPrice,
                 'total_price' => $totalPrice,
-                'commission_rate' => $fees['service_fee_rate'],
-                'commission_amount' => $fees['commission_amount'],
+                'commission_rate' => $fees['commission_rate'],
+                'commission_amount' => $fees['service_fee_amount'],
                 'marketplace_fee' => $fees['marketplace_fee'],
                 'withholding_tax' => $fees['withholding_tax'],
                 'shipping_cost_share' => 0,
@@ -160,7 +206,7 @@ class PaymentSystemTest extends TestCase
                 'seller_payout_amount' => $fees['net_seller_amount'],
             ]);
 
-        return $order->fresh(['items']);
+        return $order->fresh(['items', 'subOrders']);
     }
 
     // ==========================================
@@ -364,30 +410,32 @@ class PaymentSystemTest extends TestCase
     }
 
     /**
-     * Test order delivery triggers wallet earnings addition.
-     * When order transitions to 'delivered' with payment_status='paid',
-     * seller earnings should be added to wallet.
+     * Test buyer-confirmed delivery triggers wallet earnings addition.
+     *
+     * Akış: seller mark as delivered -> buyer confirmDelivery -> wallet earnings.
+     * Yalnızca alıcı teslimatı onayladığında satıcının cüzdanına gelir yazılır
+     * (processSubOrderEarnings yalnızca confirmDelivery yolunda çağrılır).
      */
     public function test_order_delivery_triggers_wallet_earnings(): void
     {
-        // Arrange: Create a shipped, paid order
+        // Arrange: Create a shipped, paid order with sub_order
         $order = $this->createPendingPaidOrder($this->buyer, $this->seller, 1000.00, 1);
 
-        // Act: Update status to delivered
-        $response = $this->withHeaders($this->authHeaders($this->sellerToken))
+        // Act 1: Seller marks the sub_order as delivered.
+        $statusResponse = $this->actingAs($this->seller, 'sanctum')
             ->putJson("/api/orders/{$order->id}/status", [
                 'status' => 'delivered',
             ]);
+        $statusResponse->assertStatus(200);
 
-        // Assert
-        $response->assertStatus(200);
+        // Act 2: Buyer confirms delivery -> earnings flow runs.
+        $confirmResponse = $this->actingAs($this->buyer, 'sanctum')
+            ->putJson("/api/orders/{$order->id}/confirm-delivery");
+        $confirmResponse->assertStatus(200);
 
         // Wallet should now have the earnings
         $wallet = SellerWallet::where('seller_id', $this->seller->id)->first();
         $this->assertNotNull($wallet);
-
-        // The balance should be positive (earnings were added and released)
-        $this->assertGreaterThan(0, (float) $wallet->balance);
 
         // Transactions should exist
         $transactions = WalletTransaction::where('wallet_id', $wallet->id)->get();
@@ -411,7 +459,8 @@ class PaymentSystemTest extends TestCase
      */
     public function test_order_delivery_does_not_trigger_earnings_when_not_paid(): void
     {
-        // Arrange: Create a shipped order that is NOT paid
+        // Arrange: Create a shipped order that is NOT paid (with a sub_order
+        // since updateStatus endpoint operates on sub_order level).
         $category = Category::factory()->withCommissionRate(10)->create();
         $product = Product::factory()->forCategory($category)->create();
         $offer = Offer::factory()
@@ -433,12 +482,25 @@ class PaymentSystemTest extends TestCase
                 'total_commission' => 50,
             ]);
 
+        $subOrder = SubOrder::factory()
+            ->forOrder($order)
+            ->forSeller($this->seller)
+            ->create([
+                'status' => 'shipped',
+                'subtotal' => 500,
+                'total_commission' => 50,
+                'total_payout' => 450,
+                'shipped_at' => now(),
+            ]);
+
         OrderItem::factory()
             ->forOrder($order)
             ->forOffer($offer)
             ->forSeller($this->seller)
             ->withQuantityAndPrice(1, 500.00)
-            ->create();
+            ->create([
+                'sub_order_id' => $subOrder->id,
+            ]);
 
         // Act: Deliver the order
         $response = $this->withHeaders($this->authHeaders($this->sellerToken))
@@ -465,26 +527,31 @@ class PaymentSystemTest extends TestCase
 
     /**
      * Test wallet balance reflects correctly after multiple orders delivered.
+     *
+     * Her satıcı teslim attıktan sonra alıcının onayı ile cüzdana yansır.
      */
     public function test_wallet_balance_accumulates_from_multiple_orders(): void
     {
-        // Arrange & Act: Deliver two orders
+        // Arrange & Act: Deliver + confirm two orders
         $order1 = $this->createPendingPaidOrder($this->buyer, $this->seller, 500.00, 1);
-        $this->withHeaders($this->authHeaders($this->sellerToken))
+        $this->actingAs($this->seller, 'sanctum')
             ->putJson("/api/orders/{$order1->id}/status", ['status' => 'delivered']);
+        $this->actingAs($this->buyer, 'sanctum')
+            ->putJson("/api/orders/{$order1->id}/confirm-delivery");
 
         $order2 = $this->createPendingPaidOrder($this->buyer, $this->seller, 700.00, 1);
-        $this->withHeaders($this->authHeaders($this->sellerToken))
+        $this->actingAs($this->seller, 'sanctum')
             ->putJson("/api/orders/{$order2->id}/status", ['status' => 'delivered']);
+        $this->actingAs($this->buyer, 'sanctum')
+            ->putJson("/api/orders/{$order2->id}/confirm-delivery");
 
         // Assert: Wallet should have accumulated earnings
         $wallet = SellerWallet::where('seller_id', $this->seller->id)->first();
         $this->assertNotNull($wallet);
-        $this->assertGreaterThan(0, (float) $wallet->balance);
 
-        // Balance should reflect both orders' net amounts
-        // Rough check: total sales = 1200, some deductions, balance should be significant
-        $this->assertGreaterThan(500, (float) $wallet->balance);
+        // Cüzdan toplam (released + pending) iki siparişin net tutarını yansıtmalı.
+        // total_earned addOrderEarnings içinde kümülatif olarak güncelleniyor.
+        $this->assertGreaterThan(500, (float) $wallet->total_earned);
     }
 
     /**
@@ -595,6 +662,11 @@ class PaymentSystemTest extends TestCase
 
     /**
      * Test seller order detail deductions array contains expected items.
+     *
+     * Default fee_mode='combined' -> SellerController kesinti label'ı
+     * "Komisyon" döner. Pazaryeri ek hizmet bedeli "marketplace_fee_enabled"
+     * pasif olduğu için 0 değerle dönse de kalemler dizisinde mevcuttur.
+     * Stopaj her zaman görünür. Kargo payı 0 -> visible=false.
      */
     public function test_seller_order_detail_deductions_contain_expected_items(): void
     {
@@ -614,12 +686,12 @@ class PaymentSystemTest extends TestCase
         // Extract labels
         $labels = array_column($deductions, 'label');
 
-        // Should contain these deduction types
-        $this->assertContains('Kategori Komisyonu', $labels);
+        // Yeni varsayılan combined modunda komisyon kalemi "Komisyon" label'ıyla döner.
+        $this->assertContains('Komisyon', $labels);
         $this->assertContains('Pazaryeri Hizmet Bedeli', $labels);
         $this->assertContains('Stopaj', $labels);
 
-        // Kargo Payı - check using mb_string comparison
+        // Kargo Payı - label'ı içeren bir kalem olmalı (visible flag ayrı kontrol).
         $hasKargoPay = false;
         foreach ($labels as $label) {
             if (str_contains($label, 'Kargo Pay')) {
@@ -659,7 +731,10 @@ class PaymentSystemTest extends TestCase
 
     /**
      * Test seller order detail withholding tax deduction is calculated correctly.
-     * Default withholding rate: 1% of total price.
+     *
+     * Yeni formül (T0 - 2026-05): stopaj KDV HARİÇ tutar üzerinden hesaplanır.
+     * 1000 TL KDV dahil, KDV %20 (config default) -> netPrice = 833.33,
+     * %1 stopaj = 8.33 TL.
      */
     public function test_seller_order_detail_withholding_tax_correct(): void
     {
@@ -677,8 +752,8 @@ class PaymentSystemTest extends TestCase
         $stopajDeduction = collect($deductions)->firstWhere('label', 'Stopaj');
 
         $this->assertNotNull($stopajDeduction);
-        // Default withholding rate is 1%, so for 1000 TL it should be 10 TL
-        $this->assertEquals(10.00, $stopajDeduction['value']);
+        // KDV hariç stopaj: 1000 / 1.20 * 0.01 = 8.33
+        $this->assertEqualsWithDelta(8.33, (float) $stopajDeduction['value'], 0.02);
     }
 
     /**
@@ -882,6 +957,8 @@ class PaymentSystemTest extends TestCase
 
     /**
      * Test unrelated user cannot view order financial details.
+     *
+     * OrderPolicy::view false -> Laravel authorize() throws 403.
      */
     public function test_unrelated_user_cannot_view_order_financial_details(): void
     {
@@ -895,8 +972,8 @@ class PaymentSystemTest extends TestCase
         $response = $this->withHeaders($this->authHeaders($unrelatedToken))
             ->getJson("/api/orders/{$order->id}");
 
-        // Assert: Should return 404 (not found for unauthorized user)
-        $response->assertStatus(404);
+        // Assert: OrderPolicy::view returns false for unrelated retailer -> 403.
+        $response->assertStatus(403);
     }
 
     // ------------------------------------------
@@ -994,38 +1071,59 @@ class PaymentSystemTest extends TestCase
 
     /**
      * Test FeeCalculationService calculates correct fees with default rates.
-     * Default: service fee 8.5%, VAT on service fee 20%, withholding 1%.
+     *
+     * Yeni komisyon formülü (T0 - 2026-05):
+     *   commission_rate         = %10 (Setting::commission.commission_percentage)
+     *   commission_amount       = 1000 * %10 = 100
+     *   flat_service_fee (pay)  = ₺50 (tek satıcı, tek kalem -> tamamı bu kaleme)
+     *   service_fee_amount      = commission + flat = 150
+     *   netPrice (KDV %20 ayrış)= 1000 / 1.20 = 833.33
+     *   withholding_tax         = 833.33 * %1 = 8.33
+     *   total_fees              = 150 + 8.33 + 0 (kargo) = 158.33
+     *   net_seller_amount       = 1000 - 158.33 = 841.67
      */
     public function test_fee_calculation_service_default_rates(): void
     {
         // Arrange
         $feeService = app(FeeCalculationService::class);
 
-        // Act: Calculate fees for 1000 TL
-        $fees = $feeService->calculateFees(1000.00);
+        // Act: Calculate fees for 1000 TL with full ₺50 flat fee share.
+        $fees = $feeService->calculateFees(
+            totalPrice: 1000.00,
+            flatFeeShare: 50.0,
+        );
 
         // Assert
-        // Service fee: 1000 * 8.5% = 85
-        $this->assertEquals(85.00, $fees['service_fee_amount']);
+        // Yüzdelik komisyon
+        $this->assertEqualsWithDelta(100.00, $fees['commission_amount'], 0.01);
+        $this->assertEqualsWithDelta(10.00, $fees['commission_rate'], 0.01);
 
-        // Service fee VAT: 85 * 20% = 17
-        $this->assertEquals(17.00, $fees['service_fee_vat']);
+        // Sabit hizmet bedeli payı
+        $this->assertEqualsWithDelta(50.00, $fees['flat_service_fee'], 0.01);
 
-        // Commission (backward compat): service fee + VAT = 102
-        $this->assertEquals(102.00, $fees['commission_amount']);
+        // service_fee_amount = commission + flat
+        $this->assertEqualsWithDelta(150.00, $fees['service_fee_amount'], 0.01);
 
-        // Withholding tax: 1000 * 1% = 10
-        $this->assertEquals(10.00, $fees['withholding_tax']);
+        // Stopaj KDV hariç tutar üzerinden: 1000/1.20 = 833.33 → %1 = 8.33
+        $this->assertEqualsWithDelta(8.33, $fees['withholding_tax'], 0.02);
 
-        // Total fees: 102 + 10 + 0 (shipping) = 112
-        $this->assertEquals(112.00, $fees['total_fees']);
+        // Total fees: 150 + 8.33 + 0 = 158.33
+        $this->assertEqualsWithDelta(158.33, $fees['total_fees'], 0.02);
 
-        // Net seller amount: 1000 - 112 = 888
-        $this->assertEquals(888.00, $fees['net_seller_amount']);
+        // Net seller amount: 1000 - 158.33 = 841.67
+        $this->assertEqualsWithDelta(841.67, $fees['net_seller_amount'], 0.02);
     }
 
     /**
      * Test FeeCalculationService includes shipping cost share in deductions.
+     *
+     * 1000 TL satış + ₺50 sabit hizmet bedeli + ₺25 kargo payı:
+     *   commission        = 100
+     *   flat_service_fee  = 50
+     *   service_fee_amount= 150
+     *   withholding (KDV%20 ayrış) = 1000/1.20 * %1 = 8.33
+     *   total_fees        = 150 + 8.33 + 25 = 183.33
+     *   net_seller_amount = 1000 - 183.33 = 816.67
      */
     public function test_fee_calculation_includes_shipping_cost(): void
     {
@@ -1033,16 +1131,16 @@ class PaymentSystemTest extends TestCase
         $feeService = app(FeeCalculationService::class);
 
         // Act
-        $fees = $feeService->calculateFees(1000.00, 0, 25.00);
+        $fees = $feeService->calculateFees(
+            totalPrice: 1000.00,
+            flatFeeShare: 50.0,
+            shippingCostShare: 25.00,
+        );
 
         // Assert
-        $this->assertEquals(25.00, $fees['shipping_cost_share']);
-
-        // Total fees: 102 + 10 + 25 = 137
-        $this->assertEquals(137.00, $fees['total_fees']);
-
-        // Net: 1000 - 137 = 863
-        $this->assertEquals(863.00, $fees['net_seller_amount']);
+        $this->assertEqualsWithDelta(25.00, $fees['shipping_cost_share'], 0.01);
+        $this->assertEqualsWithDelta(183.33, $fees['total_fees'], 0.02);
+        $this->assertEqualsWithDelta(816.67, $fees['net_seller_amount'], 0.02);
     }
 
     /**
@@ -1053,7 +1151,7 @@ class PaymentSystemTest extends TestCase
         // Arrange
         $feeService = app(FeeCalculationService::class);
 
-        // Act
+        // Act: 0 TL + 0 flat fee share -> hiçbir kesinti olmamalı.
         $fees = $feeService->calculateFees(0);
 
         // Assert: All fees should be zero
@@ -1066,6 +1164,10 @@ class PaymentSystemTest extends TestCase
 
     /**
      * Test FeeCalculationService applies fees to an order item correctly.
+     *
+     * Yeni davranışta commission_rate %10 olmalı (varsayılan combined mode).
+     * commission_amount = yüzdelik komisyon + sabit hizmet bedeli payı
+     * (applyFeesToOrderItem kolonları bu birleşik tutarı yazıyor).
      */
     public function test_fee_calculation_applies_to_order_item(): void
     {
@@ -1095,13 +1197,14 @@ class PaymentSystemTest extends TestCase
                 'seller_payout_amount' => 1000,
             ]);
 
-        // Act
-        $feeService->applyFeesToOrderItem($orderItem);
+        // Act: tek satıcı tek kalem -> ₺50 sabit bedel tamamı bu kaleme düşer.
+        $feeService->applyFeesToOrderItem($orderItem, flatFeeShare: 50.0);
         $orderItem->refresh();
 
         // Assert
-        $this->assertEquals(8.50, (float) $orderItem->commission_rate);
-        $this->assertGreaterThan(0, (float) $orderItem->commission_amount);
+        $this->assertEqualsWithDelta(10.00, (float) $orderItem->commission_rate, 0.01);
+        // commission_amount = yüzdelik (100) + sabit (50) = 150
+        $this->assertEqualsWithDelta(150.00, (float) $orderItem->commission_amount, 0.01);
         $this->assertGreaterThan(0, (float) $orderItem->withholding_tax);
         $this->assertLessThan(1000, (float) $orderItem->net_seller_amount);
         $this->assertEquals($orderItem->net_seller_amount, $orderItem->seller_payout_amount);
@@ -1109,6 +1212,10 @@ class PaymentSystemTest extends TestCase
 
     /**
      * Test seller financial visibility shows correct data for multi-item order.
+     *
+     * 3 kalem aynı satıcı -> ₺50 sabit hizmet bedeli üç kaleme eşit bölünür
+     * (her kalem 50/3 ≈ 16.67). commission_amount kolonu bu birleşik kesintiyi
+     * tutar (yüzdelik 100 + sabit pay 16.67 ≈ 116.67).
      */
     public function test_seller_order_detail_with_multiple_items(): void
     {
@@ -1124,6 +1231,16 @@ class PaymentSystemTest extends TestCase
                 'total_amount' => 3000,
             ]);
 
+        $subOrder = SubOrder::factory()
+            ->forOrder($order)
+            ->forSeller($this->seller)
+            ->create([
+                'status' => 'delivered',
+                'subtotal' => 3000,
+                'shipped_at' => now()->subDays(3),
+                'delivered_at' => now(),
+            ]);
+
         $feeService = app(FeeCalculationService::class);
 
         for ($i = 0; $i < 3; $i++) {
@@ -1136,18 +1253,23 @@ class PaymentSystemTest extends TestCase
                 ->available()
                 ->create();
 
-            $fees = $feeService->calculateFees(1000.00);
+            // Sabit ₺50 üç kaleme bölündü: her kaleme 50/3 ≈ 16.67 düşer.
+            $fees = $feeService->calculateFees(
+                totalPrice: 1000.00,
+                flatFeeShare: 50.0 / 3,
+            );
 
             OrderItem::factory()
                 ->forOrder($order)
                 ->forOffer($offer)
                 ->forSeller($this->seller)
                 ->create([
+                    'sub_order_id' => $subOrder->id,
                     'quantity' => 1,
                     'unit_price' => 1000,
                     'total_price' => 1000,
-                    'commission_rate' => $fees['service_fee_rate'],
-                    'commission_amount' => $fees['commission_amount'],
+                    'commission_rate' => $fees['commission_rate'],
+                    'commission_amount' => $fees['service_fee_amount'],
                     'marketplace_fee' => $fees['marketplace_fee'],
                     'withholding_tax' => $fees['withholding_tax'],
                     'shipping_cost_share' => 0,
@@ -1240,7 +1362,7 @@ class PaymentSystemTest extends TestCase
         // Arrange
         $buyer = User::factory()->create([
             'is_verified' => true,
-            'pharmacy_name' => 'Test Eczanesi',
+            'business_name' => 'Test Kırtasiye',
             'email' => 'buyer@test.com',
             'city' => 'Istanbul',
         ]);

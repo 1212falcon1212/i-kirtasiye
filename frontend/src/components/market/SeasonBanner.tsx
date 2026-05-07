@@ -16,10 +16,10 @@ export function SeasonBanner() {
             SEZON KAMPANYASI
           </p>
           <p className="text-[38px] font-black text-white tracking-tight leading-tight">
-            Yaz Dermokozmetik Fırsatları!
+            Yaz Kırtasiye Fırsatları!
           </p>
           <p className="text-sm text-white/85 mt-2">
-            Cilt bakım, güneş koruma ve saç bakım markalarında sezon indirimi
+            Defter, kalem ve sanat hobi malzemelerinde sezon indirimi
           </p>
         </div>
       </div>
