@@ -14,9 +14,9 @@ const COLUMNS: { h: string; links: { label: string; href: string }[] }[] = [
     {
         h: 'Satıcılar',
         links: [
-            { label: 'Satıcı paneli', href: '/seller' },
+            { label: 'Satıcı paneli', href: '/market/hesabim' },
             { label: 'Satıcı olmak', href: '/register' },
-            { label: 'Komisyon oranları', href: '/yardim/satici-rehberi/hakedis' },
+            { label: 'Komisyon oranları', href: '/yardim/satici-rehberi/hakedisler' },
             { label: 'Satıcı eğitimi', href: '/yardim/satici-rehberi/urun-ekleme' },
         ],
     },
@@ -35,7 +35,7 @@ const COLUMNS: { h: string; links: { label: string; href: string }[] }[] = [
             { label: 'Yardım merkezi', href: '/yardim' },
             { label: 'İletişim', href: '/iletisim' },
             { label: 'KVKK', href: '/legal/kvkk' },
-            { label: 'Sözleşmeler', href: '/legal' },
+            { label: 'Sözleşmeler', href: '/legal/uyelik-sozlesmesi' },
         ],
     },
 ];
