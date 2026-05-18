@@ -43,21 +43,14 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
 
                 <div className="relative z-10 flex flex-col justify-between p-12 xl:p-16 w-full">
                     <Link href="/" className="inline-flex items-center gap-3">
-                        <span
-                            className="inline-flex items-center justify-center font-mono font-bold"
-                            style={{
-                                width: 40,
-                                height: 40,
-                                borderRadius: 10,
-                                background: 'rgba(255,255,255,0.18)',
-                                fontSize: 20,
-                                color: 'white',
-                            }}
-                        >
-                            i
-                        </span>
+                        <svg width="48" height="48" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M50 20C50 20 30 15 15 20V75C30 70 50 75 50 75C50 75 70 70 85 75V20C70 15 50 20 50 20Z" stroke="white" stroke-width="4" fill="none"/>
+                            <path d="M50 20V75" stroke="white" stroke-width="2"/>
+                            <circle cx="50" cy="30" r="8" fill="white"/>
+                            <path d="M46 38L50 65L54 38" fill="white"/>
+                        </svg>
                         <span className="text-2xl font-bold tracking-tight text-white">
-                            kirtasiye<span className="font-medium opacity-70">.b2b</span>
+                            i-kırtasiye
                         </span>
                     </Link>
 

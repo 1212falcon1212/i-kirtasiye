@@ -51,22 +51,22 @@ export function FlashDeals({ products }: FlashDealsProps) {
   }, [products]);
 
   return (
-    <div className="bg-white -mx-4 sm:-mx-7 px-4 sm:px-7 border-y border-[#f0eceb] py-6 sm:py-12">
+    <div className="bg-gradient-to-r from-[#fff1f0] via-white to-[#ffedd5] -mx-4 sm:-mx-7 px-4 sm:px-7 border-y border-[#fecaca]/40 py-6 sm:py-12">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-5">
         <div>
           <div className="flex items-center gap-2 sm:gap-3">
-            <div className="w-9 h-9 sm:w-[44px] sm:h-[44px] bg-[#ffedd5] rounded-xl flex items-center justify-center flex-shrink-0">
-              <Zap className="w-4 h-4 sm:w-5 sm:h-5 text-[#ea580c]" />
+            <div className="w-9 h-9 sm:w-[44px] sm:h-[44px] bg-gradient-to-br from-[#dc2626] to-[#ea580c] rounded-xl flex items-center justify-center flex-shrink-0 shadow-md">
+              <Zap className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
             </div>
             <span className="text-xl sm:text-[26px] font-black text-[#1a1a1a]">Flaş Fırsatlar</span>
-            <span className="bg-[#fef2f2] text-[#dc2626] text-[10px] font-bold px-2 py-0.5 rounded-full animate-pulse">
+            <span className="bg-[#dc2626] text-white text-[10px] font-bold px-2 py-0.5 rounded-full animate-pulse">
               CANLI
             </span>
           </div>
           <p className="text-[12px] sm:text-[13px] text-[#6b7280] mt-1 ml-11 sm:ml-[56px]">Sınırlı süre, sınırlı stok</p>
         </div>
-        <div className="bg-[#1a1a1a] text-white px-4 sm:px-6 py-2 sm:py-2.5 rounded-xl font-extrabold text-base sm:text-lg tracking-wider tabular-nums self-start sm:self-auto">
+        <div className="bg-gradient-to-br from-[#1a1a1a] to-[#374151] text-white px-4 sm:px-6 py-2 sm:py-2.5 rounded-xl font-extrabold text-base sm:text-lg tracking-wider tabular-nums self-start sm:self-auto shadow-lg">
           {formatCountdown(secondsLeft)}
         </div>
       </div>
@@ -84,10 +84,10 @@ export function FlashDeals({ products }: FlashDealsProps) {
               <Link
                 key={product.id}
                 href={`/market/product/${product.id}`}
-                className="flex flex-row bg-white rounded-3xl border border-[#f0eceb] overflow-hidden hover:border-[#ffedd5] transition-colors group"
+                className="flex flex-row bg-white rounded-3xl border border-[#f0eceb] overflow-hidden hover:border-[#ea580c] hover:shadow-lg transition-all group"
               >
                 {/* Left: Image */}
-                <div className="w-[130px] sm:w-[210px] md:w-[240px] h-[150px] sm:h-[180px] md:h-[210px] flex-shrink-0 bg-white relative flex items-center justify-center">
+                <div className="w-[130px] sm:w-[210px] md:w-[240px] h-[150px] sm:h-[180px] md:h-[210px] flex-shrink-0 bg-gradient-to-br from-[#fff7ed] to-white relative flex items-center justify-center">
                   {imgSrc ? (
                     <img
                       src={imgSrc}
@@ -97,7 +97,7 @@ export function FlashDeals({ products }: FlashDealsProps) {
                   ) : (
                     <Zap className="w-12 h-12 text-[#d1d5db]" />
                   )}
-                  <span className="absolute top-3 left-3 bg-[#1e3a8a] text-white text-[12px] font-extrabold rounded-md px-2.5 py-1">
+                  <span className="absolute top-3 left-3 bg-gradient-to-br from-[#ea580c] to-[#c2410c] text-white text-[12px] font-extrabold rounded-md px-2.5 py-1 shadow-md">
                     %{discount}
                   </span>
                 </div>

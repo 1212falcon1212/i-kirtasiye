@@ -66,16 +66,16 @@ export function WeeklyHighlights({ season = FALLBACK, weekly = FALLBACK }: Weekl
                             <div
                                 className="px-5 py-3.5 flex justify-between items-center"
                                 style={{
-                                    background: '#ffffff',
+                                    background: sec.tone === 'warning' ? 'linear-gradient(90deg, #fbf1e2 0%, #ffffff 100%)' : 'linear-gradient(90deg, #ffedd5 0%, #ffffff 100%)',
                                     borderBottom: '1px solid var(--border)',
                                 }}
                             >
                                 <div className="flex items-center gap-2.5">
                                     <div
-                                        className="w-7 h-7 rounded-md flex items-center justify-center"
+                                        className="w-7 h-7 rounded-md flex items-center justify-center shadow-sm"
                                         style={{
-                                            background: toneBg,
-                                            color: toneFg,
+                                            background: sec.tone === 'warning' ? 'linear-gradient(135deg, var(--warning) 0%, #d97706 100%)' : 'linear-gradient(135deg, var(--accent) 0%, #c2410c 100%)',
+                                            color: 'white',
                                         }}
                                     >
                                         <sec.Icon className="w-[15px] h-[15px]" />
@@ -94,18 +94,21 @@ export function WeeklyHighlights({ season = FALLBACK, weekly = FALLBACK }: Weekl
                                 </div>
                                 <Link
                                     href="/market/products"
-                                    className="text-xs font-semibold"
-                                    style={{ color: toneFg }}
+                                    className="text-xs font-semibold px-3 py-1.5 rounded-md transition-all hover:shadow-sm"
+                                    style={{ background: toneBg, color: toneFg }}
                                 >
                                     Tümü →
                                 </Link>
                             </div>
-                            <div className="p-3 grid grid-cols-3 gap-2.5">
+                                <div className="p-3 flex overflow-x-auto gap-2.5 snap-x snap-mandatory pb-3 -mx-3 px-3 md:grid md:grid-cols-3 md:gap-2.5 md:snap-none md:pb-0 md:-mx-0 md:px-0">
                                 {sec.items.map((p) => (
                                     <Link
                                         key={p.id}
                                         href={p.href || `/market/product/${p.id}`}
-                                        className="flex flex-col gap-1.5 p-2 rounded-md transition-colors hover:bg-bg-muted"
+                                        className="flex flex-col gap-1.5 p-2 rounded-md transition-all hover:shadow-md snap-start flex-shrink-0 w-[120px] md:w-auto"
+                                        style={{
+                                            background: sec.tone === 'warning' ? 'var(--warning-soft)' : 'var(--accent-soft)',
+                                        }}
                                     >
                                         <div
                                             className="relative overflow-hidden"

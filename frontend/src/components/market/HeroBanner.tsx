@@ -98,13 +98,12 @@ export function HeroBanner({
     return (
         <section className="w-full">
             <div
-                className="relative overflow-hidden w-full mx-auto"
+                className="relative overflow-hidden w-full mx-auto aspect-[4/1] sm:aspect-[5/1] md:aspect-[5/1]"
                 style={{
                     background: showDefaultPlaceholder
                         ? 'linear-gradient(150deg, var(--accent) 0%, var(--accent-hover) 100%)'
                         : 'transparent',
                     maxWidth: 1920,
-                    aspectRatio: showDefaultPlaceholder ? '4 / 1' : undefined,
                 }}
             >
                 {/* Background image — intrinsic 4:1, scales by container width */}
@@ -112,31 +111,31 @@ export function HeroBanner({
                     slide.ctaHref ? (
                         <Link
                             href={slide.ctaHref}
-                            className="block w-full"
+                            className="absolute inset-0 block w-full"
                             aria-label={sideAlt || 'Banner'}
                         >
                             <Image
                                 src={sideImg}
                                 alt={sideAlt}
-                                width={1600}
-                                height={400}
+                                fill
                                 sizes="100vw"
-                                className="block w-full h-auto"
+                                className="object-cover"
                                 priority
                                 key={sideImg}
                             />
                         </Link>
                     ) : (
-                        <Image
-                            src={sideImg}
-                            alt={sideAlt}
-                            width={1600}
-                            height={400}
-                            sizes="100vw"
-                            className="block w-full h-auto"
-                            priority
-                            key={sideImg}
-                        />
+                        <div className="absolute inset-0">
+                            <Image
+                                src={sideImg}
+                                alt={sideAlt}
+                                fill
+                                sizes="100vw"
+                                className="object-cover"
+                                priority
+                                key={sideImg}
+                            />
+                        </div>
                     )
                 ) : showDefaultPlaceholder ? (
                     <DefaultDecor />
@@ -170,24 +169,24 @@ export function HeroBanner({
                         )}
                         {headlineText && (
                             <h1
-                                className="font-extrabold mt-3 leading-[1.05] drop-shadow-sm"
-                                style={{ fontSize: 'clamp(22px, 3.2vw, 40px)', letterSpacing: '-0.02em' }}
+                                className="font-extrabold mt-2 sm:mt-3 leading-[1.05] drop-shadow-sm"
+                                style={{ fontSize: 'clamp(18px, 3.2vw, 40px)', letterSpacing: '-0.02em' }}
                             >
                                 {headlineText}
                             </h1>
                         )}
                         {descriptionText && (
-                            <p className="mt-3 text-sm sm:text-[15px] max-w-md opacity-95">
+                            <p className="mt-2 sm:mt-3 text-xs sm:text-sm md:text-[15px] max-w-md opacity-95">
                                 {descriptionText}
                             </p>
                         )}
                         {ctaLabelText && (
-                            <div className="mt-5">
+                            <div className="mt-4 sm:mt-5">
                                 <Link
                                     href={ctaHrefText}
-                                    className="btn btn-lg"
+                                    className="btn btn-lg min-h-[44px] shadow-lg hover:shadow-xl transition-shadow"
                                     style={{
-                                        background: 'white',
+                                        background: 'linear-gradient(135deg, #ffffff 0%, #fef3e2 100%)',
                                         color: 'var(--accent-hover)',
                                         fontWeight: 700,
                                         paddingLeft: 20,
@@ -251,8 +250,8 @@ export function HeroBanner({
                                     aria-label={`${i + 1}. banner`}
                                     className="transition-all"
                                     style={{
-                                        width: i === index ? 24 : 8,
-                                        height: 8,
+                                        width: i === index ? 24 : 12,
+                                        height: 12,
                                         borderRadius: 999,
                                         background: i === index ? '#ffffff' : 'rgba(255,255,255,0.55)',
                                         border: 'none',

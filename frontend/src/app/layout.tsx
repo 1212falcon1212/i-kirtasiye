@@ -35,7 +35,7 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
-      { url: "/favicon.svg", type: "image/svg+xml" },
+      { url: "/favicon.png", type: "image/png" },
       { url: "/icons/icon-192x192.png", sizes: "192x192", type: "image/png" },
       { url: "/icons/icon-512x512.png", sizes: "512x512", type: "image/png" },
     ],
@@ -51,7 +51,7 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#ea580c" },
+    { media: "(prefers-color-scheme: light)", color: "#003366" },
     { media: "(prefers-color-scheme: dark)", color: "#1a1a1a" },
   ],
   width: "device-width",
@@ -74,11 +74,12 @@ export default function RootLayout({
       className={inter.variable}
     >
       <head>
+        <link rel="icon" href="/favicon.png" type="image/png" />
         <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-title" content="i-kirtasiye" />
+        <meta name="apple-mobile-web-app-title" content="i-kırtasiye" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-        <meta name="application-name" content="i-kirtasiye" />
+        <meta name="application-name" content="i-kırtasiye" />
         <meta name="mobile-web-app-capable" content="yes" />
         <script
           dangerouslySetInnerHTML={{

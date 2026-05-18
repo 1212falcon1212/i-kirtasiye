@@ -147,6 +147,8 @@
 
 /* Tailwind v4 theme (uses CSS vars above) */
 @theme inline {
+  --breakpoint-xs: 360px;
+
   --color-bg: var(--bg);
   --color-bg-elevated: var(--bg-elevated);
   --color-bg-muted: var(--bg-muted);
@@ -319,7 +321,7 @@
     color: var(--fg);
   }
   .btn-icon:hover { background: var(--bg-muted); }
-  .btn-sm { height: 28px; padding: 0 10px; font-size: 12px; }
+  .btn-sm { min-height: 44px; height: auto; padding: 0 10px; font-size: 12px; }
   .btn-lg { height: 44px; padding: 0 var(--space-5); font-size: 14px; }
 
   /* Chips */
@@ -329,7 +331,7 @@
     gap: 6px;
     padding: 3px 8px;
     border-radius: 999px;
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 500;
     background: var(--bg-muted);
     color: var(--fg-muted);

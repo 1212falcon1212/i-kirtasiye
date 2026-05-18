@@ -29,18 +29,17 @@ export function DailyDealCard({ product, title = 'Günün Fırsatı' }: DailyDea
     if (!product) {
         return (
             <div
-                className="grid items-center gap-5 p-5"
+                className="flex flex-col md:grid items-center gap-5 p-5 md:[grid-template-columns:200px_1fr_auto]"
                 style={{
                     background: 'var(--bg-elevated)',
                     border: '1px solid var(--border)',
                     borderRadius: 'var(--radius-lg)',
-                    gridTemplateColumns: '200px 1fr auto',
                     minHeight: 240,
                 }}
             >
                 <div
-                    className="ph-image animate-pulse"
-                    style={{ aspectRatio: '1 / 1', width: 200, borderRadius: 10 }}
+                    className="ph-image animate-pulse w-full md:w-[200px]"
+                    style={{ aspectRatio: '1 / 1', borderRadius: 10 }}
                 />
                 <div className="flex flex-col gap-2">
                     <div className="h-5 w-24 rounded animate-pulse" style={{ background: 'var(--bg-muted)' }} />
@@ -58,20 +57,18 @@ export function DailyDealCard({ product, title = 'Günün Fırsatı' }: DailyDea
 
     return (
         <div
-            className="relative grid items-center gap-5 p-5 overflow-hidden"
+            className="relative flex flex-col md:grid items-center gap-5 p-5 overflow-hidden md:[grid-template-columns:200px_1fr_auto]"
             style={{
                 background: 'var(--bg-elevated)',
                 border: '1px solid var(--border)',
                 borderRadius: 'var(--radius-lg)',
-                gridTemplateColumns: '200px 1fr auto',
             }}
         >
             <Link
                 href={productHref}
-                className="relative block overflow-hidden"
+                className="relative block overflow-hidden w-full md:w-[200px]"
                 style={{
                     aspectRatio: '1 / 1',
-                    width: 200,
                     borderRadius: 10,
                     background: '#ffffff',
                     border: '1px solid var(--border)',
@@ -138,7 +135,7 @@ export function DailyDealCard({ product, title = 'Günün Fırsatı' }: DailyDea
                         </span>
                     )}
                     <span
-                        className="mono text-[28px] font-bold"
+                        className="mono text-xl sm:text-2xl md:text-[28px] font-bold"
                         style={{ color: 'var(--accent)' }}
                     >
                         {formatTL(lowest)}
@@ -149,8 +146,12 @@ export function DailyDealCard({ product, title = 'Günün Fırsatı' }: DailyDea
 
             <Link
                 href={productHref}
-                className="btn btn-primary btn-lg self-stretch"
-                style={{ paddingLeft: 24, paddingRight: 24 }}
+                className="btn btn-primary btn-lg self-stretch shadow-lg hover:shadow-xl transition-shadow"
+                style={{
+                    paddingLeft: 24,
+                    paddingRight: 24,
+                    background: 'linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%)',
+                }}
             >
                 Fırsatı Yakala <ArrowRight className="w-3.5 h-3.5" />
             </Link>

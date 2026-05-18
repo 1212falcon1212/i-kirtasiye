@@ -3,34 +3,34 @@ const fs = require('fs');
 const path = require('path');
 
 const sizes = [72, 96, 128, 144, 152, 192, 384, 512];
-const svgPath = path.join(__dirname, 'public/icons/icon.svg');
+const pngPath = path.join(__dirname, 'public/favicon.png');
 const outputDir = path.join(__dirname, 'public/icons');
 
 async function generateIcons() {
-    const svgBuffer = fs.readFileSync(svgPath);
+    const pngBuffer = fs.readFileSync(pngPath);
 
     for (const size of sizes) {
         const outputPath = path.join(outputDir, `icon-${size}x${size}.png`);
-        await sharp(svgBuffer)
+        await sharp(pngBuffer)
             .resize(size, size)
             .png()
             .toFile(outputPath);
         console.log(`✅ Created: icon-${size}x${size}.png`);
     }
 
-    // Also create favicon
-    await sharp(svgBuffer)
-        .resize(32, 32)
-        .png()
-        .toFile(path.join(__dirname, 'public/favicon.png'));
-    console.log('✅ Created: favicon.png');
-
     // Create apple-touch-icon
-    await sharp(svgBuffer)
+    await sharp(pngBuffer)
         .resize(180, 180)
         .png()
         .toFile(path.join(outputDir, 'apple-touch-icon.png'));
     console.log('✅ Created: apple-touch-icon.png');
+
+    // Create icon.svg (from png)
+    await sharp(pngBuffer)
+        .resize(512, 512)
+        .png()
+        .toFile(path.join(outputDir, 'icon.svg'));
+    console.log('✅ Created: icon.svg');
 }
 
 generateIcons().then(() => {

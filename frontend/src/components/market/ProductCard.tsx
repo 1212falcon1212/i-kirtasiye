@@ -80,14 +80,13 @@ export const ProductCard = React.memo(function ProductCard({
             href={href}
             className={cn(
                 'group relative rounded-[10px] transition-colors',
-                isList ? 'grid gap-4 p-3' : 'flex flex-col gap-2.5 p-3',
+                isList ? 'grid gap-4 p-3 grid-cols-1 sm:grid-cols-[120px_1fr_auto]' : 'flex flex-col gap-2.5 p-3',
                 className,
             )}
             style={{
                 background: '#ffffff',
                 border: '1px solid var(--border)',
                 boxShadow: style === 'solid' ? 'var(--shadow-sm)' : 'none',
-                gridTemplateColumns: isList ? '120px 1fr 220px' : undefined,
             }}
         >
             {/* Image */}
@@ -136,28 +135,28 @@ export const ProductCard = React.memo(function ProductCard({
                     <div className="flex items-center gap-1.5">
                         {product.sku && (
                             <span
-                                className="mono text-[10px]"
+                                className="mono text-xs"
                                 style={{ color: 'var(--fg-soft)' }}
                             >
                                 {product.sku}
                             </span>
                         )}
                         {brandName && (
-                            <span className="text-[11px]" style={{ color: 'var(--fg-soft)' }}>
+                            <span className="text-xs" style={{ color: 'var(--fg-soft)' }}>
                                 · {brandName}
                             </span>
                         )}
                     </div>
                 )}
                 <h3
-                    className="text-[13px] font-medium leading-tight line-clamp-2"
+                    className="text-sm font-medium leading-tight line-clamp-2"
                     style={{ color: 'var(--fg)' }}
                 >
                     {product.name}
                 </h3>
 
                 {(product.rating || product.review_count) && (
-                    <div className="flex items-center gap-2 text-[11px]" style={{ color: 'var(--fg-muted)' }}>
+                    <div className="flex items-center gap-2 text-xs" style={{ color: 'var(--fg-muted)' }}>
                         <Stars value={product.rating || 0} size={12} />
                         {product.review_count != null && (
                             <span className="mono">{product.review_count.toLocaleString('tr-TR')}</span>
@@ -194,7 +193,12 @@ export const ProductCard = React.memo(function ProductCard({
                 </div>
 
                 <div
-                    className="btn btn-soft btn-sm w-full pointer-events-none"
+                    className="btn btn-sm w-full pointer-events-none min-h-[44px]"
+                    style={{
+                        background: outOfStock ? 'var(--bg-muted)' : 'var(--accent)',
+                        color: outOfStock ? 'var(--fg-muted)' : 'white',
+                        fontWeight: 600,
+                    }}
                     aria-hidden
                 >
                     {outOfStock ? (

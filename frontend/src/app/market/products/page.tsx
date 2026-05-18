@@ -459,7 +459,7 @@ function ProductsContent() {
     const headingName = activeCategory?.name || 'Tüm Ürünler';
 
     return (
-        <div className="max-w-[1440px] mx-auto px-6 pt-5">
+        <div className="max-w-[1440px] mx-auto px-4 sm:px-6 pt-4 sm:pt-5">
             {/* Breadcrumb */}
             <div className="mb-2 text-[12px]" style={{ color: 'var(--fg-muted)' }}>
                 <Link
@@ -488,7 +488,7 @@ function ProductsContent() {
             {/* Heading + meta */}
             <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
                 <div>
-                    <h1 className="text-[28px] font-semibold leading-tight">{headingName}</h1>
+                    <h1 className="text-xl sm:text-2xl lg:text-[28px] font-semibold leading-tight">{headingName}</h1>
                     <p className="mt-1 text-[13px]" style={{ color: 'var(--fg-muted)' }}>
                         <span
                             className="mono font-semibold"
@@ -521,7 +521,7 @@ function ProductsContent() {
                             <Filter className="w-4 h-4" /> Filtrele
                         </Button>
                     </SheetTrigger>
-                    <SheetContent side="bottom" className="h-[85vh]">
+                    <SheetContent side="bottom" className="h-[85vh] pb-[env(safe-area-inset-bottom)]">
                         <SheetHeader>
                             <SheetTitle>Filtreler</SheetTitle>
                         </SheetHeader>
@@ -654,13 +654,13 @@ function ProductsContent() {
                 <div>
                     {/* Toolbar */}
                     <div
-                        className="mb-4 flex items-center justify-between gap-3 rounded-[10px] px-4 py-2.5"
+                        className="mb-4 flex flex-wrap items-center justify-between gap-2 sm:gap-3 rounded-[10px] px-4 py-2.5"
                         style={{
                             background: 'var(--bg-elevated)',
                             border: '1px solid var(--border)',
                         }}
                     >
-                        <div className="text-[13px]" style={{ color: 'var(--fg-muted)' }}>
+                        <div className="text-sm sm:text-[13px]" style={{ color: 'var(--fg-muted)' }}>
                             <span
                                 className="mono font-semibold"
                                 style={{ color: 'var(--fg)' }}
@@ -672,7 +672,7 @@ function ProductsContent() {
                                 {page} / {lastPage}
                             </span>
                         </div>
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-2 w-full sm:w-auto">
                             <span className="text-[12px]" style={{ color: 'var(--fg-soft)' }}>
                                 Sırala:
                             </span>
@@ -681,7 +681,7 @@ function ProductsContent() {
                                 onChange={(e) =>
                                     applyFilters({ ...filters, sortBy: e.target.value })
                                 }
-                                className="h-7 rounded-[6px] px-2 text-[12px]"
+                                className="h-7 rounded-[6px] px-2 text-[12px] flex-1 sm:flex-initial"
                                 style={{
                                     background: 'var(--bg-elevated)',
                                     border: '1px solid var(--border)',
@@ -884,9 +884,9 @@ function Pagination({
                                 ? {
                                       background: 'var(--accent)',
                                       color: 'var(--accent-fg)',
-                                      minWidth: 32,
+                                      minWidth: 44,
                                   }
-                                : { minWidth: 32 }
+                                : { minWidth: 44 }
                         }
                         onClick={() => onChange(p)}
                     >
@@ -910,14 +910,14 @@ export default function ProductsPage() {
     return (
         <Suspense
             fallback={
-                <div className="max-w-[1440px] mx-auto px-6 pt-5">
+                <div className="max-w-[1440px] mx-auto px-4 sm:px-6 pt-4 sm:pt-5">
                     <Skeleton className="h-6 w-64 mb-4" />
                     <Skeleton className="h-10 w-80 mb-3" />
                     <div className="grid gap-6 lg:grid-cols-[260px_1fr]">
                         <Skeleton className="h-96 rounded-[10px] hidden lg:block" />
                         <div>
                             <Skeleton className="h-12 mb-4 rounded-[10px]" />
-                            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3.5">
+<div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3.5">
                                 {Array.from({ length: 8 }).map((_, i) => (
                                     <Skeleton key={i} className="h-[260px] rounded-[10px]" />
                                 ))}

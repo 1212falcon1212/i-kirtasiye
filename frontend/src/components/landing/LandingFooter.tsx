@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Plus } from "lucide-react";
+import Image from "next/image";
 
 export default function LandingFooter() {
   return (
@@ -11,17 +11,12 @@ export default function LandingFooter() {
           {/* Brand */}
           <div className="lg:col-span-1">
             <Link href="/" className="flex items-center gap-2.5 mb-5">
-              <div className="w-9 h-9 bg-[#1e3a8a] rounded-xl flex items-center justify-center">
-                <Plus className="w-5 h-5 text-white" strokeWidth={3} />
-              </div>
-              <div className="flex flex-col -space-y-0.5">
-                <span className="font-extrabold text-lg text-white tracking-tight">
-                  i-kirtasiye
-                </span>
-                <span className="text-[9px] font-bold text-accent tracking-[0.15em] uppercase whitespace-nowrap">
-                  B2B Kırtasiye Pazaryeri
-                </span>
-              </div>
+              <Image
+                src="/logo.webp"
+                alt="i-kırtasiye logo"
+                width={140}
+                height={46}
+              />
             </Link>
             <p className="text-sm leading-relaxed text-slate-500">
               Eczacılar arası güvenli B2B ticaret platformu. Vergi numarası doğrulaması ile

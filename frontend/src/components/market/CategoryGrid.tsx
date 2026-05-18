@@ -103,13 +103,15 @@ export function CategoryGrid() {
     return (
         <section className="max-w-[1440px] mx-auto px-4 sm:px-6 pt-8">
             <div className="flex justify-between items-baseline mb-4">
-                <h2 className="text-xl font-bold" style={{ color: 'var(--fg)' }}>
-                    İlgini Çekebilecek Kategoriler
-                </h2>
+                <div className="flex items-center gap-3">
+                    <div className="w-1.5 h-7 bg-gradient-to-b from-[#ea580c] to-[#c2410c] rounded-full" />
+                    <h2 className="text-xl font-bold" style={{ color: 'var(--fg)' }}>
+                        İlgini Çekebilecek Kategoriler
+                    </h2>
+                </div>
                 <Link
                     href="/market/products"
-                    className="text-sm font-medium"
-                    style={{ color: 'var(--primary)' }}
+                    className="text-sm font-medium px-4 py-2 rounded-lg bg-[#ea580c] text-white hover:bg-[#c2410c] hover:shadow-md transition-all"
                 >
                     Tümünü gör →
                 </Link>
@@ -197,7 +199,7 @@ export function CategoryGrid() {
                                     )}
                                 </div>
                                 <span
-                                    className="text-[12.5px] font-medium text-center leading-tight px-1 line-clamp-2 transition-colors"
+                                    className="text-xs sm:text-sm font-medium text-center leading-tight px-1 line-clamp-2 transition-colors"
                                     style={{ color: isActive ? 'var(--primary)' : 'var(--fg)' }}
                                 >
                                     {c.name}

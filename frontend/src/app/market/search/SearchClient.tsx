@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { productsApi, Product } from '@/lib/api';
 import { ProductCard } from '@/components/market/ProductCard';
+import { GridProductCard } from '@/components/market/GridProductCard';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Input } from '@/components/ui/input';
@@ -13,8 +14,18 @@ import {
     ArrowRight,
     Search as SearchIcon,
     Sliders,
+    SlidersHorizontal,
     X,
+    Grid3X3,
+    List,
 } from 'lucide-react';
+import {
+    Sheet,
+    SheetContent,
+    SheetHeader,
+    SheetTitle,
+    SheetTrigger,
+} from '@/components/ui/sheet';
 import { addRecentSearch } from '@/lib/search-history';
 
 interface Filters {
@@ -33,6 +44,87 @@ const RELATED_SEARCH_SUGGESTIONS = [
     'tükenmez kalem',
     'mekanik kalem',
 ];
+
+function MobileFilterContent({
+    filters,
+    setFilters,
+    availableBrands,
+    onApply,
+}: {
+    filters: Filters;
+    setFilters: (f: Filters) => void;
+    availableBrands: string[];
+    onApply: () => void;
+}) {
+    return (
+        <div className="px-4 py-3">
+            {availableBrands.length > 0 && (
+                <div className="py-3" style={{ borderTop: '1px solid var(--border)' }}>
+                    <div className="text-[12px] font-semibold mb-2" style={{ color: 'var(--fg-muted)' }}>
+                        Marka
+                    </div>
+                    <div className="flex flex-col gap-1.5">
+                        {availableBrands.slice(0, 10).map((b) => (
+                            <label key={b} className="flex items-center gap-2 text-[13px] cursor-pointer">
+                                <input
+                                    type="checkbox"
+                                    checked={filters.brand === b}
+                                    onChange={(e) =>
+                                        setFilters({ ...filters, brand: e.target.checked ? b : '' })
+                                    }
+                                />
+                                <span className="flex-1">{b}</span>
+                            </label>
+                        ))}
+                    </div>
+                </div>
+            )}
+
+            <div className="py-3" style={{ borderTop: '1px solid var(--border)' }}>
+                <div className="text-[12px] font-semibold mb-2" style={{ color: 'var(--fg-muted)' }}>
+                    Fiyat aralığı
+                </div>
+                <div className="flex gap-2">
+                    <Input
+                        type="number"
+                        placeholder="Min"
+                        value={filters.minPrice}
+                        onChange={(e) => setFilters({ ...filters, minPrice: e.target.value })}
+                        className="h-9 text-[13px]"
+                    />
+                    <Input
+                        type="number"
+                        placeholder="Max"
+                        value={filters.maxPrice}
+                        onChange={(e) => setFilters({ ...filters, maxPrice: e.target.value })}
+                        className="h-9 text-[13px]"
+                    />
+                </div>
+            </div>
+
+            <div className="flex gap-2 mt-4">
+                <Button
+                    onClick={onApply}
+                    className="flex-1"
+                    style={{ background: 'var(--accent)', color: 'var(--accent-fg)' }}
+                >
+                    Uygula
+                </Button>
+                {(filters.brand || filters.minPrice || filters.maxPrice) && (
+                    <Button
+                        variant="outline"
+                        onClick={() => {
+                            setFilters({ brand: '', minPrice: '', maxPrice: '', sortBy: filters.sortBy });
+                            onApply();
+                        }}
+                    >
+                        Temizle
+                    </Button>
+                )}
+            </div>
+        </div>
+    );
+}
 
 function SearchContent() {
     const router = useRouter();
@@ -57,6 +149,8 @@ function SearchContent() {
         maxPrice: '',
         sortBy: 'offers_count',
     });
+    const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
+    const [view, setView] = useState<'grid' | 'list'>('grid');
 
     useEffect(() => {
         if (initialQuery && !searchSavedRef.current) {
@@ -154,7 +248,7 @@ function SearchContent() {
 
     if (!activeQuery) {
         return (
-            <div className="max-w-[1440px] mx-auto px-6 py-12">
+            <div className="max-w-[1440px] mx-auto px-4 sm:px-6 py-8 sm:py-12">
                 <div
                     className="rounded-[10px] py-16 text-center"
                     style={{
@@ -182,7 +276,7 @@ function SearchContent() {
     }
 
     return (
-        <div className="max-w-[1440px] mx-auto px-6">
+            <div className="max-w-[1440px] mx-auto px-4 sm:px-6">
             {/* Search header bar */}
             <div
                 className="border-b py-5"
@@ -316,6 +410,33 @@ function SearchContent() {
 
             {/* Main grid w/ compact left filters + right results */}
             <div className="pt-5 pb-12 grid gap-6 lg:grid-cols-[240px_1fr]">
+                {/* Mobile filter trigger */}
+                <div className="lg:hidden mb-2">
+                    <Sheet open={mobileFilterOpen} onOpenChange={setMobileFilterOpen}>
+                        <SheetTrigger asChild>
+                            <Button variant="outline" className="gap-2">
+                                <SlidersHorizontal className="w-4 h-4" />
+                                Filtreler
+                            </Button>
+                        </SheetTrigger>
+                        <SheetContent side="left" className="w-[85vw] max-w-[360px] p-0">
+                            <SheetHeader className="px-4 py-3 border-b" style={{ borderColor: 'var(--border)' }}>
+                                <SheetTitle className="text-[14px] inline-flex items-center gap-1.5">
+                                    <Sliders className="w-3.5 h-3.5" /> Filtreler
+                                </SheetTitle>
+                            </SheetHeader>
+                            <div className="overflow-y-auto pb-[env(safe-area-inset-bottom)]">
+                                <MobileFilterContent
+                                    filters={filters}
+                                    setFilters={setFilters}
+                                    availableBrands={availableBrands}
+                                    onApply={() => setMobileFilterOpen(false)}
+                                />
+                            </div>
+                        </SheetContent>
+                    </Sheet>
+                </div>
+
                 {/* Compact sidebar */}
                 <aside
                     className="hidden lg:block self-start rounded-[10px] p-4"
@@ -423,36 +544,23 @@ function SearchContent() {
                 <div>
                     {/* Toolbar */}
                     <div
-                        className="mb-3.5 flex items-center justify-between rounded-[10px] px-4 py-2.5"
+                        className="mb-4 flex flex-wrap items-center justify-between gap-2 sm:gap-3 rounded-[10px] px-4 py-2.5"
                         style={{
                             background: 'var(--bg-elevated)',
                             border: '1px solid var(--border)',
                         }}
                     >
-                        <div
-                            className="text-[13px]"
-                            style={{ color: 'var(--fg-muted)' }}
-                        >
-                            <span
-                                className="mono font-semibold"
-                                style={{ color: 'var(--fg)' }}
-                            >
-                                {products.length}
-                            </span>{' '}
-                            /{' '}
-                            <span
-                                className="mono font-semibold"
-                                style={{ color: 'var(--fg)' }}
-                            >
+                        <div className="text-sm sm:text-[13px]" style={{ color: 'var(--fg-muted)' }}>
+                            <span className="mono font-semibold" style={{ color: 'var(--fg)' }}>
                                 {totalProducts.toLocaleString('tr-TR')}
                             </span>{' '}
-                            sonuç
+                            sonuç · sayfa{' '}
+                            <span className="mono" style={{ color: 'var(--fg)' }}>
+                                {page} / {lastPage}
+                            </span>
                         </div>
-                        <div className="flex items-center gap-2">
-                            <span
-                                className="text-[12px]"
-                                style={{ color: 'var(--fg-soft)' }}
-                            >
+                        <div className="flex items-center gap-2 w-full sm:w-auto">
+                            <span className="text-[12px]" style={{ color: 'var(--fg-soft)' }}>
                                 Sırala:
                             </span>
                             <select
@@ -460,7 +568,7 @@ function SearchContent() {
                                 onChange={(e) =>
                                     setFilters({ ...filters, sortBy: e.target.value })
                                 }
-                                className="h-7 rounded-[6px] px-2 text-[12px]"
+                                className="h-7 rounded-[6px] px-2 text-[12px] flex-1 sm:flex-initial"
                                 style={{
                                     background: 'var(--bg-elevated)',
                                     border: '1px solid var(--border)',
@@ -473,66 +581,54 @@ function SearchContent() {
                                 <option value="name">İsim (A-Z)</option>
                                 <option value="newest">En Yeniler</option>
                             </select>
+                            <div className="h-5 w-px" style={{ background: 'var(--border)' }} />
+                            <div className="flex rounded-[6px]" style={{ border: '1px solid var(--border)' }}>
+                                <button
+                                    type="button"
+                                    onClick={() => setView('grid')}
+                                    className="px-2.5 py-1.5"
+                                    style={{
+                                        background: view === 'grid' ? 'var(--accent-soft)' : 'transparent',
+                                        color: view === 'grid' ? 'var(--accent)' : 'var(--fg-muted)',
+                                        borderRadius: '6px 0 0 6px',
+                                    }}
+                                    aria-label="Grid görünümü"
+                                >
+                                    <Grid3X3 className="w-3.5 h-3.5" />
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => setView('list')}
+                                    className="px-2.5 py-1.5"
+                                    style={{
+                                        background: view === 'list' ? 'var(--accent-soft)' : 'transparent',
+                                        color: view === 'list' ? 'var(--accent)' : 'var(--fg-muted)',
+                                        borderRadius: '0 6px 6px 0',
+                                    }}
+                                    aria-label="List görünümü"
+                                >
+                                    <List className="w-3.5 h-3.5" />
+                                </button>
+                            </div>
                         </div>
                     </div>
 
-                    {/* Sponsored / promoted listing */}
-                    {!isLoading && products.length > 0 && (
-                        <div
-                            className="rounded-[10px] p-4 mb-3.5 grid items-center gap-4"
-                            style={{
-                                background: 'var(--bg-elevated)',
-                                border: '1px dashed var(--accent)',
-                                gridTemplateColumns: '120px 1fr auto',
-                            }}
-                        >
-                            <div
-                                className="ph-image aspect-square w-[120px]"
-                                style={{
-                                    background:
-                                        'repeating-linear-gradient(45deg, var(--bg-muted) 0 8px, var(--bg-subtle) 8px 16px)',
-                                }}
-                            >
-                                <span style={{ color: 'var(--fg-soft)' }}>
-                                    {products[0]?.brand || 'FC'}
-                                </span>
-                            </div>
-                            <div>
-                                <div className="flex gap-1.5 mb-1.5">
-                                    <span className="chip chip-warning">Sponsorlu</span>
-                                    <span className="chip chip-accent">Mağaza ilanı</span>
-                                </div>
-                                <div className="text-[15px] font-semibold mb-1">
-                                    {products[0]?.brand
-                                        ? `${products[0].brand} Toptan Mağaza`
-                                        : 'Toptan Mağaza'}{' '}
-                                    — Tüm ürün serisi
-                                </div>
-                                <div
-                                    className="text-[12px]"
-                                    style={{ color: 'var(--fg-muted)' }}
-                                >
-                                    Çok sayıda model · 3.000+ adet stok · İstanbul depodan
-                                    24 saatte teslim
-                                </div>
-                            </div>
-                            <Button
-                                size="sm"
-                                style={{
-                                    background: 'var(--accent)',
-                                    color: 'var(--accent-fg)',
-                                }}
-                            >
-                                Mağazayı gör
-                            </Button>
-                        </div>
-                    )}
-
                     {/* Product list */}
                     {isLoading ? (
-                        <div className="flex flex-col gap-2.5">
-                            {Array.from({ length: 6 }).map((_, i) => (
-                                <Skeleton key={i} className="h-[140px] rounded-[10px]" />
+                        <div
+                            className={
+                                view === 'grid'
+                                    ? 'grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3.5'
+                                    : 'flex flex-col gap-2.5'
+                            }
+                        >
+                            {Array.from({ length: 12 }).map((_, i) => (
+                                <Skeleton
+                                    key={i}
+                                    className={
+                                        view === 'grid' ? 'h-[260px] rounded-[10px]' : 'h-[120px] rounded-[10px]'
+                                    }
+                                />
                             ))}
                         </div>
                     ) : products.length === 0 ? (
@@ -556,6 +652,12 @@ function SearchContent() {
                                     Pazaryerine Dön
                                 </Button>
                             </Link>
+                        </div>
+                    ) : view === 'grid' ? (
+                        <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3.5">
+                            {products.map((p) => (
+                                <GridProductCard key={p.id} product={p} />
+                            ))}
                         </div>
                     ) : (
                         <div className="flex flex-col gap-2.5">
@@ -592,9 +694,9 @@ function SearchContent() {
                                                 ? {
                                                       background: 'var(--accent)',
                                                       color: 'var(--accent-fg)',
-                                                      minWidth: 32,
+                                                      minWidth: 44,
                                                   }
-                                                : { minWidth: 32 }
+                                                : { minWidth: 44 }
                                         }
                                         onClick={() => {
                                             setPage(p);
@@ -629,7 +731,7 @@ export function SearchClient() {
     return (
         <Suspense
             fallback={
-                <div className="max-w-[1440px] mx-auto px-6 pt-5">
+                <div className="max-w-[1440px] mx-auto px-4 sm:px-6 pt-4 sm:pt-5">
                     <Skeleton className="h-8 w-64 mb-4" />
                     <Skeleton className="h-32 w-full mb-4 rounded-[10px]" />
                     <div className="grid gap-6 lg:grid-cols-[240px_1fr]">

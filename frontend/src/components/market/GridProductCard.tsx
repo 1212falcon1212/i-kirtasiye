@@ -103,7 +103,7 @@ export const GridProductCard = React.memo(function GridProductCard({
           <div className="absolute top-2.5 left-2.5">
             <span
               className={cn(
-                'inline-flex items-center gap-1 px-2 py-1 rounded-full text-[10px] font-bold tracking-wide',
+                'inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-bold tracking-wide',
                 stockInfo.badgeClass,
               )}
             >
@@ -121,13 +121,13 @@ export const GridProductCard = React.memo(function GridProductCard({
         <div className="flex flex-col flex-1 p-3.5">
           {/* Brand */}
           {product.brand && (
-            <p className="text-[10px] font-extrabold text-[#ea580c] dark:text-[#ffedd5] uppercase tracking-[0.8px] mb-1">
+            <p className="text-xs font-extrabold text-[#ea580c] dark:text-[#ffedd5] uppercase tracking-[0.8px] mb-1">
               {product.brand}
             </p>
           )}
 
           {/* Product Name */}
-          <p className="text-[13px] font-semibold text-[#1a1a1a] dark:text-white line-clamp-2 leading-[1.4] mb-auto group-hover:text-[#ea580c] dark:group-hover:text-[#ffedd5] transition-colors">
+          <p className="text-sm font-semibold text-[#1a1a1a] dark:text-white line-clamp-2 leading-[1.4] mb-auto group-hover:text-[#ea580c] dark:group-hover:text-[#ffedd5] transition-colors">
             {product.name}
           </p>
 
@@ -141,7 +141,7 @@ export const GridProductCard = React.memo(function GridProductCard({
                 {product.highest_price &&
                   product.lowest_price &&
                   product.highest_price > product.lowest_price && (
-                    <p className="text-[10px] text-slate-400 dark:text-slate-500 mt-0.5">
+                    <p className="text-xs text-slate-400 dark:text-slate-500 mt-0.5">
                       {formatPrice(product.highest_price)}&apos;e kadar
                     </p>
                   )}
@@ -149,7 +149,7 @@ export const GridProductCard = React.memo(function GridProductCard({
             </div>
 
             {/* Action: view listing */}
-            <div className="mt-2.5 flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-[#1e3a8a] text-white pointer-events-none">
+            <div className="mt-2.5 flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-[#ea580c] text-white pointer-events-none min-h-[44px]">
               {stockInfo.status === 'out_of_stock' ? (
                 'Stokta Yok'
               ) : (

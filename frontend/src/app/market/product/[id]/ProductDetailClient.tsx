@@ -212,7 +212,7 @@ export function ProductDetailClient() {
 
     if (isLoading) {
         return (
-            <div className="max-w-[1440px] mx-auto px-6 pt-5">
+            <div className="max-w-[1440px] mx-auto px-4 sm:px-6 pt-4 sm:pt-5">
                 <Skeleton className="h-4 w-64 mb-4" />
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
                     <Skeleton className="aspect-square rounded-[10px]" />
@@ -228,7 +228,7 @@ export function ProductDetailClient() {
 
     if (!product) {
         return (
-            <div className="max-w-[1440px] mx-auto px-6 py-12">
+            <div className="max-w-[1440px] mx-auto px-4 sm:px-6 py-8 sm:py-12">
                 <div
                     className="rounded-[10px] py-16 text-center"
                     style={{
@@ -276,7 +276,7 @@ export function ProductDetailClient() {
     const showThumbnailColumn = thumbnails.length > 1;
 
     return (
-        <div className="max-w-[1440px] mx-auto px-6 pt-5 pb-12">
+        <div className="max-w-[1440px] mx-auto px-4 sm:px-6 pt-4 sm:pt-5 pb-8 sm:pb-12">
             <ProductJsonLd
                 name={product.name}
                 description={product.description}
@@ -333,7 +333,7 @@ export function ProductDetailClient() {
                                 {product.brand}
                             </Link>
                         )}
-                        <h1 className="text-[20px] font-semibold leading-tight">{product.name}</h1>
+                        <h1 className="text-lg sm:text-xl font-semibold leading-tight">{product.name}</h1>
                         {product.barcode && (
                             <div
                                 className="mono text-[11px]"
@@ -424,7 +424,7 @@ export function ProductDetailClient() {
                             </div>
                         </div>
                         <div
-                            className="mono text-[22px] font-bold"
+                            className="mono text-xl sm:text-[22px] font-bold"
                             style={{ color: 'var(--fg)' }}
                         >
                             {psf ? formatTL(psf) : '---'}
@@ -495,7 +495,7 @@ export function ProductDetailClient() {
 
                         return (
                             <div
-                                className="rounded-[12px] p-4 sm:p-5 mb-4"
+                                className="rounded-[12px] p-3 sm:p-4 md:p-5 mb-4"
                                 style={{
                                     background: 'var(--bg-elevated)',
                                     border: '1px solid var(--border)',
@@ -504,19 +504,19 @@ export function ProductDetailClient() {
                             >
                                 {/* PSF + En düşük ilan fiyatı paneli */}
                                 <div
-                                    className="rounded-[10px] p-4 mb-3"
+                                    className="rounded-[10px] p-3 sm:p-4 mb-3"
                                     style={{ background: 'var(--bg-muted)' }}
                                 >
-                                    <div className="flex items-start justify-between gap-3 flex-wrap">
+                                    <div className="flex items-start justify-between gap-2 sm:gap-3 flex-wrap">
                                         <div className="min-w-0">
                                             <div
-                                                className="text-[10px] font-bold uppercase tracking-wider mb-1"
+                                                className="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider mb-1"
                                                 style={{ color: 'var(--fg-soft)' }}
                                             >
                                                 PSF (Önerilen Satış)
                                             </div>
                                             <div
-                                                className="mono text-[15px] line-through"
+                                                className="mono text-[13px] sm:text-[15px] line-through"
                                                 style={{ color: 'var(--fg-muted)' }}
                                             >
                                                 {psf ? formatTL(psf) : '—'}
@@ -524,27 +524,27 @@ export function ProductDetailClient() {
                                         </div>
                                         <div className="text-right">
                                             <div
-                                                className="text-[10px] font-bold uppercase tracking-wider mb-1"
+                                                className="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider mb-1"
                                                 style={{ color: 'var(--success)' }}
                                             >
                                                 En Düşük İlan Fiyatı
                                             </div>
-                                            <div className="flex items-baseline gap-1 justify-end">
+                                            <div className="flex items-baseline gap-0.5 sm:gap-1 justify-end">
                                                 <span
-                                                    className="mono text-[28px] sm:text-[30px] font-bold leading-none"
+                                                    className="mono text-xl sm:text-2xl md:text-[28px] font-bold leading-none"
                                                     style={{ color: 'var(--fg)' }}
                                                 >
                                                     {formatTL(cheapestOffer.price).replace(' ₺', '')}
                                                 </span>
                                                 <span
-                                                    className="text-[12px] font-semibold"
+                                                    className="text-[10px] sm:text-[12px] font-semibold"
                                                     style={{ color: 'var(--fg-muted)' }}
                                                 >
                                                     TL
                                                 </span>
                                             </div>
                                             <div
-                                                className="text-[11px] mt-0.5"
+                                                className="text-[10px] sm:text-[11px] mt-0.5"
                                                 style={{ color: 'var(--fg-soft)' }}
                                             >
                                                 KDV dahil · adet başı
@@ -576,9 +576,9 @@ export function ProductDetailClient() {
                                 )}
 
                                 {/* Quantity + CTA + Wishlist */}
-                                <div className="flex items-stretch gap-2">
+                                <div className="flex flex-col sm:flex-row items-stretch gap-2">
                                     <div
-                                        className="flex items-center overflow-hidden flex-shrink-0"
+                                        className="flex items-center overflow-hidden flex-shrink-0 sm:w-auto w-full"
                                         style={{
                                             border: '1px solid var(--border)',
                                             background: 'var(--bg-elevated)',
@@ -622,15 +622,15 @@ export function ProductDetailClient() {
                                         onClick={handleAddCheapestToCart}
                                         disabled={adding || !canBuy}
                                         title={!canBuy ? 'Bu satıcıdan alış izniniz yok' : undefined}
-                                        className="btn btn-primary flex-1 whitespace-nowrap text-[14px] font-bold"
-                                        style={{ height: 44, opacity: !canBuy ? 0.6 : undefined, cursor: !canBuy ? 'not-allowed' : undefined }}
+                                        className="btn btn-primary flex-1 text-[13px] sm:text-[14px] font-bold min-h-[44px] h-auto py-2 px-3 sm:whitespace-nowrap"
+                                        style={{ opacity: !canBuy ? 0.6 : undefined, cursor: !canBuy ? 'not-allowed' : undefined }}
                                     >
                                         {adding ? (
                                             <Loader2 className="w-4 h-4 animate-spin" />
                                         ) : (
                                             <>
-                                                <ShoppingCart className="w-4 h-4" />
-                                                {canBuy ? 'En ucuz ilanı sepete ekle' : 'Bu satıcıdan alış izniniz yok'}
+                                                <ShoppingCart className="w-4 h-4 flex-shrink-0" />
+                                                <span className="truncate sm:truncate-none">{canBuy ? 'En ucuz ilanı sepete ekle' : 'Bu satıcıdan alış izniniz yok'}</span>
                                             </>
                                         )}
                                     </button>
@@ -638,10 +638,9 @@ export function ProductDetailClient() {
                                     <button
                                         type="button"
                                         onClick={handleToggleFavorite}
-                                        className="flex items-center justify-center flex-shrink-0"
+                                        className="flex items-center justify-center flex-shrink-0 sm:w-[44px] w-full"
                                         aria-label={isFavorite ? 'Favorilerden çıkar' : 'Favorilere ekle'}
                                         style={{
-                                            width: 44,
                                             height: 44,
                                             border: '1px solid var(--border)',
                                             background: 'var(--bg-elevated)',
@@ -753,7 +752,7 @@ export function ProductDetailClient() {
             {similarProducts.length > 0 && (
                 <div>
                     <h2 className="text-[20px] font-semibold mb-4">Benzer Ürünler</h2>
-                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3.5">
+                    <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3.5">
                         {similarProducts.map((p) => (
                             <ProductCard key={p.id} product={p} />
                         ))}

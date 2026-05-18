@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 
 type LogoSize = 'sm' | 'md' | 'lg';
 
@@ -10,48 +11,30 @@ interface LogoProps {
     className?: string;
 }
 
-const SIZES: Record<LogoSize, { box: number; radius: number; mark: number; word: number }> = {
-    sm: { box: 26, radius: 6, mark: 13, word: 14 },
-    md: { box: 32, radius: 8, mark: 16, word: 18 },
-    lg: { box: 40, radius: 10, mark: 20, word: 22 },
+const SIZES: Record<LogoSize, { width: number; height: number }> = {
+    sm: { width: 120, height: 40 },
+    md: { width: 160, height: 52 },
+    lg: { width: 200, height: 64 },
 };
 
 export function Logo({ size = 'md', href = '/', asChild = false, className = '' }: LogoProps) {
     const s = SIZES[size];
 
     const inner = (
-        <span className={`inline-flex items-center gap-2.5 ${className}`}>
-            <span
-                aria-hidden
-                className="inline-flex items-center justify-center font-mono font-bold"
-                style={{
-                    width: s.box,
-                    height: s.box,
-                    borderRadius: s.radius,
-                    background: 'var(--accent)',
-                    color: 'var(--accent-fg)',
-                    fontSize: s.mark,
-                    lineHeight: 1,
-                }}
-            >
-                i
-            </span>
-            <span
-                className="font-bold tracking-tight"
-                style={{ fontSize: s.word, letterSpacing: '-0.02em', color: 'var(--fg)' }}
-            >
-                kirtasiye
-                <span className="font-medium" style={{ color: 'var(--fg-soft)' }}>
-                    .b2b
-                </span>
-            </span>
-        </span>
+        <Image
+            src="/logo.webp"
+            alt="i-kırtasiye logo"
+            width={s.width}
+            height={s.height}
+            className={className}
+            priority
+        />
     );
 
     if (asChild) return inner;
 
     return (
-        <Link href={href} className="inline-flex items-center" aria-label="i-kirtasiye anasayfa">
+        <Link href={href} className="inline-flex items-center" aria-label="i-kırtasiye anasayfa">
             {inner}
         </Link>
     );

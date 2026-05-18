@@ -46,7 +46,7 @@ export function RecentSalesFeed() {
             <div
                 className="p-5"
                 style={{
-                    background: 'var(--bg-elevated)',
+                    background: 'linear-gradient(135deg, var(--bg-elevated) 0%, #fef3e2 100%)',
                     border: '1px solid var(--border)',
                     borderRadius: 'var(--radius-lg)',
                 }}
@@ -56,8 +56,8 @@ export function RecentSalesFeed() {
                         <div
                             className="w-7 h-7 rounded-md flex items-center justify-center"
                             style={{
-                                background: 'var(--success-soft)',
-                                color: 'var(--success)',
+                                background: 'linear-gradient(135deg, var(--success) 0%, #16a34a 100%)',
+                                color: 'white',
                             }}
                         >
                             <ArrowRight className="w-[15px] h-[15px]" />
@@ -77,7 +77,7 @@ export function RecentSalesFeed() {
                         Canlı güncellemeler
                     </span>
                 </div>
-                <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5">
+                <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-4 gap-2.5">
                     {items.slice(0, 4).map((p, idx) => {
                         const img = p.image_url || p.image;
                         const highlighted = idx === highlightIdx % 4;

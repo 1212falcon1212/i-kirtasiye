@@ -28,8 +28,10 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login()
+            ->brandLogo(asset('logo.webp'))
+            ->brandName('i-kırtasiye')
             ->colors([
-                'primary' => Color::Amber,
+                'primary' => Color::Blue,
             ])
             ->navigationGroups([
                 NavigationGroup::make('Satış'),

@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useState, useEffect, useCallback } from "react";
-import { Menu, X, Plus } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const NAV_ITEMS = [
@@ -40,36 +41,14 @@ export default function LandingHeader() {
           <div className="flex items-center justify-between h-16 lg:h-20">
             {/* Logo */}
             <Link href="/" className="flex items-center gap-2.5 group">
-              <div
-                className={`w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-300 ${
-                  scrolled
-                    ? "bg-[#1e3a8a] shadow-md shadow-cyan-200"
-                    : "bg-white/20 backdrop-blur-sm border border-white/30"
-                }`}
-              >
-                <Plus
-                  className={`w-5 h-5 transition-colors duration-300 ${
-                    scrolled ? "text-white" : "text-white"
-                  }`}
-                  strokeWidth={3}
-                />
-              </div>
-              <div className="flex flex-col -space-y-0.5">
-                <span
-                  className={`font-extrabold text-lg tracking-tight transition-colors duration-300 ${
-                    scrolled ? "text-slate-900" : "text-white"
-                  }`}
-                >
-                  i-kirtasiye
-                </span>
-                <span
-                  className={`text-[9px] font-bold tracking-[0.15em] uppercase transition-colors duration-300 whitespace-nowrap ${
-                    scrolled ? "text-[#ea580c]" : "text-accent-soft"
-                  }`}
-                >
-                  B2B Kırtasiye Pazaryeri
-                </span>
-              </div>
+              <Image
+                src="/logo.webp"
+                alt="i-kırtasiye logo"
+                width={140}
+                height={46}
+                className="transition-all duration-300"
+                priority
+              />
             </Link>
 
             {/* Desktop nav */}
@@ -149,7 +128,12 @@ export default function LandingHeader() {
               onClick={(e) => e.stopPropagation()}
             >
               <div className="flex items-center justify-between p-5 border-b border-slate-100">
-                <span className="font-bold text-lg text-slate-900">Menu</span>
+                <Image
+                  src="/logo.webp"
+                  alt="i-kırtasiye logo"
+                  width={120}
+                  height={39}
+                />
                 <button
                   onClick={closeMobile}
                   className="p-2 rounded-lg hover:bg-slate-100 text-slate-500"

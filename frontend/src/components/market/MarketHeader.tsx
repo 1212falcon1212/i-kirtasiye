@@ -92,7 +92,7 @@ export function MarketHeader({ activeNav }: MarketHeaderProps) {
                 }
                 setCategories(list);
             })
-            .catch(() => {});
+            .catch(() => { });
         return () => {
             active = false;
         };
@@ -199,28 +199,348 @@ export function MarketHeader({ activeNav }: MarketHeaderProps) {
             </div>
 
             {/* TopBar: logo, search, tools */}
-            <div className="max-w-[1440px] mx-auto px-3 sm:px-6 py-3 sm:py-3.5 flex items-center gap-2 sm:gap-4">
-                {/* Mobile hamburger */}
-                <button
-                    type="button"
-                    onClick={() => setMobileMenuOpen(true)}
-                    aria-label="Menüyü aç"
-                    className="lg:hidden inline-flex items-center justify-center rounded-md transition-colors"
-                    style={{
-                        width: 40,
-                        height: 40,
-                        background: 'transparent',
-                        color: 'var(--fg)',
-                    }}
-                >
-                    <Menu className="w-5 h-5" />
-                </button>
+            <div className="max-w-[1440px] mx-auto px-3 sm:px-6 py-2.5 sm:py-3.5">
+                {/* Mobile: 3-column layout */}
+                <div className="flex items-center justify-between lg:hidden">
+                    {/* Hamburger */}
+                    <button
+                        type="button"
+                        onClick={() => setMobileMenuOpen(true)}
+                        aria-label="Menüyü aç"
+                        className="inline-flex items-center justify-center rounded-lg transition-colors"
+                        style={{
+                            width: 40,
+                            height: 40,
+                            background: 'var(--bg-muted)',
+                            color: 'var(--fg)',
+                        }}
+                    >
+                        <Menu className="w-5 h-5" />
+                    </button>
 
-                <Logo size="md" href="/market" />
+                    {/* Logo centered */}
+                    <Link href="/market" className="flex items-center">
+                        <Image
+                            src="/logo.webp"
+                            alt="i-kırtasiye logo"
+                            width={200}
+                            height={200}
+                            className="h-24 w-auto"
+                            priority
+                        />
+                    </Link>
 
-                <div ref={searchRef} className="flex-1 relative min-w-0 hidden md:block">
-                    <form onSubmit={onSearch} className="flex items-stretch gap-2">
-                        <div className="relative flex-1 min-w-0">
+                    {/* Avatar + Cart */}
+                    <div className="flex items-center gap-2">
+                        {user ? (
+                            <button
+                                type="button"
+                                onClick={() => setAccountOpen((v) => !v)}
+                                className="inline-flex items-center justify-center rounded-full"
+                                style={{
+                                    width: 36,
+                                    height: 36,
+                                    background: 'var(--accent)',
+                                    color: 'white',
+                                    fontWeight: 700,
+                                    fontSize: 14,
+                                }}
+                            >
+                                {(user.nickname || user.business_name || user.email || 'U').charAt(0).toUpperCase()}
+                            </button>
+                        ) : (
+                            <Link
+                                href="/login"
+                                className="inline-flex items-center justify-center rounded-full"
+                                style={{
+                                    width: 36,
+                                    height: 36,
+                                    background: 'var(--bg-muted)',
+                                    color: 'var(--fg)',
+                                }}
+                            >
+                                <UserIcon className="w-4 h-4" />
+                            </Link>
+                        )}
+                        <MiniCart />
+                    </div>
+                </div>
+
+                {/* Desktop: original layout */}
+                <div className="hidden lg:flex items-center gap-4">
+                    <Logo size="md" href="/market" />
+
+                    <div ref={searchRef} className="flex-1 relative min-w-0">
+                        <form onSubmit={onSearch} className="flex items-stretch gap-2">
+                            <div className="relative flex-1 min-w-0">
+                                <Search
+                                    className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none"
+                                    style={{ color: 'var(--fg-soft)' }}
+                                />
+                                <input
+                                    type="search"
+                                    value={search}
+                                    onChange={(e) => {
+                                        setSearch(e.target.value);
+                                        setSearchOpen(true);
+                                    }}
+                                    onFocus={() => search.length >= 2 && setSearchOpen(true)}
+                                    placeholder="Ürün, marka veya barkod ara…"
+                                    className="input w-full"
+                                    style={{
+                                        paddingLeft: 36,
+                                        paddingRight: search ? 72 : 44,
+                                        height: 40,
+                                        fontSize: 14,
+                                        background: 'var(--bg-elevated)',
+                                        color: 'var(--fg)',
+                                        border: '1px solid var(--border)',
+                                    }}
+                                    autoComplete="off"
+                                />
+                                {search && (
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            setSearch('');
+                                            setSearchOpen(false);
+                                        }}
+                                        className="absolute top-1/2 -translate-y-1/2 p-1"
+                                        style={{ right: 40, color: 'var(--fg-soft)' }}
+                                        aria-label="Aramayı temizle"
+                                    >
+                                        <X className="w-4 h-4" />
+                                    </button>
+                                )}
+                                <button
+                                    type="button"
+                                    onClick={() => setScannerOpen(true)}
+                                    className="absolute top-1/2 -translate-y-1/2 inline-flex items-center justify-center transition-colors"
+                                    style={{
+                                        right: 6,
+                                        height: 28,
+                                        width: 28,
+                                        color: 'var(--fg-muted)',
+                                        borderRadius: 6,
+                                    }}
+                                    aria-label="Barkod tara"
+                                    title="Barkod tara"
+                                >
+                                    <ScanLine className="w-4 h-4" />
+                                </button>
+                            </div>
+                            <button
+                                type="submit"
+                                className="btn btn-primary flex-shrink-0"
+                                style={{ height: 40, width: 40, padding: 0 }}
+                                aria-label="Ara"
+                                title="Ara"
+                            >
+                                <Search className="w-4 h-4" />
+                            </button>
+                        </form>
+
+                        {/* Search dropdown */}
+                        {searchOpen && search.trim().length >= 2 && (
+                            <div
+                                className="absolute left-0 right-0 mt-2 z-50 overflow-hidden"
+                                style={{
+                                    background: 'var(--bg-elevated)',
+                                    border: '1px solid var(--border)',
+                                    borderRadius: 'var(--radius-lg)',
+                                    boxShadow: 'var(--shadow-lg)',
+                                    maxHeight: '70vh',
+                                    overflowY: 'auto',
+                                }}
+                            >
+                                {searchLoading && searchResults.length === 0 ? (
+                                    <div
+                                        className="flex items-center justify-center gap-2 py-6 text-[13px]"
+                                        style={{ color: 'var(--fg-muted)' }}
+                                    >
+                                        <Loader2 className="w-4 h-4 animate-spin" />
+                                        Aranıyor…
+                                    </div>
+                                ) : searchResults.length === 0 ? (
+                                    <div className="py-6 text-center text-[13px]" style={{ color: 'var(--fg-muted)' }}>
+                                        Sonuç bulunamadı.
+                                    </div>
+                                ) : (
+                                    <>
+                                        <div
+                                            className="px-3 py-2 text-[11px] font-semibold uppercase tracking-wider"
+                                            style={{
+                                                color: 'var(--fg-soft)',
+                                                borderBottom: '1px solid var(--border)',
+                                            }}
+                                        >
+                                            Ürünler
+                                        </div>
+                                        <ul>
+                                            {searchResults.map((p) => {
+                                                const img = p.image_url || p.image;
+                                                const brandName =
+                                                    typeof p.brand === 'string'
+                                                        ? p.brand
+                                                        : (p.brand as { name?: string } | null | undefined)?.name;
+                                                return (
+                                                    <li key={p.id}>
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => goToProduct(p)}
+                                                            className="w-full flex items-center gap-3 px-3 py-2.5 text-left transition-colors"
+                                                            style={{ color: 'var(--fg)' }}
+                                                            onMouseEnter={(e) => {
+                                                                e.currentTarget.style.background = 'var(--bg-muted)';
+                                                            }}
+                                                            onMouseLeave={(e) => {
+                                                                e.currentTarget.style.background = 'transparent';
+                                                            }}
+                                                        >
+                                                            <div
+                                                                className="relative flex-shrink-0 overflow-hidden rounded-md"
+                                                                style={{
+                                                                    width: 44,
+                                                                    height: 44,
+                                                                    background: 'var(--bg-muted)',
+                                                                    border: '1px solid var(--border)',
+                                                                }}
+                                                            >
+                                                                {img ? (
+                                                                    <Image
+                                                                        src={img}
+                                                                        alt={p.name}
+                                                                        fill
+                                                                        sizes="44px"
+                                                                        className="object-contain p-1"
+                                                                    />
+                                                                ) : null}
+                                                            </div>
+                                                            <div className="flex-1 min-w-0">
+                                                                {brandName && (
+                                                                    <div
+                                                                        className="text-[10px] font-bold uppercase tracking-wider"
+                                                                        style={{ color: 'var(--primary)' }}
+                                                                    >
+                                                                        {brandName}
+                                                                    </div>
+                                                                )}
+                                                                <div className="text-[13px] font-medium leading-tight line-clamp-1">
+                                                                    {p.name}
+                                                                </div>
+                                                                {(p.lowest_price ?? null) !== null && (
+                                                                    <div
+                                                                        className="mono text-[11px] mt-0.5"
+                                                                        style={{ color: 'var(--success)' }}
+                                                                    >
+                                                                        {formatTL(p.lowest_price)}
+                                                                    </div>
+                                                                )}
+                                                            </div>
+                                                        </button>
+                                                    </li>
+                                                );
+                                            })}
+                                        </ul>
+                                        <button
+                                            type="button"
+                                            onClick={onSearch}
+                                            className="w-full flex items-center justify-center gap-2 px-3 py-3 text-[13px] font-semibold transition-colors"
+                                            style={{
+                                                color: 'var(--primary)',
+                                                background: 'var(--primary-soft)',
+                                                borderTop: '1px solid var(--border)',
+                                            }}
+                                        >
+                                            &ldquo;{search.trim()}&rdquo; için tüm sonuçları gör
+                                            {searchTotal > 0 && (
+                                                <span className="mono opacity-70">({searchTotal.toLocaleString('tr-TR')})</span>
+                                            )}
+                                            <ArrowRight className="w-3.5 h-3.5" />
+                                        </button>
+                                    </>
+                                )}
+                            </div>
+                        )}
+                    </div>
+
+                    <div className="flex gap-3 items-center flex-shrink-0">
+                        <NotificationDropdown />
+
+                        <div ref={accountRef} className="relative">
+                            <button
+                                type="button"
+                                className="btn btn-ghost"
+                                onClick={() => setAccountOpen((v) => !v)}
+                            >
+                                <UserIcon className="w-4 h-4" />
+                                <span>{user?.nickname || user?.business_name || 'Hesabım'}</span>
+                                <ChevronDown className="w-3.5 h-3.5" />
+                            </button>
+                            {accountOpen && (
+                                <div
+                                    className="absolute right-0 mt-2 w-60 z-50 py-1"
+                                    style={{
+                                        background: 'var(--bg-elevated)',
+                                        border: '1px solid var(--border)',
+                                        borderRadius: 'var(--radius-lg)',
+                                        boxShadow: 'var(--shadow-lg)',
+                                    }}
+                                >
+                                    <div className="px-3 py-2 border-b" style={{ borderColor: 'var(--border)' }}>
+                                        <div className="text-sm font-semibold" style={{ color: 'var(--fg)' }}>
+                                            {user?.nickname || user?.business_name || 'Misafir'}
+                                        </div>
+                                        {user?.email && (
+                                            <div className="text-xs truncate" style={{ color: 'var(--fg-soft)' }}>
+                                                {user.email}
+                                            </div>
+                                        )}
+                                    </div>
+                                    <Link
+                                        href="/market/hesabim"
+                                        className="flex items-center gap-2 px-3 py-2 text-sm hover:bg-bg-muted"
+                                        style={{ color: 'var(--fg)' }}
+                                    >
+                                        <LayoutDashboard className="w-4 h-4" /> Hesabım
+                                    </Link>
+                                    <Link
+                                        href="/market/hesabim?tab=orders"
+                                        className="flex items-center gap-2 px-3 py-2 text-sm hover:bg-bg-muted"
+                                        style={{ color: 'var(--fg)' }}
+                                    >
+                                        <Package className="w-4 h-4" /> Siparişlerim
+                                    </Link>
+                                    <button
+                                        type="button"
+                                        onClick={() => logout()}
+                                        className="w-full flex items-center gap-2 px-3 py-2 text-sm hover:bg-bg-muted text-left"
+                                        style={{ color: 'var(--danger)' }}
+                                    >
+                                        <LogOut className="w-4 h-4" /> Çıkış yap
+                                    </button>
+                                </div>
+                            )}
+                        </div>
+
+                        <MiniCart />
+                    </div>
+                </div>
+
+                {/* Mobile: Search bar row */}
+                <div className="mt-2.5 lg:hidden" ref={searchRef}>
+                    <form
+                        onSubmit={(e) => {
+                            e.preventDefault();
+                            const q = search.trim();
+                            if (q) {
+                                setSearchOpen(false);
+                                router.push(`/market/search?q=${encodeURIComponent(q)}`);
+                            }
+                        }}
+                        className="flex items-center gap-2 relative"
+                    >
+                        <div className="relative flex-1">
                             <Search
                                 className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none"
                                 style={{ color: 'var(--fg-soft)' }}
@@ -233,247 +553,154 @@ export function MarketHeader({ activeNav }: MarketHeaderProps) {
                                     setSearchOpen(true);
                                 }}
                                 onFocus={() => search.length >= 2 && setSearchOpen(true)}
-                                placeholder="Ürün, marka veya barkod ara…"
+                                placeholder="Ürün ara…"
                                 className="input w-full"
                                 style={{
                                     paddingLeft: 36,
-                                    paddingRight: search ? 72 : 44,
-                                    height: 40,
+                                    paddingRight: 44,
+                                    height: 42,
                                     fontSize: 14,
-                                    background: 'var(--bg-elevated)',
+                                    background: 'var(--bg)',
                                     color: 'var(--fg)',
                                     border: '1px solid var(--border)',
+                                    borderRadius: 10,
                                 }}
                                 autoComplete="off"
                             />
-                            {search && (
-                                <button
-                                    type="button"
-                                    onClick={() => {
-                                        setSearch('');
-                                        setSearchOpen(false);
-                                    }}
-                                    className="absolute top-1/2 -translate-y-1/2 p-1"
-                                    style={{ right: 40, color: 'var(--fg-soft)' }}
-                                    aria-label="Aramayı temizle"
-                                >
-                                    <X className="w-4 h-4" />
-                                </button>
-                            )}
                             <button
                                 type="button"
                                 onClick={() => setScannerOpen(true)}
-                                className="absolute top-1/2 -translate-y-1/2 inline-flex items-center justify-center transition-colors"
+                                className="absolute top-1/2 -translate-y-1/2 inline-flex items-center justify-center"
                                 style={{
-                                    right: 6,
-                                    height: 28,
-                                    width: 28,
+                                    right: 8,
+                                    height: 30,
+                                    width: 30,
                                     color: 'var(--fg-muted)',
                                     borderRadius: 6,
                                 }}
                                 aria-label="Barkod tara"
-                                title="Barkod tara"
                             >
                                 <ScanLine className="w-4 h-4" />
                             </button>
+
+                            {/* Mobile search dropdown */}
+                            {searchOpen && search.trim().length >= 2 && (
+                                <div
+                                    className="absolute left-0 right-0 mt-1 z-50 overflow-hidden"
+                                    style={{
+                                        background: 'var(--bg-elevated)',
+                                        border: '1px solid var(--border)',
+                                        borderRadius: 10,
+                                        boxShadow: 'var(--shadow-lg)',
+                                        maxHeight: '50vh',
+                                        overflowY: 'auto',
+                                    }}
+                                >
+                                    {searchLoading && searchResults.length === 0 ? (
+                                        <div className="flex items-center justify-center gap-2 py-4 text-[12px]" style={{ color: 'var(--fg-muted)' }}>
+                                            <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                                            Aranıyor…
+                                        </div>
+                                    ) : searchResults.length === 0 && !searchLoading ? (
+                                        <div className="py-4 text-center text-[12px]" style={{ color: 'var(--fg-muted)' }}>
+                                            Sonuç bulunamadı.
+                                        </div>
+                                    ) : (
+                                        <>
+                                            <ul>
+                                                {searchResults.slice(0, 5).map((p) => {
+                                                    const img = p.image_url || p.image;
+                                                    const brandName =
+                                                        typeof p.brand === 'string'
+                                                            ? p.brand
+                                                            : (p.brand as { name?: string } | null | undefined)?.name;
+                                                    return (
+                                                        <li key={p.id}>
+                                                            <button
+                                                                type="button"
+                                                                onClick={() => goToProduct(p)}
+                                                                className="w-full flex items-center gap-2.5 px-3 py-2.5 text-left transition-colors"
+                                                                style={{ color: 'var(--fg)' }}
+                                                            >
+                                                                <div
+                                                                    className="relative flex-shrink-0 overflow-hidden rounded-md"
+                                                                    style={{
+                                                                        width: 36,
+                                                                        height: 36,
+                                                                        background: 'var(--bg-muted)',
+                                                                        border: '1px solid var(--border)',
+                                                                    }}
+                                                                >
+                                                                    {img ? (
+                                                                        <Image
+                                                                            src={img}
+                                                                            alt={p.name}
+                                                                            fill
+                                                                            sizes="36px"
+                                                                            className="object-contain p-0.5"
+                                                                        />
+                                                                    ) : null}
+                                                                </div>
+                                                                <div className="flex-1 min-w-0">
+                                                                    {brandName && (
+                                                                        <div className="text-[9px] font-bold uppercase tracking-wider" style={{ color: 'var(--accent)' }}>
+                                                                            {brandName}
+                                                                        </div>
+                                                                    )}
+                                                                    <div className="text-[12px] font-medium leading-tight line-clamp-1">
+                                                                        {p.name}
+                                                                    </div>
+                                                                    {(p.lowest_price ?? null) !== null && (
+                                                                        <div className="mono text-[11px] mt-0.5" style={{ color: 'var(--success)' }}>
+                                                                            {formatTL(p.lowest_price)}
+                                                                        </div>
+                                                                    )}
+                                                                </div>
+                                                            </button>
+                                                        </li>
+                                                    );
+                                                })}
+                                            </ul>
+                                            <button
+                                                type="button"
+                                                onClick={() => {
+                                                    setSearchOpen(false);
+                                                    const q = search.trim();
+                                                    if (q) router.push(`/market/search?q=${encodeURIComponent(q)}`);
+                                                }}
+                                                className="w-full flex items-center justify-center gap-2 px-3 py-2.5 text-[12px] font-semibold"
+                                                style={{
+                                                    color: 'var(--accent)',
+                                                    background: 'var(--accent-soft)',
+                                                    borderTop: '1px solid var(--border)',
+                                                }}
+                                            >
+                                                Tüm sonuçları gör
+                                                {searchTotal > 0 && (
+                                                    <span className="mono opacity-70">({searchTotal.toLocaleString('tr-TR')})</span>
+                                                )}
+                                                <ArrowRight className="w-3 h-3" />
+                                            </button>
+                                        </>
+                                    )}
+                                </div>
+                            )}
                         </div>
                         <button
                             type="submit"
-                            className="btn btn-primary flex-shrink-0"
-                            style={{ height: 40, width: 40, padding: 0 }}
+                            className="inline-flex items-center justify-center flex-shrink-0"
+                            style={{
+                                width: 42,
+                                height: 42,
+                                background: 'var(--accent)',
+                                color: 'white',
+                                borderRadius: 10,
+                            }}
                             aria-label="Ara"
-                            title="Ara"
                         >
-                            <Search className="w-4 h-4" />
+                            <Search className="w-5 h-5" />
                         </button>
                     </form>
-
-                    {/* Search dropdown */}
-                    {searchOpen && search.trim().length >= 2 && (
-                        <div
-                            className="absolute left-0 right-0 mt-2 z-50 overflow-hidden"
-                            style={{
-                                background: 'var(--bg-elevated)',
-                                border: '1px solid var(--border)',
-                                borderRadius: 'var(--radius-lg)',
-                                boxShadow: 'var(--shadow-lg)',
-                                maxHeight: '70vh',
-                                overflowY: 'auto',
-                            }}
-                        >
-                            {searchLoading && searchResults.length === 0 ? (
-                                <div
-                                    className="flex items-center justify-center gap-2 py-6 text-[13px]"
-                                    style={{ color: 'var(--fg-muted)' }}
-                                >
-                                    <Loader2 className="w-4 h-4 animate-spin" />
-                                    Aranıyor…
-                                </div>
-                            ) : searchResults.length === 0 ? (
-                                <div className="py-6 text-center text-[13px]" style={{ color: 'var(--fg-muted)' }}>
-                                    Sonuç bulunamadı.
-                                </div>
-                            ) : (
-                                <>
-                                    <div
-                                        className="px-3 py-2 text-[11px] font-semibold uppercase tracking-wider"
-                                        style={{
-                                            color: 'var(--fg-soft)',
-                                            borderBottom: '1px solid var(--border)',
-                                        }}
-                                    >
-                                        Ürünler
-                                    </div>
-                                    <ul>
-                                        {searchResults.map((p) => {
-                                            const img = p.image_url || p.image;
-                                            const brandName =
-                                                typeof p.brand === 'string'
-                                                    ? p.brand
-                                                    : (p.brand as { name?: string } | null | undefined)?.name;
-                                            return (
-                                                <li key={p.id}>
-                                                    <button
-                                                        type="button"
-                                                        onClick={() => goToProduct(p)}
-                                                        className="w-full flex items-center gap-3 px-3 py-2.5 text-left transition-colors"
-                                                        style={{ color: 'var(--fg)' }}
-                                                        onMouseEnter={(e) => {
-                                                            e.currentTarget.style.background = 'var(--bg-muted)';
-                                                        }}
-                                                        onMouseLeave={(e) => {
-                                                            e.currentTarget.style.background = 'transparent';
-                                                        }}
-                                                    >
-                                                        <div
-                                                            className="relative flex-shrink-0 overflow-hidden rounded-md"
-                                                            style={{
-                                                                width: 44,
-                                                                height: 44,
-                                                                background: 'var(--bg-muted)',
-                                                                border: '1px solid var(--border)',
-                                                            }}
-                                                        >
-                                                            {img ? (
-                                                                <Image
-                                                                    src={img}
-                                                                    alt={p.name}
-                                                                    fill
-                                                                    sizes="44px"
-                                                                    className="object-contain p-1"
-                                                                />
-                                                            ) : null}
-                                                        </div>
-                                                        <div className="flex-1 min-w-0">
-                                                            {brandName && (
-                                                                <div
-                                                                    className="text-[10px] font-bold uppercase tracking-wider"
-                                                                    style={{ color: 'var(--primary)' }}
-                                                                >
-                                                                    {brandName}
-                                                                </div>
-                                                            )}
-                                                            <div className="text-[13px] font-medium leading-tight line-clamp-1">
-                                                                {p.name}
-                                                            </div>
-                                                            {(p.lowest_price ?? null) !== null && (
-                                                                <div
-                                                                    className="mono text-[11px] mt-0.5"
-                                                                    style={{ color: 'var(--success)' }}
-                                                                >
-                                                                    {formatTL(p.lowest_price)}
-                                                                </div>
-                                                            )}
-                                                        </div>
-                                                    </button>
-                                                </li>
-                                            );
-                                        })}
-                                    </ul>
-                                    <button
-                                        type="button"
-                                        onClick={onSearch}
-                                        className="w-full flex items-center justify-center gap-2 px-3 py-3 text-[13px] font-semibold transition-colors"
-                                        style={{
-                                            color: 'var(--primary)',
-                                            background: 'var(--primary-soft)',
-                                            borderTop: '1px solid var(--border)',
-                                        }}
-                                    >
-                                        &ldquo;{search.trim()}&rdquo; için tüm sonuçları gör
-                                        {searchTotal > 0 && (
-                                            <span className="mono opacity-70">({searchTotal.toLocaleString('tr-TR')})</span>
-                                        )}
-                                        <ArrowRight className="w-3.5 h-3.5" />
-                                    </button>
-                                </>
-                            )}
-                        </div>
-                    )}
-                </div>
-
-                <div className="flex gap-2 sm:gap-3 items-center flex-shrink-0">
-                    <div className="hidden md:block">
-                        <NotificationDropdown />
-                    </div>
-
-                    <div ref={accountRef} className="relative hidden md:block">
-                        <button
-                            type="button"
-                            className="btn btn-ghost"
-                            onClick={() => setAccountOpen((v) => !v)}
-                        >
-                            <UserIcon className="w-4 h-4" />
-                            <span className="hidden md:inline">{user?.nickname || user?.business_name || 'Hesabım'}</span>
-                            <ChevronDown className="w-3.5 h-3.5" />
-                        </button>
-                        {accountOpen && (
-                            <div
-                                className="absolute right-0 mt-2 w-60 z-50 py-1"
-                                style={{
-                                    background: 'var(--bg-elevated)',
-                                    border: '1px solid var(--border)',
-                                    borderRadius: 'var(--radius-lg)',
-                                    boxShadow: 'var(--shadow-lg)',
-                                }}
-                            >
-                                <div className="px-3 py-2 border-b" style={{ borderColor: 'var(--border)' }}>
-                                    <div className="text-sm font-semibold" style={{ color: 'var(--fg)' }}>
-                                        {user?.nickname || user?.business_name || 'Misafir'}
-                                    </div>
-                                    {user?.email && (
-                                        <div className="text-xs truncate" style={{ color: 'var(--fg-soft)' }}>
-                                            {user.email}
-                                        </div>
-                                    )}
-                                </div>
-                                <Link
-                                    href="/market/hesabim"
-                                    className="flex items-center gap-2 px-3 py-2 text-sm hover:bg-bg-muted"
-                                    style={{ color: 'var(--fg)' }}
-                                >
-                                    <LayoutDashboard className="w-4 h-4" /> Hesabım
-                                </Link>
-                                <Link
-                                    href="/market/hesabim?tab=orders"
-                                    className="flex items-center gap-2 px-3 py-2 text-sm hover:bg-bg-muted"
-                                    style={{ color: 'var(--fg)' }}
-                                >
-                                    <Package className="w-4 h-4" /> Siparişlerim
-                                </Link>
-                                <button
-                                    type="button"
-                                    onClick={() => logout()}
-                                    className="w-full flex items-center gap-2 px-3 py-2 text-sm hover:bg-bg-muted text-left"
-                                    style={{ color: 'var(--danger)' }}
-                                >
-                                    <LogOut className="w-4 h-4" /> Çıkış yap
-                                </button>
-                            </div>
-                        )}
-                    </div>
-
-                    <MiniCart />
                 </div>
             </div>
 
@@ -591,61 +818,6 @@ export function MarketHeader({ activeNav }: MarketHeaderProps) {
                             )}
                         </SheetTitle>
                     </SheetHeader>
-
-                    {/* Mobile search */}
-                    <div className="px-4 py-3 border-b" style={{ borderColor: 'var(--border)' }}>
-                        <form
-                            onSubmit={(e) => {
-                                e.preventDefault();
-                                const q = search.trim();
-                                if (q) {
-                                    setMobileMenuOpen(false);
-                                    router.push(`/market/search?q=${encodeURIComponent(q)}`);
-                                }
-                            }}
-                            className="relative flex gap-2"
-                        >
-                            <div className="relative flex-1">
-                                <Search
-                                    className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4"
-                                    style={{ color: 'var(--fg-soft)' }}
-                                />
-                                <input
-                                    type="search"
-                                    value={search}
-                                    onChange={(e) => setSearch(e.target.value)}
-                                    placeholder="Ürün, marka veya barkod ara…"
-                                    className="input"
-                                    style={{
-                                        paddingLeft: 36,
-                                        paddingRight: 12,
-                                        height: 40,
-                                        fontSize: 14,
-                                    }}
-                                    autoComplete="off"
-                                />
-                            </div>
-                            <button
-                                type="button"
-                                onClick={() => {
-                                    setMobileMenuOpen(false);
-                                    setScannerOpen(true);
-                                }}
-                                className="inline-flex items-center justify-center flex-shrink-0 transition-colors"
-                                style={{
-                                    width: 40,
-                                    height: 40,
-                                    color: 'var(--fg)',
-                                    background: 'var(--bg-muted)',
-                                    border: '1px solid var(--border)',
-                                    borderRadius: 'var(--radius)',
-                                }}
-                                aria-label="Barkod tara"
-                            >
-                                <ScanLine className="w-4 h-4" />
-                            </button>
-                        </form>
-                    </div>
 
                     <div className="py-2">
                         {user ? (
